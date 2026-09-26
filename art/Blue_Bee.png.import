@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c78uvpasit2si"
-path="res://.godot/imported/Red_Bee_(pollen).png-32cbc85e5a2557510b014e529555c2bc.ctex"
+uid="uid://crwatl5yu6yga"
+path="res://.godot/imported/Blue_Bee.png-272b0506d6e198dbf8f90afdb24f645e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Red_Bee_(pollen).png"
-dest_files=["res://.godot/imported/Red_Bee_(pollen).png-32cbc85e5a2557510b014e529555c2bc.ctex"]
+source_file="res://art/Blue_Bee.png"
+dest_files=["res://.godot/imported/Blue_Bee.png-272b0506d6e198dbf8f90afdb24f645e.ctex"]
 
 [params]
 
