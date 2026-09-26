@@ -5,10 +5,21 @@ var win_amount = 10
 var max_time = 60
 
 var num_to_art = [
-	
+	preload("res://art/numbers/0.png"),
+	preload("res://art/numbers/1.png"),
+	preload("res://art/numbers/2.png"),
+	preload("res://art/numbers/3.png"),
+	preload("res://art/numbers/4.png"),
+	preload("res://art/numbers/5.png"),
+	preload("res://art/numbers/6.png"),
+	preload("res://art/numbers/7.png"),
+	preload("res://art/numbers/8.png"),
+	preload("res://art/numbers/9.png"),
 ]
 
-
+enum PlayerSim { AUTHORITY, REPLICA, PREDICTED }
+var PLAYER_SPAWN_FROM_CENTER = Vector2(640, 360)
+const COLOR_NAMES := ["red", "blue","green","yellow","purple","orange","pink","light_blue"]
 
 const ACTIONS = {
 	
