@@ -1,24 +1,24 @@
 [gd_scene format=3 uid="uid://bjnp8g5702l8h"]
 
 [ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player_movement.gd" id="1_ij6vw"]
-[ext_resource type="Texture2D" uid="uid://c78uvpasit2si" path="res://Red_Bee_(pollen).png" id="2_ij6vw"]
+[ext_resource type="Texture2D" uid="uid://d0ykg44156l0o" path="res://art/Red_Bee.png" id="2_g2brh"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ghijl"]
-atlas = ExtResource("2_ij6vw")
-region = Rect2(0, 0, 15, 19)
+[sub_resource type="AtlasTexture" id="AtlasTexture_dn4c7"]
+atlas = ExtResource("2_g2brh")
+region = Rect2(0, 0, 15, 13)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_44cfe"]
-atlas = ExtResource("2_ij6vw")
-region = Rect2(15, 0, 15, 19)
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vejd"]
+atlas = ExtResource("2_g2brh")
+region = Rect2(15, 0, 15, 13)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ghijl")
+"texture": SubResource("AtlasTexture_dn4c7")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_44cfe")
+"texture": SubResource("AtlasTexture_4vejd")
 }],
 "loop": 1,
 "name": &"default",
