@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://cw3y2vy37howp"]
+
+[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/character_body_2d.tscn" id="1_u52ul"]
+[ext_resource type="PackedScene" uid="uid://dgpvp2bl1i61d" path="res://scenes/flower.tscn" id="2_w7c3h"]
+
+[node name="level" type="Node2D" unique_id=1662596204]
+
+[node name="CharacterBody2D" parent="." unique_id=558911984 instance=ExtResource("1_u52ul")]
+position = Vector2(-34, 6)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=665732631]
+zoom = Vector2(2, 2)
+
+[node name="Flower" parent="." unique_id=221364224 instance=ExtResource("2_w7c3h")]

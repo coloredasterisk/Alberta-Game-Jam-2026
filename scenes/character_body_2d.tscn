@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bjnp8g5702l8h"]
 
-[ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://character_body_2d.gd" id="1_ij6vw"]
+[ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player_movement.gd" id="1_ij6vw"]
 [ext_resource type="Texture2D" uid="uid://c78uvpasit2si" path="res://Red_Bee_(pollen).png" id="2_ij6vw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ghijl"]

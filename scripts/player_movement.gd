@@ -9,6 +9,7 @@ const ACTIONS = {
 	"move_up":    [KEY_W, KEY_UP],
 	"move_down":  [KEY_S, KEY_DOWN],
 	"jump":       [KEY_SPACE],
+	"interact": [KEY_E, KEY_ENTER]
 }
 
 func _ready():
@@ -23,7 +24,11 @@ func _ready():
 
 func movement(delta):
 	direction = Input.get_vector("move_left", "move_right", 'move_up', 'move_down')
-	velocity = velocity.move_toward(direction * speed, 700 * delta)
+	velocity = direction * speed
+
+func interact():
+	if Input.is_action_just_pressed("interact"):
+		print("grap")
 
 func animation():
 	if direction.x < 0:
@@ -33,6 +38,6 @@ func animation():
 
 func _physics_process(delta: float) -> void:
 	animation()
-	print(direction)
+	interact()
 	movement(delta)
 	move_and_slide()

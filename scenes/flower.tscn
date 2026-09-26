@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dgpvp2bl1i61d"]
+
+[ext_resource type="Texture2D" uid="uid://ibhr3umxnw7k" path="res://art/Red_Flower.png" id="1_8x8dx"]
+[ext_resource type="Script" uid="uid://bltvd3fka7mrb" path="res://scripts/flower.gd" id="1_yoh7s"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f58d2"]
+
+[node name="Flower" type="Area2D" unique_id=221364224]
+script = ExtResource("1_yoh7s")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1686954063]
+texture = ExtResource("1_8x8dx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1792918883]
+shape = SubResource("CapsuleShape2D_f58d2")
