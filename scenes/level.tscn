@@ -1,14 +1,34 @@
 [gd_scene format=3 uid="uid://cw3y2vy37howp"]
 
-[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/character_body_2d.tscn" id="1_u52ul"]
+[ext_resource type="Script" uid="uid://by5vglhrrsp8l" path="res://scenes/level.gd" id="1_mx8sn"]
+[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://dgpvp2bl1i61d" path="res://scenes/flower.tscn" id="2_w7c3h"]
+[ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="3_w8frs"]
 
 [node name="level" type="Node2D" unique_id=1662596204]
-
-[node name="CharacterBody2D" parent="." unique_id=558911984 instance=ExtResource("1_u52ul")]
-position = Vector2(-34, 6)
+script = ExtResource("1_mx8sn")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=665732631]
 zoom = Vector2(2, 2)
 
-[node name="Flower" parent="." unique_id=221364224 instance=ExtResource("2_w7c3h")]
+[node name="RedBeehive" type="Sprite2D" parent="." unique_id=1586166088]
+position = Vector2(-88, -3)
+texture = ExtResource("3_w8frs")
+
+[node name="FlowerSpawner" type="Timer" parent="." unique_id=1318573852]
+autostart = true
+
+[node name="Red_Flower" parent="FlowerSpawner" unique_id=221364224 instance=ExtResource("2_w7c3h")]
+
+[node name="Blue_Flower" parent="FlowerSpawner" unique_id=685865285 instance=ExtResource("2_w7c3h")]
+position = Vector2(1, -40)
+flower_color = "blue"
+
+[node name="Bees" parent="." unique_id=558911984 instance=ExtResource("1_u52ul")]
+position = Vector2(-39, -18)
+
+[node name="Bees2" parent="." unique_id=454362827 instance=ExtResource("1_u52ul")]
+position = Vector2(-38, 5)
+player_color = "blue"
+
+[connection signal="timeout" from="FlowerSpawner" to="." method="_on_flower_spawner_timeout"]

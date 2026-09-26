@@ -2,14 +2,43 @@
 
 [ext_resource type="Texture2D" uid="uid://ibhr3umxnw7k" path="res://art/Red_Flower.png" id="1_8x8dx"]
 [ext_resource type="Script" uid="uid://bltvd3fka7mrb" path="res://scripts/flower.gd" id="1_yoh7s"]
+[ext_resource type="Texture2D" uid="uid://bivs2ld4yylqj" path="res://art/Blue_Flower.png" id="2_agc10"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rqhtc"]
+atlas = ExtResource("2_agc10")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ym8cu"]
+atlas = ExtResource("1_8x8dx")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rqhtc")
+}],
+"loop": 1,
+"name": &"blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ym8cu")
+}],
+"loop": 1,
+"name": &"red",
+"speed": 5.0
+}]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f58d2"]
 
 [node name="Flower" type="Area2D" unique_id=221364224]
 script = ExtResource("1_yoh7s")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1686954063]
-texture = ExtResource("1_8x8dx")
+[node name="Color" type="AnimatedSprite2D" parent="." unique_id=1375704492]
+sprite_frames = SubResource("SpriteFrames_x7p88")
+animation = &"red"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1792918883]
 shape = SubResource("CapsuleShape2D_f58d2")

@@ -1,6 +1,9 @@
 class_name Player extends CharacterBody2D
 var speed: int = 100
 var direction: Vector2
+
+@export_enum("red", "blue") var player_color: String = "red"
+@onready var interaction: Area2D = $Area_Interact
 @onready var bee_animation: AnimatedSprite2D = $AnimatedSprite2D
 
 const ACTIONS = {
@@ -20,7 +23,7 @@ func _ready():
 			var ev := InputEventKey.new()
 			ev.physical_keycode = key
 			InputMap.action_add_event(action, ev)
-			
+	bee_animation.play(player_color)
 
 func movement(delta):
 	direction = Input.get_vector("move_left", "move_right", 'move_up', 'move_down')
@@ -28,7 +31,10 @@ func movement(delta):
 
 func interact():
 	if Input.is_action_just_pressed("interact"):
-		print("grap")
+		for area in interaction.get_overlapping_areas():
+			if area.has_method("interact") and area.interact(self):
+				print("interacted with: ", area.name)
+				break
 
 func animation():
 	if direction.x < 0:
@@ -37,7 +43,7 @@ func animation():
 		bee_animation.flip_h = false
 
 func _physics_process(delta: float) -> void:
-	animation()
 	interact()
+	animation()
 	movement(delta)
 	move_and_slide()
