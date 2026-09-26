@@ -1,3 +1,14 @@
 [gd_scene format=3 uid="uid://dfps2ajsxma4d"]
 
+[ext_resource type="Texture2D" uid="uid://dciyja7femgyp" path="res://Red_Bee.png" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://coq7i5wpuef4o" path="res://Red_Bee_(pollen).png" id="2_h2yge"]
+
 [node name="Main" type="Node2D" unique_id=1361628959]
+
+[node name="RedBee" type="Sprite2D" parent="." unique_id=1750135638]
+position = Vector2(154, 137)
+texture = ExtResource("1_0xm2m")
+
+[node name="RedBee(pollen)" type="Sprite2D" parent="." unique_id=1709794296]
+position = Vector2(285, 225)
+texture = ExtResource("2_h2yge")
