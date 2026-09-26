@@ -1,9 +1,0 @@
-[gd_scene format=3 uid="uid://dsegxlwwm1w67"]
-
-[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="1_ig7tw"]
-
-[node name="Main" type="Node2D" unique_id=1361628959]
-
-[node name="World" type="Node2D" parent="." unique_id=1782736975]
-
-[node name="CharacterBody2D" parent="World" unique_id=558911984 instance=ExtResource("1_ig7tw")]

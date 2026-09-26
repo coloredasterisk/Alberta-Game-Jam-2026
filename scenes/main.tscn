@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://colb7a5ytrq4o" path="res://main_theme.tres" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://b4xlfkqdhwlqf" path="res://scenes/world.gd" id="1_tbgi4"]
 [ext_resource type="Script" uid="uid://dy1l2xljudpey" path="res://scripts/title_screen.gd" id="2_0wfyh"]
-[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/player.tscn" id="2_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_py7os"]
 

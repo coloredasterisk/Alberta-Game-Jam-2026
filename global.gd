@@ -8,6 +8,8 @@ var num_to_art = [
 	
 ]
 
+
+
 const ACTIONS = {
 	
 	"p1_move_left":  KEY_A,
@@ -24,3 +26,11 @@ const ACTIONS = {
 
 }
 	
+
+func _ready() -> void:
+	for action in Global.ACTIONS.keys():
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+			var ev := InputEventKey.new()
+			ev.physical_keycode = Global.ACTIONS[action]
+			InputMap.action_add_event(action, ev)
