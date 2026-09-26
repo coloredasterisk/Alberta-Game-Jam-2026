@@ -28,6 +28,11 @@ window/size/window_height_override=1080
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
+[gui]
+
+theme/custom="uid://colb7a5ytrq4o"
+theme/custom_font="uid://wo31p2nbef7q"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

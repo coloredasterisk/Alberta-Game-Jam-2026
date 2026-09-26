@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bti365s467xvk"]
+
+[ext_resource type="Script" uid="uid://dsc64vy1c3nca" path="res://scripts/number_display.gd" id="1_t4r5x"]
+
+[node name="NumberDisplay" type="HBoxContainer" unique_id=1561342514]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_t4r5x")

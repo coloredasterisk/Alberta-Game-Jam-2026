@@ -1,0 +1,63 @@
+[gd_resource type="Theme" format=3 uid="uid://colb7a5ytrq4o"]
+
+[ext_resource type="FontFile" uid="uid://wo31p2nbef7q" path="res://pixelFJ8pt1-Modified.otf" id="1_470mv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_470mv"]
+bg_color = Color(0.498918, 0.40529555, 0.69070023, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.33097857, 0.25448936, 0.48302865, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g2brh"]
+bg_color = Color(0.62888676, 0.5474004, 0.8135541, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.48758757, 0.3957368, 0.6819928, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a2l2q"]
+bg_color = Color(0.7709475, 0.72285074, 0.89934015, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.58495486, 0.50169885, 0.77923095, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hd4y"]
+bg_color = Color(0.7010465, 0.5351341, 0.7049917, 1)
+
+[resource]
+Button/colors/font_color = Color(1, 0.92941177, 0.05490196, 1)
+Button/styles/hover = SubResource("StyleBoxFlat_470mv")
+Button/styles/normal = SubResource("StyleBoxFlat_g2brh")
+Button/styles/pressed = SubResource("StyleBoxFlat_a2l2q")
+Label/fonts/font = ExtResource("1_470mv")
+Panel/styles/panel = SubResource("StyleBoxFlat_2hd4y")
+RichTextLabel/fonts/normal_font = ExtResource("1_470mv")

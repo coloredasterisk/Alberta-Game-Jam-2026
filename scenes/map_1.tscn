@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://2elg8d45uxjs"]
+
+[ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="2_7xies"]
+
+[node name="Map1" type="Node2D" unique_id=585905906]
+
+[node name="RedBeehive" type="Sprite2D" parent="." unique_id=293841813]
+position = Vector2(79, -17)
+texture = ExtResource("2_7xies")

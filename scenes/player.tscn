@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cvw3y8fgoh4iw"]
+
+[ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player.gd" id="1_ij6vw"]
+[ext_resource type="Texture2D" uid="uid://d0ykg44156l0o" path="res://art/Red_Bee.png" id="2_g2brh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dn4c7"]
+atlas = ExtResource("2_g2brh")
+region = Rect2(0, 0, 15, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vejd"]
+atlas = ExtResource("2_g2brh")
+region = Rect2(15, 0, 15, 13)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dn4c7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vejd")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"new_animation",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x7p88"]
+
+[node name="Player" type="CharacterBody2D" unique_id=558911984]
+script = ExtResource("1_ij6vw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1893458618]
+sprite_frames = SubResource("SpriteFrames_x7p88")
+autoplay = "default"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1951408223]
+shape = SubResource("CircleShape2D_x7p88")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1820678239]
+position_smoothing_enabled = true

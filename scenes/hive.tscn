@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://byfkdm40kje5f"]
 
-[ext_resource type="Script" uid="uid://c13u6afwud6qk" path="res://hive.gd" id="1_u1ead"]
+[ext_resource type="Script" uid="uid://c13u6afwud6qk" path="res://scripts/hive.gd" id="1_u1ead"]
 [ext_resource type="Texture2D" uid="uid://dmh0sbq2u4wci" path="res://art/Blue_Beehive.png" id="2_1m1dw"]
 [ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="3_6xwxf"]
 
@@ -32,7 +32,7 @@ script = ExtResource("1_u1ead")
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=699097792]
 position = Vector2(0, -11)
 sprite_frames = SubResource("SpriteFrames_py7os")
-animation = &"blue"
+animation = &"red"
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1620438514]
 

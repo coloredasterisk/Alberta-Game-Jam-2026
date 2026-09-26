@@ -1,4 +1,6 @@
 class_name Player extends CharacterBody2D
+@export var player_index = 1
+
 var speed: int = 100
 var direction: Vector2
 
@@ -6,35 +8,18 @@ var direction: Vector2
 @onready var interaction: Area2D = $Area_Interact
 @onready var bee_animation: AnimatedSprite2D = $AnimatedSprite2D
 
-const ACTIONS = {
-	"move_left":  [KEY_A, KEY_LEFT],
-	"move_right": [KEY_D, KEY_RIGHT],
-	"move_up":    [KEY_W, KEY_UP],
-	"move_down":  [KEY_S, KEY_DOWN],
-	"jump":       [KEY_SPACE],
-	"interact": [KEY_E, KEY_ENTER]
-}
 
 func _ready():
-	for action in ACTIONS:
-		if not InputMap.has_action(action):
-			InputMap.add_action(action)
-		for key in ACTIONS[action]:
-			var ev := InputEventKey.new()
-			ev.physical_keycode = key
-			InputMap.action_add_event(action, ev)
-	bee_animation.play(player_color)
+	pass
+			
 
 func movement(delta):
-	direction = Input.get_vector("move_left", "move_right", 'move_up', 'move_down')
+	direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	velocity = direction * speed
 
 func interact():
-	if Input.is_action_just_pressed("interact"):
-		for area in interaction.get_overlapping_areas():
-			if area.has_method("interact") and area.interact(self):
-				print("interacted with: ", area.name)
-				break
+	if Input.is_action_just_pressed("p%d_interact" % player_index):
+		print("grap")
 
 func animation():
 	if direction.x < 0:
