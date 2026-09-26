@@ -7,4 +7,3 @@
 [node name="World" type="Node2D" parent="." unique_id=1782736975]
 
 [node name="CharacterBody2D" parent="World" unique_id=558911984 instance=ExtResource("1_ig7tw")]
-position = Vector2(66, 65)
