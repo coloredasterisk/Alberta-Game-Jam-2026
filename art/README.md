@@ -1,0 +1,1 @@
+Art assets for Alberta Game Jam 2026
