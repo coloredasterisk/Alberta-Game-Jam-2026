@@ -1,8 +1,26 @@
 [gd_scene format=3 uid="uid://bti365s467xvk"]
 
 [ext_resource type="Script" uid="uid://dsc64vy1c3nca" path="res://scripts/number_display.gd" id="1_t4r5x"]
+[ext_resource type="Texture2D" uid="uid://dlvgvfgbi4jjc" path="res://art/numbers/0.png" id="2_vut1w"]
 
 [node name="NumberDisplay" type="HBoxContainer" unique_id=1561342514]
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 23.0
+offset_bottom = 9.0
+theme_override_constants/separation = 2
 script = ExtResource("1_t4r5x")
+
+[node name="Digit" type="TextureRect" parent="." unique_id=737354739]
+layout_mode = 2
+texture = ExtResource("2_vut1w")
+
+[node name="Digit2" type="TextureRect" parent="." unique_id=1811392318]
+layout_mode = 2
+texture = ExtResource("2_vut1w")
+
+[node name="Digit3" type="TextureRect" parent="." unique_id=590739836]
+layout_mode = 2
+texture = ExtResource("2_vut1w")
+
+[node name="Digit4" type="TextureRect" parent="." unique_id=2058620192]
+layout_mode = 2
+texture = ExtResource("2_vut1w")
