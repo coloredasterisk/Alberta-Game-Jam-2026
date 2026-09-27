@@ -12,5 +12,6 @@ func update_display(num : int) -> void:
 		if count >= str_num.length():
 			child.visible = false
 			continue
+		child.visible = true
 		child.texture = Global.num_to_art[int(str_num[count])]
 		count += 1

@@ -1,8 +1,9 @@
 extends Node
 
-
+var original_max_capacity: int = 5
 var win_amount = 10
 var max_time = 60
+
 
 var num_to_art = [
 	preload("res://art/numbers/0.png"),

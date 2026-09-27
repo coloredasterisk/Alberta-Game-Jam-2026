@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bgycq7fv61ta4"]
+
+[ext_resource type="Texture2D" uid="uid://diu4kcghal7ke" path="res://art/Flower_Pot.png" id="1_lx5au"]
+[ext_resource type="Script" uid="uid://cgq23bpe8x2bu" path="res://scenes/shop.gd" id="1_xfvoa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7p88"]
+size = Vector2(34, 24)
+
+[node name="Shop" type="Area2D" unique_id=1784644030]
+script = ExtResource("1_xfvoa")
+
+[node name="Shop_Icon\'" type="Sprite2D" parent="." unique_id=680922733]
+texture = ExtResource("1_lx5au")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498266263]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_x7p88")
