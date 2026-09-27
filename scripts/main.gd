@@ -25,6 +25,9 @@ const SNAPSHOT_SEC := 1.0 / 30.0
 @onready var _code_label: RichTextLabel = $CanvasLayer/Screens/PlayerSetup/Code
 @onready var _player_setup_screen: Control = $CanvasLayer/Screens/PlayerSetup
 @onready var _tutorial_screen: Control = $CanvasLayer/Screens/TutorialScreen
+## Full-screen menu background. It stays below Screens and is hidden at the
+## exact moment the arena becomes interactive.
+@onready var _golden_bloom: GoldenBloomValleyController = $CanvasLayer/GoldenBloomValley
 @onready var _player_labels: Array[RichTextLabel] = [
 	$CanvasLayer/Screens/PlayerSetup/PlayerList/Player1,
 	$CanvasLayer/Screens/PlayerSetup/PlayerList/Player2,
@@ -192,6 +195,7 @@ func _leave() -> void:
 func _show_lobby(preloading = false) -> void:
 	in_lobby = true
 	_phase = Phase.LOBBY
+	_golden_bloom.visible = true
 	_show_player_setup(preloading)
 	$CanvasLayer.visible = true
 	world.visible = false
@@ -223,6 +227,7 @@ func _enter_playing() -> void:
 	update_split_screen()
 	in_lobby = false
 	_waiting_to_start = false
+	_golden_bloom.visible = false
 	$CanvasLayer/Screens.visible = false
 	world.visible = true
 	$CanvasLayer/HUD.visible = true
@@ -274,6 +279,7 @@ func _on_phone_button(id: int, button: StringName) -> void:
 
 
 func _refresh_names() -> void:
+	var joined_count := 0
 	for i in _player_labels.size():
 		if i >= players.size():
 			_player_labels[i].visible = false
@@ -289,6 +295,11 @@ func _refresh_names() -> void:
 				is_ready = i == 0 or (_guest != null and _guest.is_connected_to_host())
 		var status := players[i].username if is_ready and players[i].username != "" else ("Ready" if is_ready else "Empty")
 		_player_labels[i].text = "Player %d - %s" % [i + 1, status]
+		if is_ready:
+			joined_count += 1
+	# The concept has four rival hives; additional supported player slots still
+	# work normally but intentionally do not add more background hive lights.
+	_golden_bloom.set_joined_players(mini(joined_count, 4))
 
 
 ## Everyone has a slot: show the tutorial and wait for each player to press a button.
@@ -323,6 +334,8 @@ func _show_tutorial() -> void:
 		else:
 			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).text = "[center]" + players[i].username + "\nWaiting"
 			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).visible = true
+	for i in 4:
+		_golden_bloom.set_player_ready(i, false)
 
 
 func _show_player_setup(preloading = false) -> void:
@@ -335,6 +348,8 @@ func _mark_ready(slot: int) -> void:
 	if slot < 0 or slot >= _ready_to_start.size() or _ready_to_start[slot]:
 		return
 	_ready_to_start[slot] = true
+	if slot < 4:
+		_golden_bloom.set_player_ready(slot, true)
 	$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(slot+1)).text = "[center]" + players[slot].username + "\nReady!"
 	if _ready_to_start.all(func(r: bool) -> bool: return r):
 		_start_match()

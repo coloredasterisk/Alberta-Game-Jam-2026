@@ -13,6 +13,8 @@
 [ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scripts/input.gd" id="11_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
 [ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
+[ext_resource type="Material" path="res://resources/golden_bloom_valley_material.tres" id="12_golden_bloom"]
+[ext_resource type="Script" path="res://scripts/golden_bloom_valley_controller.gd" id="12_golden_controller"]
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
@@ -258,6 +260,27 @@ player_index = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
 script = ExtResource("4_tipki")
+
+[node name="GoldenBloomValley" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("12_golden_controller")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/GoldenBloomValley"]
+material = ExtResource("12_golden_bloom")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
 
 [node name="Screens" type="TabContainer" parent="CanvasLayer" unique_id=643847560]
 offset_right = 640.0
