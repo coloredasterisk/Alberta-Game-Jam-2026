@@ -22,6 +22,9 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_py7os"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ld40"]
+bg_color = Color(0.7019608, 0.53333336, 0.7058824, 0.14901961)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py7os"]
 bg_color = Color(0.1254902, 0.03529412, 0.13725491, 0.8980392)
 
@@ -79,8 +82,11 @@ animations = [{
 script = ExtResource("1_tipki")
 
 [node name="World" type="Panel" parent="." unique_id=1789398444]
-offset_right = 640.0
-offset_bottom = 360.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_tbgi4")
 
 [node name="Player1" type="SubViewportContainer" parent="World" unique_id=399490160]
@@ -255,21 +261,21 @@ player_index = 2
 script = ExtResource("4_tipki")
 
 [node name="Screens" type="TabContainer" parent="CanvasLayer" unique_id=643847560]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 640.0
+offset_bottom = 360.0
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 0
+current_tab = 6
 tabs_visible = false
 deselect_enabled = true
 script = ExtResource("7_85g3d")
 
-[node name="TitleScreen" type="Control" parent="CanvasLayer/Screens" unique_id=1018211508]
+[node name="TitleScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=1965919025]
+visible = false
+custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0ld40")
 script = ExtResource("2_0wfyh")
 metadata/_tab_index = 0
 
@@ -748,7 +754,6 @@ grow_vertical = 2
 text = "Back"
 
 [node name="EnterCode" type="Control" parent="CanvasLayer/Screens" unique_id=342267924]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
@@ -793,9 +798,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -125.0
+offset_left = -101.5
 offset_top = -46.0
-offset_right = 125.0
+offset_right = 101.5
 offset_bottom = 46.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -836,13 +841,11 @@ layout_mode = 2
 text = "Submit"
 
 [node name="HUD" type="Control" parent="CanvasLayer" unique_id=1440550048]
-visible = false
+custom_minimum_size = Vector2(640, 360)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
 
 [node name="TimerDisplay" type="Panel" parent="CanvasLayer/HUD" unique_id=1779309656]
 layout_mode = 1
@@ -884,19 +887,25 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -10.0
+offset_left = -11.0
 offset_top = -5.0
-offset_right = 16.0
+offset_right = 15.0
 offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Player" type="GridContainer" parent="CanvasLayer/HUD" unique_id=86557914]
-layout_mode = 0
-offset_left = 278.0
-offset_top = 139.0
-offset_right = 318.0
-offset_bottom = 179.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -42.0
+offset_top = -40.0
+offset_right = 4.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/h_separation = 46
 theme_override_constants/v_separation = 40
 columns = 2
@@ -936,9 +945,9 @@ texture = ExtResource("14_0ld40")
 [node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1828275000]
 layout_mode = 0
 offset_left = 21.0
-offset_top = 8.0
+offset_top = 9.0
 offset_right = 42.0
-offset_bottom = 17.0
+offset_bottom = 18.0
 theme_override_font_sizes/normal_font_size = 8
 text = "000"
 
