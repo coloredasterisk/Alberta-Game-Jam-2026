@@ -198,6 +198,8 @@ func _show_lobby(preloading = false) -> void:
 	_golden_bloom.visible = true
 	_show_player_setup(preloading)
 	$CanvasLayer.visible = true
+	$CanvasLayer/Screens.visible = true
+	$CanvasLayer/HUD.visible = false
 	world.visible = false
 	_refresh_names()
 

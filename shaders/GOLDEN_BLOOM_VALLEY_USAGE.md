@@ -11,8 +11,11 @@ motion; the original repository PNGs remain nearest-neighbour pixel art.
 ## Add to a menu
 
 The project's main scene is already integrated: `CanvasLayer/GoldenBloomValley`
-renders beneath every pre-game tab and `scripts/main.gd` hides it in
-`_enter_playing()`, immediately before the arena becomes interactive.
+renders beneath the title, local/online selection, player-count selection,
+session creation/join, player setup, and tutorial/readiness tabs. Their panels
+use transparent or semi-transparent overlays so the background remains visible.
+`scripts/main.gd` restores this complete layer in `_show_lobby()` and hides it
+only in `_enter_playing()`, immediately before the arena becomes interactive.
 
 For another scene:
 
