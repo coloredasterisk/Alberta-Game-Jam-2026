@@ -5,15 +5,27 @@ enum FlowerState {BULB, GROW, BLOOM}
 var current_state
 var can_give_pollen: bool = true
 
+@onready var bloom_color: AnimatedSprite2D = $Color
+@onready var bloom_outline: Sprite2D = $bloom_outline
+@onready var bulb_color: AnimatedSprite2D = $bulb_color
+@onready var bulb_outline: Sprite2D = $bulb_outline
+
 func _ready():
 	current_state = FlowerState.BLOOM
-	$Color.play(flower_color)
+	bloom_outline.modulate = Global.modulate_color[flower_color]
+	bloom_color.play(flower_color)
+	bulb_outline.modulate = Global.modulate_color[flower_color]
+	bulb_color.play(flower_color)
 
 func interact(player) -> bool:
 	if player.player_color != flower_color or player.nectar >= player.current_nectar_capacity:
 		return false
 	if current_state == FlowerState.BLOOM:
 		current_state = FlowerState.BULB
+		bloom_color.hide()
+		bloom_outline.hide()
+		bulb_color.show()
+		bulb_outline.show()
 		$Growing_Cooldown.start()
 		print(current_state)
 		player.nectar += 1
@@ -21,8 +33,9 @@ func interact(player) -> bool:
 	elif current_state == FlowerState.BULB and player.pollen_counter == 4:
 		current_state = FlowerState.GROW
 		player.pollen_counter = 0
-		$Pollen_Growth_Cooldown.start()
 		$Growing_Cooldown.stop()
+		$Pollen_Growth_Cooldown.start()
+		
 		print("you changed to grow ", current_state)
 	return true
 
@@ -37,9 +50,17 @@ func pollen(player) -> bool:
 
 func _on_growing_cooldown_timeout() -> void:
 	current_state = FlowerState.BLOOM
+	bloom_color.show()
+	bloom_outline.show()
+	bulb_color.hide()
+	bulb_outline.hide()
 	print(current_state, "flower grown")
 
 
 func _on_pollen_growth_cooldown_timeout() -> void:
 	current_state = FlowerState.BLOOM
+	bloom_color.show()
+	bloom_outline.show()
+	bulb_color.hide()
+	bulb_outline.hide()
 	print(current_state, "flower grown")

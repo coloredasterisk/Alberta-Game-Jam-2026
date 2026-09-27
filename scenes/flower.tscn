@@ -3,14 +3,26 @@
 [ext_resource type="Texture2D" uid="uid://ibhr3umxnw7k" path="res://art/Red_Flower.png" id="1_8x8dx"]
 [ext_resource type="Script" uid="uid://bltvd3fka7mrb" path="res://scripts/flower.gd" id="1_yoh7s"]
 [ext_resource type="Texture2D" uid="uid://bivs2ld4yylqj" path="res://art/Blue_Flower.png" id="2_agc10"]
+[ext_resource type="Texture2D" uid="uid://fdhyq7spn3dc" path="res://art/Mono_Flower.png" id="3_ym8cu"]
+[ext_resource type="Texture2D" uid="uid://cj1wo7erowj1s" path="res://art/Mono_Flower-outline.png" id="4_rqhtc"]
+[ext_resource type="Texture2D" uid="uid://dlsdc6jiqvblr" path="res://art/Mono_Flower_Bulb.png" id="6_bv3ss"]
+[ext_resource type="Texture2D" uid="uid://n1pqwchjf0at" path="res://art/Mono_Flower_Bulb-outline.png" id="7_vlpni"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rqhtc"]
 atlas = ExtResource("2_agc10")
 region = Rect2(0, 0, 21, 33)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bv3ss"]
+atlas = ExtResource("3_ym8cu")
+region = Rect2(0, 0, 23, 33)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_ym8cu"]
 atlas = ExtResource("1_8x8dx")
 region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vlpni"]
+atlas = ExtResource("3_ym8cu")
+region = Rect2(0, 0, 23, 33)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
 animations = [{
@@ -24,21 +36,88 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bv3ss")
+}],
+"loop": 1,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_ym8cu")
 }],
 "loop": 1,
 "name": &"red",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vlpni")
+}],
+"loop": 1,
+"name": &"yellow",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f58d2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17csd"]
+atlas = ExtResource("6_bv3ss")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tucwa"]
+atlas = ExtResource("6_bv3ss")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jm4k8"]
+atlas = ExtResource("6_bv3ss")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_34oqi"]
+atlas = ExtResource("6_bv3ss")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f6auw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_17csd")
+}],
+"loop": 1,
+"name": &"blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tucwa")
+}],
+"loop": 1,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jm4k8")
+}],
+"loop": 1,
+"name": &"red",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_34oqi")
+}],
+"loop": 1,
+"name": &"yellow",
+"speed": 5.0
+}]
 
 [node name="Flower" type="Area2D" unique_id=221364224]
 script = ExtResource("1_yoh7s")
 
 [node name="Color" type="AnimatedSprite2D" parent="." unique_id=1375704492]
 sprite_frames = SubResource("SpriteFrames_x7p88")
-animation = &"red"
+animation = &"yellow"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1792918883]
 shape = SubResource("CapsuleShape2D_f58d2")
@@ -50,6 +129,18 @@ one_shot = true
 [node name="Pollen_Growth_Cooldown" type="Timer" parent="." unique_id=926487611]
 wait_time = 3.0
 one_shot = true
+
+[node name="bulb_color" type="AnimatedSprite2D" parent="." unique_id=399451848]
+visible = false
+sprite_frames = SubResource("SpriteFrames_f6auw")
+animation = &"yellow"
+
+[node name="bulb_outline" type="Sprite2D" parent="." unique_id=495926151]
+visible = false
+texture = ExtResource("7_vlpni")
+
+[node name="bloom_outline" type="Sprite2D" parent="." unique_id=608064076]
+texture = ExtResource("4_rqhtc")
 
 [connection signal="timeout" from="Growing_Cooldown" to="." method="_on_growing_cooldown_timeout"]
 [connection signal="timeout" from="Pollen_Growth_Cooldown" to="." method="_on_pollen_growth_cooldown_timeout"]

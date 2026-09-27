@@ -84,16 +84,24 @@ position = Vector2(-112, 1)
 autostart = true
 
 [node name="Red_Flower" parent="FlowerSpawner" unique_id=221364224 instance=ExtResource("2_w7c3h")]
-position = Vector2(-81, 21)
+position = Vector2(-95, 28)
+
+[node name="Red_Flower2" parent="FlowerSpawner" unique_id=709155921 instance=ExtResource("2_w7c3h")]
+position = Vector2(-118, 47)
+
+[node name="Red_Flower4" parent="FlowerSpawner" unique_id=106349283 instance=ExtResource("2_w7c3h")]
+position = Vector2(-90, 66)
+
+[node name="Red_Flower3" parent="FlowerSpawner" unique_id=888916995 instance=ExtResource("2_w7c3h")]
+position = Vector2(-68, 42)
 
 [node name="Blue_Flower" parent="FlowerSpawner" unique_id=685865285 instance=ExtResource("2_w7c3h")]
-position = Vector2(90, -8)
+position = Vector2(-57, 1)
 flower_color = "blue"
 
 [node name="RoundTimer" type="Timer" parent="." unique_id=117652426]
 wait_time = 5.0
 one_shot = true
-autostart = true
 
 [connection signal="body_entered" from="Shop" to="Shop" method="_on_body_entered"]
 [connection signal="body_exited" from="Shop" to="Shop" method="_on_body_exited"]
