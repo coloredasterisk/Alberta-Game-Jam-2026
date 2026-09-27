@@ -23,6 +23,16 @@ backplate. It does not touch buttons, the gameplay HUD, or the scenery outside
 each text label's bounds. The backplate expands outward, so it never changes the
 label's internal text rectangle. Page headings, player statuses, and session
 codes are centred; multi-line tutorial body copy remains left-aligned.
+Single-line labels are vertically centred, major heading rectangles are sized
+to their copy rather than the full viewport, and the tutorial body backplate
+uses its content height instead of leaving a large empty dark area.
+
+Pre-game UI frames are generated separately in `scripts/main.gd`; they do not
+alter or depend on this shader. The main `HONEY & MONEY` title uses the ornate
+Royal Hive frame, while all other pre-game labels and buttons use the simpler
+Honey Frame. Buttons receive matching hover, focus, and pressed states.
+Player lobby/readiness text uses brighter team colours on neutral frames so the
+blue, red, and green states remain readable without tinting their backplates.
 
 For another scene:
 
