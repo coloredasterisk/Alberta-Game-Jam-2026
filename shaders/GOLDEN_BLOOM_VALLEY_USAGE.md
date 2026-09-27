@@ -17,6 +17,11 @@ use transparent or semi-transparent overlays so the background remains visible.
 `scripts/main.gd` restores this complete layer in `_show_lobby()` and hides it
 only in `_enter_playing()`, immediately before the arena becomes interactive.
 
+For readability, `_apply_pregame_text_contrast()` gives every free-standing
+`RichTextLabel` under `CanvasLayer/Screens` a localized translucent dark
+backplate. It does not touch buttons, the gameplay HUD, or the scenery outside
+each text label's bounds.
+
 For another scene:
 
 1. Add a `ColorRect` as the first child of the menu root.

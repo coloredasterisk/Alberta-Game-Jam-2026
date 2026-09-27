@@ -57,7 +57,25 @@ var _session_started := false
 
 
 func _ready() -> void:
+	_apply_pregame_text_contrast()
 	_show_lobby(true)
+
+
+## Adds a localized dark backplate to every free-standing RichTextLabel in the
+## pre-game screen tree. Buttons already provide their own contrast, and the HUD
+## is outside Screens, so gameplay visuals remain completely unchanged.
+func _apply_pregame_text_contrast() -> void:
+	var backdrop := StyleBoxFlat.new()
+	backdrop.bg_color = Color(0.025, 0.035, 0.07, 0.68)
+	backdrop.set_corner_radius_all(3)
+	backdrop.content_margin_left = 4.0
+	backdrop.content_margin_top = 3.0
+	backdrop.content_margin_right = 4.0
+	backdrop.content_margin_bottom = 3.0
+
+	for node in $CanvasLayer/Screens.find_children("*", "RichTextLabel", true, false):
+		var label := node as RichTextLabel
+		label.add_theme_stylebox_override("normal", backdrop.duplicate())
 
 
 ## Starts phone-controller / relay networking for Session.mode. Called once the player finishes
