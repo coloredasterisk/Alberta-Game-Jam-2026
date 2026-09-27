@@ -68,10 +68,12 @@ func _apply_pregame_text_contrast() -> void:
 	var backdrop := StyleBoxFlat.new()
 	backdrop.bg_color = Color(0.025, 0.035, 0.07, 0.68)
 	backdrop.set_corner_radius_all(3)
-	backdrop.content_margin_left = 4.0
-	backdrop.content_margin_top = 3.0
-	backdrop.content_margin_right = 4.0
-	backdrop.content_margin_bottom = 3.0
+	# Expand outside the existing control rectangle. Content margins would make
+	# the usable text box smaller and can shift or clip carefully aligned labels.
+	backdrop.expand_margin_left = 4.0
+	backdrop.expand_margin_top = 3.0
+	backdrop.expand_margin_right = 4.0
+	backdrop.expand_margin_bottom = 3.0
 
 	for node in $CanvasLayer/Screens.find_children("*", "RichTextLabel", true, false):
 		var label := node as RichTextLabel
@@ -314,7 +316,7 @@ func _refresh_names() -> void:
 			Session.Mode.ONLINE_GUEST:
 				is_ready = i == 0 or (_guest != null and _guest.is_connected_to_host())
 		var status := players[i].username if is_ready and players[i].username != "" else ("Ready" if is_ready else "Empty")
-		_player_labels[i].text = "Player %d - %s" % [i + 1, status]
+		_player_labels[i].text = "[center]Player %d - %s" % [i + 1, status]
 		if is_ready:
 			joined_count += 1
 	# The concept has four rival hives; additional supported player slots still
@@ -380,10 +382,10 @@ func _update_join_info() -> void:
 		Session.Mode.LOCAL:
 			if PhoneControllers.can_join:
 				_qr_rect.texture = PhoneControllers.make_qr_texture(10) 
-				_code_label.text = "Scan to join!\n\nOr input the code: " + PhoneControllers.session_code
+				_set_code_label("Scan to join!\n\nOr input the code: " + PhoneControllers.session_code)
 			else:
 				_qr_rect.texture = null
-				_code_label.text = PhoneControllers.status_message
+				_set_code_label(PhoneControllers.status_message)
 		Session.Mode.ONLINE_HOST:
 			if PhoneControllers.can_join:
 				var code := PhoneControllers.session_code
@@ -391,13 +393,18 @@ func _update_join_info() -> void:
 				# by the relay. Session.invite_url(code) would open the whole game on the phone
 				# instead (the ONLINE_GUEST path, which friends reach with Join + this code).
 				_qr_rect.texture = PhoneControllers.make_qr_texture(10)
-				_code_label.text = "Host Match Code: %s" % code
+				_set_code_label("Host Match Code: %s" % code)
 			else:
 				_qr_rect.texture = null
-				_code_label.text = "Creating a match…"
+				_set_code_label("Creating a match…")
 		Session.Mode.ONLINE_GUEST:
 			_qr_rect.texture = null
-			_code_label.text = "Joining match %s…" % Session.join_code
+			_set_code_label("Joining match %s…" % Session.join_code)
+
+
+## Player-setup code/status copy is always centred in its right-hand column.
+func _set_code_label(value: String) -> void:
+	_code_label.text = "[center]" + value
 
 
 # --- Online: host ------------------------------------------------------------
@@ -457,7 +464,7 @@ func _send_guest_input() -> void:
 
 func _on_host_message(msg: Dictionary) -> void:
 	if str(msg.get("t", "")) == "msg":
-		_code_label.text = str(msg.get("text", ""))
+		_set_code_label(str(msg.get("text", "")))
 
 
 func _on_snapshot(msg: Dictionary) -> void:

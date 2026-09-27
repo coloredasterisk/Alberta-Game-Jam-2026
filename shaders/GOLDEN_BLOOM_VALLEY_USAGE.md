@@ -20,7 +20,9 @@ only in `_enter_playing()`, immediately before the arena becomes interactive.
 For readability, `_apply_pregame_text_contrast()` gives every free-standing
 `RichTextLabel` under `CanvasLayer/Screens` a localized translucent dark
 backplate. It does not touch buttons, the gameplay HUD, or the scenery outside
-each text label's bounds.
+each text label's bounds. The backplate expands outward, so it never changes the
+label's internal text rectangle. Page headings, player statuses, and session
+codes are centred; multi-line tutorial body copy remains left-aligned.
 
 For another scene:
 
