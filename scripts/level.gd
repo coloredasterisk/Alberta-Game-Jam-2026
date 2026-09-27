@@ -52,4 +52,17 @@ func _on_flower_spawner_timeout() -> void:
 
 
 func _on_round_timer_timeout() -> void:
-	pass # Replace with function body.
+	var hives = get_tree().get_nodes_in_group("hives")
+	hives.sort_custom(func(a, b): return a.current_amount > b.current_amount)
+
+	var place := 0
+	for i in hives.size():
+		# only move down a place if this hive has less than the one before it
+		if i == 0 or hives[i].current_amount < hives[i - 1].current_amount:
+			place = i + 1
+		print(place_name(place), ": ", hives[i].color, " with ", hives[i].current_amount, " nectar")
+
+	get_tree().paused = true
+
+func place_name(place: int) -> String:
+	return ["1st", "2nd", "3rd", "4th"][place - 1]

@@ -44,6 +44,12 @@ animation = &"red"
 shape = SubResource("CapsuleShape2D_f58d2")
 
 [node name="Growing_Cooldown" type="Timer" parent="." unique_id=517442327]
+wait_time = 10.0
+one_shot = true
+
+[node name="Pollen_Growth_Cooldown" type="Timer" parent="." unique_id=926487611]
+wait_time = 3.0
 one_shot = true
 
 [connection signal="timeout" from="Growing_Cooldown" to="." method="_on_growing_cooldown_timeout"]
+[connection signal="timeout" from="Pollen_Growth_Cooldown" to="." method="_on_pollen_growth_cooldown_timeout"]

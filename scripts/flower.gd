@@ -14,13 +14,15 @@ func interact(player) -> bool:
 		return false
 	if current_state == FlowerState.BLOOM:
 		current_state = FlowerState.BULB
+		$Growing_Cooldown.start()
 		print(current_state)
 		player.nectar += 1
 		print("picked! nectar counter: ", player.nectar)
 	elif current_state == FlowerState.BULB and player.pollen_counter == 4:
 		current_state = FlowerState.GROW
 		player.pollen_counter = 0
-		$Growing_Cooldown.start()
+		$Pollen_Growth_Cooldown.start()
+		$Growing_Cooldown.stop()
 		print("you changed to grow ", current_state)
 	return true
 
@@ -34,5 +36,10 @@ func pollen(player) -> bool:
 	return true
 
 func _on_growing_cooldown_timeout() -> void:
+	current_state = FlowerState.BLOOM
+	print(current_state, "flower grown")
+
+
+func _on_pollen_growth_cooldown_timeout() -> void:
 	current_state = FlowerState.BLOOM
 	print(current_state, "flower grown")
