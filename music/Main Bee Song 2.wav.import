@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cbri8tv6xim0u"
+path="res://.godot/imported/Main Bee Song 2.wav-5c83d1bf468b2b9265b53bf4ec6db8ae.sample"
+
+[deps]
+
+source_file="res://music/Main Bee Song 2.wav"
+dest_files=["res://.godot/imported/Main Bee Song 2.wav-5c83d1bf468b2b9265b53bf4ec6db8ae.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
