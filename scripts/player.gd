@@ -120,12 +120,13 @@ func stinger():
 	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
 	blink.tween_property($Rainbow_Effect, "modulate:a", 0.3, 0.3)
 	blink.tween_property($Rainbow_Effect, "modulate:a", 1.0, 0.3)
-	var sfx = preload("res://scenes/one_shot.tscn")
+	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
 	sfx.stream = preload("res://Rainbow Stinger Powerup.wav")
 	add_child(sfx)
 	await get_tree().create_timer(Global.stinger_duration).timeout
 	blink.kill()
-	sfx.queue_free()
+	if is_instance_valid(sfx):  # OneShot frees itself when the sound ends
+		sfx.queue_free()
 	has_stinger = false
 
 func get_stung(attacker: Player):
