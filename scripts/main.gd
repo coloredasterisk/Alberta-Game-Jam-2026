@@ -352,7 +352,10 @@ func _update_join_info() -> void:
 		Session.Mode.ONLINE_HOST:
 			if PhoneControllers.can_join:
 				var code := PhoneControllers.session_code
-				_qr_rect.texture = QrCode.make_texture(Session.invite_url(code), 8)
+				# Phones scan into the controller page (name entry, INTERACT, player view), served
+				# by the relay. Session.invite_url(code) would open the whole game on the phone
+				# instead (the ONLINE_GUEST path, which friends reach with Join + this code).
+				_qr_rect.texture = PhoneControllers.make_qr_texture(10)
 				_code_label.text = "Host Match Code: %s" % code
 			else:
 				_qr_rect.texture = null
