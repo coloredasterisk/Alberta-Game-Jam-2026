@@ -66,6 +66,7 @@ func _ready() -> void:
 func _apply_pregame_text_contrast() -> void:
 	var honey_backdrop := _create_pixel_panel(false, false, false)
 	var royal_title := _create_pixel_panel(true, false, false)
+	var compact_player_backdrop := _create_pixel_panel(false, false, false, true)
 	var game_title := $CanvasLayer/Screens/TitleScreen/RichTextLabel as RichTextLabel
 
 	for node in $CanvasLayer/Screens.find_children("*", "RichTextLabel", true, false):
@@ -109,6 +110,8 @@ func _apply_pregame_text_contrast() -> void:
 		for label in [lobby_label, ready_label]:
 			label.modulate = Color.WHITE
 			label.add_theme_color_override("default_color", player_colours[i])
+			label.add_theme_font_size_override("normal_font_size", 10)
+			label.add_theme_stylebox_override("normal", compact_player_backdrop.duplicate())
 
 
 ## Creates the pre-game frames from pixels at runtime. This keeps the styling
@@ -116,7 +119,12 @@ func _apply_pregame_text_contrast() -> void:
 ## shader. `royal` is reserved for the main game title; all other labels and
 ## buttons use the simpler Honey Frame. Hover/pressed variants only alter the
 ## Honey Frame colours, never its geometry or layout.
-func _create_pixel_panel(royal: bool, hovered: bool, pressed: bool) -> StyleBoxTexture:
+func _create_pixel_panel(
+	royal: bool,
+	hovered: bool,
+	pressed: bool,
+	compact: bool = false,
+) -> StyleBoxTexture:
 	const SIZE := 32
 	var image := Image.create(SIZE, SIZE, false, Image.FORMAT_RGBA8)
 	image.fill(Color.TRANSPARENT)
@@ -147,14 +155,15 @@ func _create_pixel_panel(royal: bool, hovered: bool, pressed: bool) -> StyleBoxT
 
 	var panel := StyleBoxTexture.new()
 	panel.texture = ImageTexture.create_from_image(image)
-	panel.texture_margin_left = 10.0
-	panel.texture_margin_top = 10.0
-	panel.texture_margin_right = 10.0
-	panel.texture_margin_bottom = 10.0
-	panel.expand_margin_left = 6.0 if royal else 4.0
-	panel.expand_margin_top = 4.0 if royal else 3.0
-	panel.expand_margin_right = 6.0 if royal else 4.0
-	panel.expand_margin_bottom = 4.0 if royal else 3.0
+	var slice_margin := 5.0 if compact else 10.0
+	panel.texture_margin_left = slice_margin
+	panel.texture_margin_top = slice_margin
+	panel.texture_margin_right = slice_margin
+	panel.texture_margin_bottom = slice_margin
+	panel.expand_margin_left = 2.0 if compact else (6.0 if royal else 4.0)
+	panel.expand_margin_top = 1.0 if compact else (4.0 if royal else 3.0)
+	panel.expand_margin_right = 2.0 if compact else (6.0 if royal else 4.0)
+	panel.expand_margin_bottom = 1.0 if compact else (4.0 if royal else 3.0)
 	return panel
 
 

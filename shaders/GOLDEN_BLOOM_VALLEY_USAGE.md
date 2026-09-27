@@ -33,6 +33,8 @@ Royal Hive frame, while all other pre-game labels and buttons use the simpler
 Honey Frame. Buttons receive matching hover, focus, and pressed states.
 Player lobby/readiness text uses brighter team colours on neutral frames so the
 blue, red, and green states remain readable without tinting their backplates.
+Those repeated status rows use a compact version of the same Honey Frame so all
+six players and the `Players` heading fit without overlap at 640×360.
 
 For another scene:
 
