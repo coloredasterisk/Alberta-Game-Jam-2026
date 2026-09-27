@@ -1,17 +1,72 @@
 [gd_scene format=3 uid="uid://bgycq7fv61ta4"]
 
-[ext_resource type="Script" uid="uid://cgq23bpe8x2bu" path="res://scenes/shop.gd" id="1_xfvoa"]
+[ext_resource type="Script" uid="uid://cgq23bpe8x2bu" path="res://scripts/shop.gd" id="1_xfvoa"]
+[ext_resource type="PackedScene" uid="uid://b3o8dub4bgkxy" path="res://scenes/interactable_powerup.tscn" id="2_1l46r"]
 [ext_resource type="Texture2D" uid="uid://dk6xkuixlnj8y" path="res://art/Shop.png" id="2_xfvoa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x7p88"]
 size = Vector2(34, 24)
 
-[node name="Shop" type="Area2D" unique_id=1784644030]
+[node name="Shop" type="Area2D" unique_id=1194599816]
+z_index = 5
 script = ExtResource("1_xfvoa")
 
-[node name="Shop_Icon" type="Sprite2D" parent="." unique_id=680922733]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1621118703]
+visible = false
+offset_left = -87.0
+offset_top = 14.0
+offset_right = 89.0
+offset_bottom = 54.0
+alignment = 1
+
+[node name="Stinger" type="TextureRect" parent="HBoxContainer" unique_id=958544586]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 12)
+layout_mode = 2
+
+[node name="Stinger" parent="HBoxContainer/Stinger" unique_id=417485488 instance=ExtResource("2_1l46r")]
+powerup_type = "stinger"
+powerup_cost = 20
+
+[node name="Rain" type="TextureRect" parent="HBoxContainer" unique_id=2083458530]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Rain" parent="HBoxContainer/Rain" unique_id=1072026957 instance=ExtResource("2_1l46r")]
+powerup_type = "rain"
+powerup_cost = 15
+
+[node name="Swarm" type="TextureRect" parent="HBoxContainer" unique_id=211147435]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Swarm" parent="HBoxContainer/Swarm" unique_id=534876417 instance=ExtResource("2_1l46r")]
+powerup_type = "swarm"
+powerup_cost = 30
+
+[node name="Speed" type="TextureRect" parent="HBoxContainer" unique_id=516882567]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Speed" parent="HBoxContainer/Speed" unique_id=1005683008 instance=ExtResource("2_1l46r")]
+powerup_type = "speed"
+powerup_cost = 15
+
+[node name="Confusion" type="TextureRect" parent="HBoxContainer" unique_id=1442386275]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Confusion" parent="HBoxContainer/Confusion" unique_id=876564730 instance=ExtResource("2_1l46r")]
+powerup_cost = 10
+
+[node name="Shop_Icon" type="Sprite2D" parent="." unique_id=609943227]
 texture = ExtResource("2_xfvoa")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=498266263]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1435268038]
 position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_x7p88")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
