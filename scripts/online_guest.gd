@@ -1,20 +1,41 @@
 class_name OnlineGuest
 extends Node
-## The guest side of an online match: joins the host's relay room like a phone controller would,
-## sends this player's input and receives the host's game state. In web builds it also accepts
-## the host's offer of a direct WebRTC link, which then carries input and state (lower latency);
-## the relay stays as the fallback and for everything else.
+## The guest side of an online match (the host side is PhoneControllerServer). Game-agnostic:
+## it moves messages, the game decides what they mean. See docs/REUSE.md in https://github.com/jalaad/GameJam-PvP-Online.
+##
+## Joins the host's relay room as if it were a phone controller (hello with a token, so a page
+## reload gets the same player slot back), sends this player's input and receives the host's
+## game state. In web builds it also accepts the host's offer of a direct WebRTC link, which then
+## carries input and state (lower latency); the relay stays as the fallback and for everything else.
+##
+##   var guest := OnlineGuest.new()
+##   add_child(guest)
+##   guest.snapshot.connect(func(st): ...)          # host's "st" messages (game state)
+##   guest.failed.connect(func(reason): ...)        # bad code / match full: show reason
+##   guest.join("K7QD")
+##   # every physics tick:
+##   guest.send_fast({"t": "in", "q": seq, "x": stick.x, "y": stick.y, "b": held, "pc": press_counts})
+##
+## Needs the PhoneControllers autoload only for get_relay_url() and the shared constants.
 
+## The host accepted us; player_id is our slot on the host (PhoneControllers id there).
 signal joined(player_id: int)
 ## Could not join (bad code, match full...). reason is shown to the player.
 signal failed(reason: String)
-## The link dropped; we're trying again.
+## The link dropped; we're trying again (with the same token, so we keep our slot). If the host
+## stays gone for _GIVE_UP_SEC, failed fires instead.
 signal reconnecting
+## A game-state message from the host ({"t": "st", ...}; the contents are up to the game).
 signal snapshot(state: Dictionary)
-signal message(msg: Dictionary)  # "msg", "vibrate", "theme" etc. from the host
+## Any other message from the host: "msg", "vibrate", "theme", or the game's own types.
+signal message(msg: Dictionary)
 
-const _RETRY_SEC := 1.5
 const _PING_SEC := 1.0
+## Reconnecting backs off (every attempt is a relay request; its free plan allows 100,000 a day)
+## and gives up if the host doesn't come back.
+const _RETRY_FIRST_SEC := 1.0
+const _RETRY_MAX_SEC := 15.0
+const _GIVE_UP_SEC := 120.0
 
 var code := ""
 var player_id := 0
@@ -25,6 +46,8 @@ var _ws: WebSocketPeer
 var _token := ""
 var _name := ""
 var _retry_at := -1.0
+var _retry_delay := _RETRY_FIRST_SEC
+var _failing_since := -1.0  # when we lost the host (-1 = not failing)
 var _welcomed := false
 var _hello_sent := false
 var _given_up := false
@@ -48,6 +71,8 @@ func join(room_code: String, player_name := "") -> void:
 	code = room_code
 	_name = player_name
 	_given_up = false
+	_retry_delay = _RETRY_FIRST_SEC
+	_failing_since = -1.0
 	_connect()
 
 
@@ -89,7 +114,18 @@ func _connect() -> void:
 	_ws = WebSocketPeer.new()
 	if _ws.connect_to_url("%s/ws/phone/%s" % [PhoneControllers.get_relay_url(), code]) != OK:
 		_ws = null
-		_retry_at = _now() + _RETRY_SEC
+		_schedule_retry(_now())
+
+
+## Next attempt after a growing delay; gives up once the host has been gone for _GIVE_UP_SEC.
+func _schedule_retry(now: float) -> void:
+	if _failing_since < 0.0:
+		_failing_since = now
+	if now - _failing_since > _GIVE_UP_SEC:
+		_give_up("Lost the connection to the match.")
+		return
+	_retry_at = now + _retry_delay
+	_retry_delay = minf(_retry_delay * 1.6, _RETRY_MAX_SEC)
 
 
 func _now() -> float:
@@ -108,7 +144,7 @@ func _process(_delta: float) -> void:
 			if not _hello_sent:
 				_hello_sent = true
 				send({"t": "hello", "s": code, "name": _name, "token": _token,
-						"rtc": PhoneControllerServer._rtc_supported()})
+						"rtc": PhoneControllerServer.rtc_supported()})
 			while _ws.get_available_packet_count() > 0:
 				_on_text(_ws.get_packet().get_string_from_utf8())
 			if _welcomed and now - _last_ping > _PING_SEC:
@@ -128,7 +164,7 @@ func _process(_delta: float) -> void:
 				_give_up("That match is full." if reason != "old_session" else "That match has ended.")
 			else:
 				reconnecting.emit()
-				_retry_at = now + _RETRY_SEC
+				_schedule_retry(now)
 	_poll_rtc()
 
 
@@ -144,6 +180,8 @@ func _on_text(text: String) -> void:
 	match str(msg.get("t", "")):
 		"welcome":
 			_welcomed = true
+			_retry_delay = _RETRY_FIRST_SEC  # connected for real (the relay alone doesn't count)
+			_failing_since = -1.0
 			player_id = int(msg.get("id", 0))
 			joined.emit(player_id)
 		"reject":

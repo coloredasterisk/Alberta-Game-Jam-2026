@@ -45,7 +45,7 @@ func _fit_orientation() -> void:
 static func clean_code(text: String) -> String:
 	var out := ""
 	for ch in text.to_upper():
-		if PhoneControllerServer._CODE_CHARS.contains(ch):
+		if PhoneControllerServer.CODE_CHARS.contains(ch):
 			out += ch
 	return out.left(4)
 
