@@ -172,7 +172,8 @@ func _process(delta: float) -> void:
 				_send_snapshot()
 		Session.Mode.ONLINE_GUEST:
 			_send_guest_input()
-
+	if _phase == Phase.PLAYING:
+		$CanvasLayer.update_player_stats()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -203,10 +204,14 @@ func update_split_screen() -> void:
 		if i >= $World.get_child_count():
 			$World.get_child(i).visible = false
 			players[i].disable()
+			$CanvasLayer/HUD/Player.get_child(i).visible = false
+			
 		else:
 			$World.get_child(i).visible = true
 			$World.get_child(i).size = pos[i]
 			players[i].enable()
+			$CanvasLayer/HUD/Player.get_child(i).visible = true
+		
 
 func _start_match() -> void:
 	_phase = Phase.PLAYING
@@ -436,7 +441,7 @@ func _on_snapshot(msg: Dictionary) -> void:
 			if positions[i] is Array and positions[i].size() >= 2:
 				var pos: Array = positions[i]
 				players[i].global_position = Vector2(pos[0], pos[1])
-	$CanvasLayer.update_player_stats()
+	
 
 
 func _set_guest_players_physics(enabled: bool) -> void:

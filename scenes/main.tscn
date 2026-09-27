@@ -12,7 +12,6 @@
 [ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scripts/choose_player_amount.gd" id="10_choun"]
 [ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scripts/input.gd" id="11_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
-[ext_resource type="PackedScene" uid="uid://bti365s467xvk" path="res://scenes/number_display.tscn" id="12_a8y0u"]
 [ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
@@ -265,13 +264,12 @@ offset_right = 640.0
 offset_bottom = 360.0
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 6
+current_tab = 0
 tabs_visible = false
 deselect_enabled = true
 script = ExtResource("7_85g3d")
 
 [node name="TitleScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=1965919025]
-visible = false
 custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 mouse_filter = 2
@@ -694,17 +692,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -146.0
+offset_left = -73.0
 offset_top = -46.0
-offset_right = 146.0
+offset_right = 219.0
 offset_bottom = 46.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
-columns = 2
 
 [node name="1" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=1049396327]
+visible = false
 layout_mode = 2
 text = "One Player"
 
@@ -721,10 +719,12 @@ layout_mode = 2
 text = "Four Players"
 
 [node name="5" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=962004805]
+visible = false
 layout_mode = 2
 text = "Five Players"
 
 [node name="6" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=357572456]
+visible = false
 layout_mode = 2
 text = "Six Players"
 
@@ -754,6 +754,7 @@ grow_vertical = 2
 text = "Back"
 
 [node name="EnterCode" type="Control" parent="CanvasLayer/Screens" unique_id=342267924]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 
@@ -841,6 +842,7 @@ layout_mode = 2
 text = "Submit"
 
 [node name="HUD" type="Control" parent="CanvasLayer" unique_id=1440550048]
+visible = false
 custom_minimum_size = Vector2(640, 360)
 layout_mode = 3
 anchors_preset = 0
@@ -880,19 +882,14 @@ fill_mode = 4
 texture_under = ExtResource("12_0ld40")
 texture_progress = ExtResource("13_dp3eg")
 
-[node name="NumberDisplay" parent="CanvasLayer/HUD/TimerDisplay/TextureProgressBar" unique_id=1561342514 instance=ExtResource("12_a8y0u")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -11.0
-offset_top = -5.0
-offset_right = 15.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="TimeText" type="RichTextLabel" parent="CanvasLayer/HUD/TimerDisplay/TextureProgressBar" unique_id=757814224]
+layout_mode = 0
+offset_left = 42.5
+offset_top = 49.5
+offset_right = 82.5
+offset_bottom = 61.0
+theme_override_font_sizes/normal_font_size = 8
+text = "120"
 
 [node name="Player" type="GridContainer" parent="CanvasLayer/HUD" unique_id=86557914]
 layout_mode = 1
@@ -911,6 +908,7 @@ theme_override_constants/v_separation = 40
 columns = 2
 
 [node name="Player1" type="Control" parent="CanvasLayer/HUD/Player" unique_id=1510396259]
+visible = false
 layout_mode = 2
 
 [node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1912796947]
@@ -945,9 +943,9 @@ texture = ExtResource("14_0ld40")
 [node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1828275000]
 layout_mode = 0
 offset_left = 21.0
-offset_top = 9.0
+offset_top = 8.0
 offset_right = 42.0
-offset_bottom = 18.0
+offset_bottom = 17.0
 theme_override_font_sizes/normal_font_size = 8
 text = "000"
 
@@ -979,6 +977,7 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Player2" type="Control" parent="CanvasLayer/HUD/Player" unique_id=799470903]
+visible = false
 layout_mode = 2
 
 [node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player2" unique_id=1621758177]
@@ -1049,6 +1048,7 @@ autowrap_mode = 0
 horizontal_alignment = 2
 
 [node name="Player3" type="Control" parent="CanvasLayer/HUD/Player" unique_id=598995410]
+visible = false
 layout_mode = 2
 
 [node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player3" unique_id=1695117872]
@@ -1117,6 +1117,7 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Player4" type="Control" parent="CanvasLayer/HUD/Player" unique_id=1508083122]
+visible = false
 layout_mode = 2
 
 [node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player4" unique_id=1256439141]

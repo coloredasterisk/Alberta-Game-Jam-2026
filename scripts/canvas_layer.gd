@@ -38,6 +38,7 @@ func _on_cancel_pressed() -> void:
 
 
 func update_player_stats() -> void:
+	return
 	# Update the player stats UI elements here
 	for i in range(Global.amount_of_players):
 		var player = Global.players[i]
