@@ -1,5 +1,5 @@
 # Builds the web version with Godot and publishes it to GitHub Pages, so invite links
-# (https://jalaad.github.io/GameJam-PvP-Online/?join=CODE) open the game and join the match.
+# (https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?join=CODE) open the game and join the match.
 # Needs Settings > Pages > Source: "GitHub Actions".
 name: Deploy web build to Pages
 
