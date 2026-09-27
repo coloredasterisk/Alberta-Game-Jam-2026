@@ -1,12 +1,12 @@
-# Golden Bloom Valley usage
+# Bloom Market background usage
 
 ## Preview
 
 Open `res://scenes/golden_bloom_valley_preview.tscn` and press **F6**.
 
 The preview intentionally contains no debug menu or keyboard controls. Move the
-mouse to verify the subtle parallax, flower glow, pollen repulsion, and bee
-attraction. All tuning and integration entry points remain documented in code.
+mouse to verify restrained environment and sprite parallax. Bees use gentle
+motion; the original repository PNGs remain nearest-neighbour pixel art.
 
 ## Add to a menu
 
@@ -35,16 +35,34 @@ func _on_player_joined(player_count: int) -> void:
 func _on_player_ready(player_index: int) -> void:
     bloom_background.set_player_ready(player_index, true)
 
-func _on_match_countdown_started() -> void:
-    bloom_background.play_countdown(3.0)
 ```
 
-Use `set_quality(0)` on slower web/mobile devices and `set_reduced_motion(true)` when the player enables an accessibility option.
+Use `set_reduced_motion(true)` when the player enables an accessibility option.
 
 Power-up presentation is deliberately not part of this background shader. Keep
 gameplay feedback in separate effects so the home/menu visual stays focused and
 easy to maintain.
 
-## Performance
+## Approved settings
 
-The effect is texture-free and uses no screen-reading pass. Quality levels change procedural cell density and decorative bee count. The shader remains full-screen, so test exported Web builds on representative phones before choosing High as the default.
+The values selected in the in-chat tuner are documented beside their implementation:
+
+- Bright-day palette
+- Sun: 30 design pixels at `(19%, 28%)`
+- Shop: scale `3`, vertical position `47%`; shifted to `82%` horizontal in the
+  real menu so the existing centre button stack does not hide it
+- Path width: `55%` tuner value
+- Flowers: `8`, positioned clear of both hives and flags
+- Bees: `5`
+- Bird flocks: removed after visual review
+- Hives: scale `2`
+- Menu-safe width: `46%`
+- Gentle motion: enabled
+
+## Rendering approach
+
+The CanvasItem shader draws the scalable sky, sun, hedge, meadow, path, and
+safe-area shading. `golden_bloom_valley_controller.gd` layers the repository's
+actual Shop, Bee, Beehive, and Flower textures above it. This hybrid
+approach preserves the supplied sprite designs exactly while keeping the full-
+screen terrain responsive and inexpensive.
