@@ -2,9 +2,8 @@ extends Node
 
 
 #power up durations
-var stinger_duration: float
+var stinger_duration: float = 10.0
 var rain_duration: float = 3.0
-var swarm_duration: float
 var speed_duration: float = 5.0
 var confusion_duration: float = 5.0
 
@@ -12,6 +11,12 @@ var original_max_capacity: int = 5
 var win_amount = 10
 var max_time = 60
 
+var modulate_color = {
+"red": Color.RED,
+"blue": Color.BLUE,
+"yellow": Color.YELLOW,
+"green": Color.GREEN,
+}
 
 var num_to_art = [
 	preload("res://art/numbers/0.png"),

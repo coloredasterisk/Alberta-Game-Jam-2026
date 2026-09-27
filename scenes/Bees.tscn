@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player.gd" id="1_ij6vw"]
 [ext_resource type="Texture2D" uid="uid://crwatl5yu6yga" path="res://art/Blue_Bee.png" id="2_635w0"]
 [ext_resource type="Texture2D" uid="uid://d0ykg44156l0o" path="res://art/Red_Bee.png" id="2_g2brh"]
+[ext_resource type="Texture2D" uid="uid://dmectf1na0gqi" path="res://art/Stinger_Rainbow.png" id="4_t2mbh"]
+[ext_resource type="Texture2D" uid="uid://d35bjq8fayu2v" path="res://art/Mono_Bee-outline.png" id="5_csgcu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t2mbh"]
 atlas = ExtResource("2_635w0")
@@ -33,6 +35,11 @@ animations = [{
 "name": &"blue",
 "speed": 5.0
 }, {
+"frames": [],
+"loop": 1,
+"name": &"green",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_dn4c7")
@@ -43,6 +50,11 @@ animations = [{
 "loop": 1,
 "name": &"red",
 "speed": 3.0
+}, {
+"frames": [],
+"loop": 1,
+"name": &"yellow",
+"speed": 5.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x7p88"]
@@ -51,12 +63,36 @@ radius = 6.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_f58d2"]
 radius = 11.0
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_b8v61"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lexnm"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f58d2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b8v61")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lexnm")
+}],
+"loop": 1,
+"name": &"outline",
+"speed": 3.0
+}]
+
 [node name="Bees" type="CharacterBody2D" unique_id=558911984]
 script = ExtResource("1_ij6vw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1893458618]
+position = Vector2(-1, -1)
 sprite_frames = SubResource("SpriteFrames_x7p88")
 animation = &"red"
+autoplay = "red"
 
 [node name="collider" type="CollisionShape2D" parent="." unique_id=1951408223]
 shape = SubResource("CircleShape2D_x7p88")
@@ -65,3 +101,15 @@ shape = SubResource("CircleShape2D_x7p88")
 
 [node name="Collector" type="CollisionShape2D" parent="Area_Interact" unique_id=128156563]
 shape = SubResource("CircleShape2D_f58d2")
+
+[node name="Rainbow_Effect" type="Sprite2D" parent="." unique_id=706921043]
+visible = false
+position = Vector2(1, 1)
+texture = ExtResource("4_t2mbh")
+
+[node name="animated_outline" type="AnimatedSprite2D" parent="." unique_id=1834764579]
+position = Vector2(-1, 0)
+sprite_frames = SubResource("SpriteFrames_f58d2")
+animation = &"outline"
+autoplay = "outline"
+frame_progress = 0.93056184

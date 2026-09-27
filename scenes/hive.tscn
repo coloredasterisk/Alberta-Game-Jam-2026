@@ -3,6 +3,16 @@
 [ext_resource type="Script" uid="uid://c13u6afwud6qk" path="res://scripts/hive.gd" id="1_u1ead"]
 [ext_resource type="Texture2D" uid="uid://dmh0sbq2u4wci" path="res://art/Blue_Beehive.png" id="2_1m1dw"]
 [ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="3_6xwxf"]
+[ext_resource type="Texture2D" uid="uid://c7ruatby8tdr4" path="res://art/Mono_Beehive.png" id="3_qn66l"]
+[ext_resource type="Texture2D" uid="uid://byesjsb8x07s5" path="res://art/Mono_Beehive-outline.png" id="5_c550q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c550q"]
+atlas = ExtResource("3_qn66l")
+region = Rect2(0, 0, 43, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xgw1h"]
+atlas = ExtResource("3_qn66l")
+region = Rect2(0, 0, 43, 56)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_py7os"]
 animations = [{
@@ -16,28 +26,43 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_c550q")
+}],
+"loop": 1,
+"name": &"green",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("3_6xwxf")
 }],
 "loop": 1,
 "name": &"red",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xgw1h")
+}],
+"loop": 1,
+"name": &"yellow",
 "speed": 5.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_py7os"]
 radius = 19.0
 
-[node name="Hive" type="Node2D" unique_id=1789593573]
+[node name="Hive" type="Area2D" unique_id=2080311839]
 script = ExtResource("1_u1ead")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=699097792]
 position = Vector2(0, -11)
 sprite_frames = SubResource("SpriteFrames_py7os")
-animation = &"red"
+animation = &"blue"
 
-[node name="Area2D" type="Area2D" parent="." unique_id=1620438514]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=665471914]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=665471914]
 shape = SubResource("CircleShape2D_py7os")
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[node name="outline" type="Sprite2D" parent="." unique_id=1946670321]
+position = Vector2(0, -11)
+texture = ExtResource("5_c550q")

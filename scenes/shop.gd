@@ -18,10 +18,11 @@ func _on_body_entered(body: Node2D) -> void:
 		confusion.visible = true
 
 
-#func _on_body_exited(body: Node2D) -> void:
-	#if body is Player:
-		#stinger.visible = false
-		#rain.visible = false
-		#swarm.visible = false
-		#speed.visible = false
-		#confusion.visible = false
+func _on_body_exited(body: Node2D) -> void:
+	if body is Player:
+		await get_tree().create_timer(5.0).timeout
+		stinger.visible = false
+		rain.visible = false
+		swarm.visible = false
+		speed.visible = false
+		confusion.visible = false

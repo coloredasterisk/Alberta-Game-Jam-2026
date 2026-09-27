@@ -1,28 +1,27 @@
-class_name Hive extends Node2D
+class_name Hive extends Area2D
 var current_amount = 0
-var overlapping_players = {}
 
-@export var color = "red"
+@export_enum("red","blue","yellow","green") var color: String = "red"
+
 
 func _ready() -> void:
 	$Sprite.animation = color
-	
-func interact() -> void:
-	for player in overlapping_players.keys():
-		if player.color == color and player.nectar > 1:
-			current_amount += 1
-			player.nectar -= 1
-		elif player.color != color and player.nectar < player.max_nectar:
-			current_amount -= 1
-			player.nectar += 1
+	$outline.modulate = Global.modulate_color[color]
+	add_to_group("hives")
 
-
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	if body is Player:
-		overlapping_players[body] = 0
-
-
-func _on_area_2d_body_exited(body: Node2D) -> void:
-	if body is Player:
-		overlapping_players.erase(body)
-		
+func interact(player) -> bool:
+	print("hive interact called by ", player.player_color, " bee with ", player.nectar, " nectar")
+	if player.player_color == color:
+		# own hive: deposit
+		if player.nectar <= 0:
+			return false
+		current_amount += player.nectar
+		player.nectar = 0
+	else:
+		# rival hive: steal
+		if current_amount <= 0 or player.nectar >= player.current_nectar_capacity:
+			return false
+		current_amount -= 1
+		player.nectar += 1
+	print(color, " hive: ", current_amount, " | bee nectar: ", player.nectar)
+	return true

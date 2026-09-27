@@ -17,45 +17,72 @@ zoom = Vector2(2, 2)
 position = Vector2(17, 19)
 
 [node name="Stinger" parent="Shop" unique_id=417485488 instance=ExtResource("5_ppgk2")]
+visible = false
 position = Vector2(-90, 26)
 powerup_type = "stinger"
 powerup_cost = 10
 
 [node name="Rain" parent="Shop" unique_id=1308663423 instance=ExtResource("5_ppgk2")]
+visible = false
 position = Vector2(-53, 25)
 powerup_type = "rain"
 
 [node name="Swarm" parent="Shop" unique_id=742851870 instance=ExtResource("5_ppgk2")]
+visible = false
 position = Vector2(25, 25)
 powerup_type = "swarm"
 powerup_cost = 15
 
 [node name="Speed" parent="Shop" unique_id=1012920229 instance=ExtResource("5_ppgk2")]
+visible = false
 position = Vector2(-16, 24)
 powerup_type = "speed"
 
 [node name="Confusion" parent="Shop" unique_id=1427355907 instance=ExtResource("5_ppgk2")]
+visible = false
 position = Vector2(68, 26)
 
-[node name="Hive" parent="." unique_id=1789593573 instance=ExtResource("4_mx8sn")]
-position = Vector2(-88, -6)
+[node name="Red_Hive" parent="." unique_id=1789593573 instance=ExtResource("4_mx8sn")]
+position = Vector2(-140, 5)
+
+[node name="Blue_Hive" parent="." unique_id=1529555916 instance=ExtResource("4_mx8sn")]
+position = Vector2(144, -7)
+color = "blue"
+
+[node name="Yellow_Hive" parent="." unique_id=2080311839 instance=ExtResource("4_mx8sn")]
+position = Vector2(-2, -51)
+color = "yellow"
+
+[node name="Green_Hive" parent="." unique_id=1748421334 instance=ExtResource("4_mx8sn")]
+position = Vector2(-2, 81)
+color = "green"
 
 [node name="Blue_Bee" parent="." unique_id=454362827 instance=ExtResource("1_u52ul")]
-position = Vector2(-38, 5)
+position = Vector2(114, -7)
 player_index = 2
 player_color = "blue"
 
-[node name="Red_Bee" parent="." unique_id=558911984 instance=ExtResource("1_u52ul")]
-position = Vector2(-39, -18)
+[node name="Yellow_Bee" parent="." unique_id=558911984 instance=ExtResource("1_u52ul")]
+position = Vector2(3, -14)
+player_index = 3
+player_color = "yellow"
+
+[node name="Green_Bee" parent="." unique_id=644475899 instance=ExtResource("1_u52ul")]
+position = Vector2(-4, 44)
+player_index = 4
+player_color = "green"
+
+[node name="Red_Bee" parent="." unique_id=449506610 instance=ExtResource("1_u52ul")]
+position = Vector2(-112, 1)
 
 [node name="FlowerSpawner" type="Timer" parent="." unique_id=1318573852]
 autostart = true
 
 [node name="Red_Flower" parent="FlowerSpawner" unique_id=221364224 instance=ExtResource("2_w7c3h")]
-position = Vector2(132, 15)
+position = Vector2(-57, -4)
 
 [node name="Blue_Flower" parent="FlowerSpawner" unique_id=685865285 instance=ExtResource("2_w7c3h")]
-position = Vector2(78, -55)
+position = Vector2(90, -8)
 flower_color = "blue"
 
 [connection signal="body_entered" from="Shop" to="Shop" method="_on_body_entered"]

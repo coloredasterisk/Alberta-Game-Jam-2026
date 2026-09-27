@@ -12,6 +12,7 @@ func interact(player) -> bool:
 	if not is_visible_in_tree():
 		return false
 	purchased.emit(powerup_type, player)
+	
 	print("bought ", powerup_type)
 	return true
 
