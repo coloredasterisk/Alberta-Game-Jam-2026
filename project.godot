@@ -15,6 +15,10 @@ run/main_scene="uid://dfps2ajsxma4d"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://g7wg6ltt8d3v"
+
 [autoload]
 
 Global="*uid://b6nhcb2yjxn2n"
@@ -25,11 +29,10 @@ PhoneControllers="*uid://bvpms6f5agfe2"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/window_width_override=1920
-window/size/window_height_override=1080
+window/size/window_width_override=960
+window/size/window_height_override=540
 window/stretch/mode="viewport"
-window/stretch/aspect="expand"
-window/stretch/scale=2.0
+window/stretch/scale_mode="integer"
 
 [gui]
 

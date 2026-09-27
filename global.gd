@@ -11,6 +11,7 @@ var original_max_capacity: int = 5
 var win_amount = 10
 var max_time = 60
 var amount_of_players = 1
+var local_mode = false
 
 var modulate_color = {
 "red": Color.RED,
@@ -50,7 +51,16 @@ const ACTIONS = {
 	"p2_move_right":  KEY_RIGHT,
 	"p2_move_up":    KEY_UP,
 	"p2_move_down":  KEY_DOWN,
-	"p2_interact": KEY_ENTER
+	"p2_interact": KEY_ENTER,
+
+	#p3 has mouse movement
+	"p3_interact": MOUSE_BUTTON_LEFT,
+
+	"p4_move_left":  KEY_J,
+	"p4_move_right":  KEY_L,
+	"p4_move_up":    KEY_I,
+	"p4_move_down":  KEY_K,
+	"p4_interact":  KEY_O,
 
 }
 
@@ -66,6 +76,11 @@ func _ready() -> void:
 	for action in Global.ACTIONS.keys():
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
-			var ev := InputEventKey.new()
-			ev.physical_keycode = Global.ACTIONS[action]
+			var ev
+			if action == "p3_interact":
+				ev = InputEventMouseButton.new()
+				ev.button_index = Global.ACTIONS[action]
+			else:
+				ev = InputEventKey.new()
+				ev.physical_keycode = Global.ACTIONS[action]
 			InputMap.action_add_event(action, ev)

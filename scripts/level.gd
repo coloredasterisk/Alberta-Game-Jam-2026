@@ -9,6 +9,8 @@ func _ready():
 	for item in $Shop.get_children():
 		if item.has_signal("purchased"):
 			item.purchased.connect(_on_powerup_purchased)
+	$Red_Bee.enable()
+	
 
 func _on_powerup_purchased(type: String, buyer: Player):
 	match type:

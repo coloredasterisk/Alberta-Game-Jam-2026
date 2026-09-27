@@ -86,6 +86,11 @@ func _setup_players() -> void:
 ## Called by canvas_layer.gd once the player picks how many are playing
 func set_amount_of_players(amount: int) -> void:
 	amount_of_players = amount
+	if Global.local_mode:
+		_setup_players()
+		_show_tutorial() 
+		return
+
 	if not _session_started:
 		begin_session()
 		_setup_players()
@@ -192,24 +197,30 @@ func _show_lobby(preloading = false) -> void:
 	_refresh_names()
 
 
-func _start_match() -> void:
-	_phase = Phase.PLAYING
+func update_split_screen() -> void:
 	var pos = Global.SPLIT_SCREEN_DIMENSIONS[amount_of_players - 1]
 	for i in range(amount_of_players):
 		if i >= $World.get_child_count():
 			$World.get_child(i).visible = false
+			players[i].disable()
 		else:
 			$World.get_child(i).visible = true
 			$World.get_child(i).size = pos[i]
+			players[i].enable()
+
+func _start_match() -> void:
+	_phase = Phase.PLAYING
 	_enter_playing()
 
 
 ## Hides the menu and reveals the arena once the match is actually starting.
 func _enter_playing() -> void:
+	update_split_screen()
 	in_lobby = false
 	_waiting_to_start = false
-	$CanvasLayer.visible = false
+	$CanvasLayer/Screens.visible = false
 	world.visible = true
+	$CanvasLayer/HUD.visible = true
 
 
 ## Enter/Space on the keyboard, or a phone's start button.
@@ -395,7 +406,7 @@ func _send_snapshot() -> void:
 func _send_guest_input() -> void:
 	if _guest == null or not _guest.is_connected_to_host():
 		return
-	if Input.is_action_just_pressed("restart"):
+	if Input.is_action_just_pressed("p1_interact"):
 		_guest.send({"t": "in", "b": ["start"]})
 	var move := Input.get_vector("p1_move_left", "p1_move_right", "p1_move_up", "p1_move_down")
 	_guest.send_fast({"t": "in", "x": snappedf(move.x, 0.01), "y": snappedf(move.y, 0.01)})
@@ -425,6 +436,7 @@ func _on_snapshot(msg: Dictionary) -> void:
 			if positions[i] is Array and positions[i].size() >= 2:
 				var pos: Array = positions[i]
 				players[i].global_position = Vector2(pos[0], pos[1])
+	$CanvasLayer.update_player_stats()
 
 
 func _set_guest_players_physics(enabled: bool) -> void:

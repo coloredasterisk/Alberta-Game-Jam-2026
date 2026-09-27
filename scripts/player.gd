@@ -1,7 +1,7 @@
 class_name Player extends CharacterBody2D
 @export var player_index: int = 1
 
-var speed: int = 100
+var speed: int = 200
 var direction: Vector2
 var acceleration: Vector2
 var max_velocity: int = 50
@@ -41,24 +41,38 @@ func _ready():
 	bee_animation.play(player_color)
 	current_nectar_capacity = Global.original_max_capacity
 	interaction.body_entered.connect(_on_interaction_body_entered)
+	disable()
+
+func disable():
+	set_process(false)
+	set_physics_process(false)
+	$collider.disabled = true
+	visible = false
+
+func enable():
+	set_process(true)
+	set_physics_process(true)
+	$collider.disabled = false
+	visible = true
+
 
 func movement(delta):
 
 	if phone_id > 0:
 		direction = external_stick
 	else:
-		direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
+		if player_index == 3:
+			direction = (get_global_mouse_position() - global_position).normalized()
+		else:
+			direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	if confused:
 		direction = -direction
 	
-	if direction == Vector2.ZERO:
-		acceleration *= 0.6
-	else:
-		acceleration += direction * speed
-	velocity = acceleration * delta * 100
+	acceleration = direction * speed
+	velocity = acceleration * delta + (velocity * 0.98)
 	
-	if velocity.length() > max_velocity:
-		velocity = velocity.normalized() * max_velocity
+	#if velocity.length() > max_velocity:
+	#	velocity = velocity.normalized() * max_velocity
 
 func confusion():
 	confused = true

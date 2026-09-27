@@ -6,11 +6,19 @@
 [ext_resource type="Script" uid="uid://cy7876evugj5" path="res://scripts/main.gd" id="1_tipki"]
 [ext_resource type="Script" uid="uid://dy1l2xljudpey" path="res://scripts/title_screen.gd" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
-[ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scenes/canvas_layer.gd" id="4_tipki"]
-[ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scenes/online_multiplayer_setup.gd" id="6_o6xl0"]
-[ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scenes/screens.gd" id="7_85g3d"]
-[ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scenes/choose_player_amount.gd" id="10_choun"]
-[ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scenes/input.gd" id="11_ya4ey"]
+[ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scripts/canvas_layer.gd" id="4_tipki"]
+[ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scripts/online_multiplayer_setup.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scripts/screens.gd" id="7_85g3d"]
+[ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scripts/choose_player_amount.gd" id="10_choun"]
+[ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scripts/input.gd" id="11_ya4ey"]
+[ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
+[ext_resource type="PackedScene" uid="uid://bti365s467xvk" path="res://scenes/number_display.tscn" id="12_a8y0u"]
+[ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
+[ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
+[ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
+[ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
+[ext_resource type="Texture2D" uid="uid://61s8dv5acwqm" path="res://art/Money.png" id="15_gqmmt"]
+[ext_resource type="Texture2D" uid="uid://rx46n3k5ufg3" path="res://art/Honey.png" id="16_yc10j"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_py7os"]
 
@@ -24,6 +32,49 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8y0u"]
+bg_color = Color(0.7010465, 0.5351341, 0.7049917, 1)
+corner_radius_top_left = 64
+corner_radius_top_right = 64
+corner_radius_bottom_right = 64
+corner_radius_bottom_left = 64
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a8y0u"]
+atlas = ExtResource("13_trceg")
+region = Rect2(0, 0, 10, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkv2x"]
+atlas = ExtResource("13_trceg")
+region = Rect2(10, 0, 10, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbj1t"]
+atlas = ExtResource("13_trceg")
+region = Rect2(20, 0, 10, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_muem4"]
+atlas = ExtResource("13_trceg")
+region = Rect2(30, 0, 28, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xu4xf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a8y0u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkv2x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbj1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_muem4")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 1.0
+}]
+
 [node name="Main" type="Node2D" unique_id=1361628959]
 script = ExtResource("1_tipki")
 
@@ -34,7 +85,7 @@ script = ExtResource("1_tbgi4")
 
 [node name="Player1" type="SubViewportContainer" parent="World" unique_id=399490160]
 layout_mode = 0
-offset_right = 318.0
+offset_right = 640.0
 offset_bottom = 360.0
 stretch = true
 
@@ -43,7 +94,7 @@ disable_3d = true
 handle_input_locally = false
 snap_2d_transforms_to_pixel = true
 scaling_3d_mode = 5
-size = Vector2i(318, 360)
+size = Vector2i(640, 360)
 render_target_update_mode = 4
 
 [node name="Map1" parent="World/Player1/SubViewport" unique_id=585905906 instance=ExtResource("1_jyhfs")]
@@ -85,6 +136,7 @@ color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 [node name="Player" parent="World/Player2/SubViewport" unique_id=1663139987 instance=ExtResource("2_tbgi4")]
 position = Vector2(57, 2)
 player_index = 2
+player_color = "blue"
 
 [node name="Player3" type="SubViewportContainer" parent="World" unique_id=2016832901]
 visible = false
@@ -112,7 +164,8 @@ color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player3/SubViewport" unique_id=837753581 instance=ExtResource("2_tbgi4")]
 position = Vector2(238, 158)
-player_index = 2
+player_index = 3
+player_color = "green"
 
 [node name="Player4" type="SubViewportContainer" parent="World" unique_id=380069114]
 visible = false
@@ -140,8 +193,9 @@ offset_bottom = 40.0
 color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
-position = Vector2(57, 2)
-player_index = 2
+position = Vector2(0, 2)
+player_index = 4
+player_color = "blue"
 
 [node name="Player5" type="SubViewportContainer" parent="World" unique_id=1908158357]
 visible = false
@@ -167,7 +221,7 @@ offset_bottom = 40.0
 color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player5/SubViewport" unique_id=279821071 instance=ExtResource("2_tbgi4")]
-position = Vector2(57, 2)
+position = Vector2(68, 2)
 player_index = 2
 
 [node name="Player6" type="SubViewportContainer" parent="World" unique_id=2125865951]
@@ -194,7 +248,7 @@ offset_bottom = 40.0
 color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player6/SubViewport" unique_id=549633761 instance=ExtResource("2_tbgi4")]
-position = Vector2(57, 2)
+position = Vector2(57, -27)
 player_index = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
@@ -715,6 +769,23 @@ mouse_filter = 2
 bbcode_enabled = true
 text = "[center]Enter Join Code"
 
+[node name="Entry" type="RichTextLabel" parent="CanvasLayer/Screens/EnterCode" unique_id=1690349558]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = 111.0
+offset_right = 210.0
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "[center]Entered:"
+
 [node name="Input" type="GridContainer" parent="CanvasLayer/Screens/EnterCode" unique_id=851960590]
 layout_mode = 1
 anchors_preset = 8
@@ -722,9 +793,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -146.0
+offset_left = -125.0
 offset_top = -46.0
-offset_right = 146.0
+offset_right = 125.0
 offset_bottom = 46.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -763,6 +834,366 @@ text = "Delete
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Submit"
+
+[node name="HUD" type="Control" parent="CanvasLayer" unique_id=1440550048]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TimerDisplay" type="Panel" parent="CanvasLayer/HUD" unique_id=1779309656]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a8y0u")
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer/HUD/TimerDisplay" unique_id=1678024464]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+fill_mode = 4
+texture_under = ExtResource("12_0ld40")
+texture_progress = ExtResource("13_dp3eg")
+
+[node name="NumberDisplay" parent="CanvasLayer/HUD/TimerDisplay/TextureProgressBar" unique_id=1561342514 instance=ExtResource("12_a8y0u")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -5.0
+offset_right = 16.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Player" type="GridContainer" parent="CanvasLayer/HUD" unique_id=86557914]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 139.0
+offset_right = 318.0
+offset_bottom = 179.0
+theme_override_constants/h_separation = 46
+theme_override_constants/v_separation = 40
+columns = 2
+
+[node name="Player1" type="Control" parent="CanvasLayer/HUD/Player" unique_id=1510396259]
+layout_mode = 2
+
+[node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1912796947]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 0
+offset_left = 25.0
+offset_top = -2.0
+offset_right = 39.0
+offset_bottom = 7.0
+theme_override_font_sizes/normal_font_size = 8
+text = "P1
+"
+
+[node name="CapacityDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=2110256024]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 17.0
+offset_right = 40.0
+offset_bottom = 26.0
+theme_override_font_sizes/normal_font_size = 8
+text = "0/0
+"
+
+[node name="NectarIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player1" unique_id=1578632067]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 19.0
+offset_right = 5.0
+offset_bottom = 23.0
+texture = ExtResource("14_0ld40")
+
+[node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1828275000]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 8.0
+offset_right = 42.0
+offset_bottom = 17.0
+theme_override_font_sizes/normal_font_size = 8
+text = "000"
+
+[node name="MoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player1" unique_id=1563881298]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 8.0
+offset_right = 20.0
+offset_bottom = 15.0
+texture = ExtResource("15_gqmmt")
+
+[node name="HoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player1" unique_id=529627510]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 25.0
+offset_right = 5.0
+offset_bottom = 34.0
+texture = ExtResource("16_yc10j")
+
+[node name="HoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player1" unique_id=1192260763]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 26.0
+offset_right = 41.0
+offset_bottom = 35.0
+theme_override_font_sizes/normal_font_size = 8
+text = "00000"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Player2" type="Control" parent="CanvasLayer/HUD/Player" unique_id=799470903]
+layout_mode = 2
+
+[node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player2" unique_id=1621758177]
+modulate = Color(0, 0, 1, 1)
+layout_mode = 0
+offset_left = 1.0
+offset_top = -2.0
+offset_right = 15.0
+offset_bottom = 7.0
+theme_override_font_sizes/normal_font_size = 8
+text = "P2
+"
+
+[node name="CapacityDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player2" unique_id=478238131]
+layout_mode = 0
+offset_top = 17.0
+offset_right = 33.0
+offset_bottom = 26.0
+theme_override_font_sizes/normal_font_size = 8
+text = "0/0
+"
+horizontal_alignment = 2
+
+[node name="NectarIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player2" unique_id=2144225071]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 19.0
+offset_right = 38.0
+offset_bottom = 23.0
+texture = ExtResource("14_0ld40")
+
+[node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player2" unique_id=367934363]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 8.0
+offset_right = 19.0
+offset_bottom = 17.0
+theme_override_font_sizes/normal_font_size = 8
+text = "000"
+horizontal_alignment = 2
+
+[node name="MoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player2" unique_id=887326091]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 8.0
+offset_right = 30.0
+offset_bottom = 15.0
+texture = ExtResource("15_gqmmt")
+
+[node name="HoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player2" unique_id=1223261998]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 25.0
+offset_right = 41.0
+offset_bottom = 34.0
+texture = ExtResource("16_yc10j")
+
+[node name="HoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player2" unique_id=1472037296]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 26.0
+offset_right = 34.0
+offset_bottom = 35.0
+theme_override_font_sizes/normal_font_size = 8
+text = "00000"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 2
+
+[node name="Player3" type="Control" parent="CanvasLayer/HUD/Player" unique_id=598995410]
+layout_mode = 2
+
+[node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player3" unique_id=1695117872]
+modulate = Color(0, 1, 0, 1)
+layout_mode = 0
+offset_left = 25.0
+offset_top = 36.0
+offset_right = 39.0
+offset_bottom = 45.0
+theme_override_font_sizes/normal_font_size = 8
+text = "P3
+"
+
+[node name="CapacityDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player3" unique_id=276777905]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 17.0
+offset_right = 40.0
+offset_bottom = 26.0
+theme_override_font_sizes/normal_font_size = 8
+text = "0/0
+"
+
+[node name="NectarIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player3" unique_id=1841053804]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 19.0
+offset_right = 5.0
+offset_bottom = 23.0
+texture = ExtResource("14_0ld40")
+
+[node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player3" unique_id=1285336640]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 26.0
+offset_right = 42.0
+offset_bottom = 35.0
+theme_override_font_sizes/normal_font_size = 8
+text = "000"
+
+[node name="MoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player3" unique_id=1983919162]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 26.0
+offset_right = 20.0
+offset_bottom = 33.0
+texture = ExtResource("15_gqmmt")
+
+[node name="HoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player3" unique_id=529034105]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 7.0
+offset_right = 5.0
+offset_bottom = 16.0
+texture = ExtResource("16_yc10j")
+
+[node name="HoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player3" unique_id=295569324]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 8.0
+offset_right = 41.0
+offset_bottom = 17.0
+theme_override_font_sizes/normal_font_size = 8
+text = "00000"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Player4" type="Control" parent="CanvasLayer/HUD/Player" unique_id=1508083122]
+layout_mode = 2
+
+[node name="PlayerName" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player4" unique_id=1256439141]
+modulate = Color(1, 1, 0, 1)
+layout_mode = 0
+offset_left = 1.0
+offset_top = 36.0
+offset_right = 15.0
+offset_bottom = 45.0
+theme_override_font_sizes/normal_font_size = 8
+text = "P4
+"
+
+[node name="CapacityDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player4" unique_id=804482132]
+layout_mode = 0
+offset_top = 17.0
+offset_right = 33.0
+offset_bottom = 26.0
+theme_override_font_sizes/normal_font_size = 8
+text = "0/0
+"
+horizontal_alignment = 2
+
+[node name="NectarIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player4" unique_id=1959235679]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 19.0
+offset_right = 38.0
+offset_bottom = 23.0
+texture = ExtResource("14_0ld40")
+
+[node name="MoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player4" unique_id=929563118]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 26.0
+offset_right = 19.0
+offset_bottom = 35.0
+theme_override_font_sizes/normal_font_size = 8
+text = "000"
+horizontal_alignment = 2
+
+[node name="MoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player4" unique_id=1707158]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 26.0
+offset_right = 30.0
+offset_bottom = 33.0
+texture = ExtResource("15_gqmmt")
+
+[node name="HoneyIcon" type="TextureRect" parent="CanvasLayer/HUD/Player/Player4" unique_id=1607811997]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 7.0
+offset_right = 41.0
+offset_bottom = 16.0
+texture = ExtResource("16_yc10j")
+
+[node name="HoneyDisplay" type="RichTextLabel" parent="CanvasLayer/HUD/Player/Player4" unique_id=1606950323]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 8.0
+offset_right = 34.0
+offset_bottom = 17.0
+theme_override_font_sizes/normal_font_size = 8
+text = "00000"
+fit_content = true
+autowrap_mode = 0
+horizontal_alignment = 2
+
+[node name="321Go" type="AnimatedSprite2D" parent="CanvasLayer" unique_id=1621301560]
+visible = false
+position = Vector2(320, 160)
+scale = Vector2(10, 10)
+sprite_frames = SubResource("SpriteFrames_xu4xf")
+
+[node name="GameCountdown" type="Timer" parent="." unique_id=1752089702]
+wait_time = 120.0
+one_shot = true
+
+[node name="StartCountdown" type="Timer" parent="." unique_id=72226698]
+wait_time = 4.0
+one_shot = true
+autostart = true
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1648089543]
+stream = ExtResource("12_eb6dy")
 
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Local" to="CanvasLayer" method="_on_local_pressed"]
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Online" to="CanvasLayer" method="_on_online_pressed"]
