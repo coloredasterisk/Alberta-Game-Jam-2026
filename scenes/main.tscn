@@ -318,7 +318,7 @@ theme_override_colors/font_outline_color = Color(0.20, 0.075, 0.015, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
-text = "[center]THE GREAT NECTAR RUSH"
+text = "[center]HONEY & MONEY"
 
 [node name="Selection" type="VBoxContainer" parent="CanvasLayer/Screens/TitleScreen" unique_id=625507326]
 layout_mode = 1

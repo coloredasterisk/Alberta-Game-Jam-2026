@@ -1,4 +1,4 @@
-// Bloom Market background for The Great Nectar Rush.
+// Bloom Market background for Honey & Money.
 //
 // This CanvasItem shader draws only the scalable environment: pixel sky,
 // block clouds, sun, distant hedge, meadow, sand path, and subtle menu-safe

@@ -2,7 +2,7 @@
 
 ## Creative credits
 
-- **Game concept and story direction:** The Great Nectar Rush story supplied by the project owner.
+- **Game concept and story direction:** Honey & Money story supplied by the project owner.
 - **Project palette and pixel-art direction:** Existing visual assets in `coloredasterisk/Alberta-Game-Jam-2026`. The repository does not currently identify individual artists in `art/README.md`; add contributor names here when available.
 - **Bloom Market direction and approval render:** Generated with OpenAI image generation for selection only. The render is not embedded in or required by the game.
 - **Final recognizable objects:** Existing repository textures `Shop.png`, `Blue_Bee.png`, `Red_Bee.png`, `Blue_Beehive.png`, `Mono_Beehive.png`, `Blue_Flower.png`, `Red_Flower.png`, and `Mono_Flower.png` are used directly without redrawing them in the shader.
