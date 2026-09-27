@@ -12,40 +12,64 @@
 script = ExtResource("1_mx8sn")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=665732631]
-visible = false
 zoom = Vector2(2, 2)
 
 [node name="ant_hill" parent="." unique_id=848726325 instance=ExtResource("7_klq6b")]
 position = Vector2(-71, -37)
 
 [node name="Shop" parent="." unique_id=1784644030 instance=ExtResource("6_2r41h")]
-position = Vector2(17, 19)
+z_index = 5
+position = Vector2(41, -2)
 
-[node name="Stinger" parent="Shop" unique_id=417485488 instance=ExtResource("5_ppgk2")]
+[node name="HBoxContainer" type="HBoxContainer" parent="Shop" unique_id=1290439749]
 visible = false
-position = Vector2(-90, 26)
+offset_left = -87.0
+offset_top = 14.0
+offset_right = 89.0
+offset_bottom = 54.0
+alignment = 1
+
+[node name="Stinger" type="TextureRect" parent="Shop/HBoxContainer" unique_id=467028347]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 12)
+layout_mode = 2
+
+[node name="Stinger" parent="Shop/HBoxContainer/Stinger" unique_id=417485488 instance=ExtResource("5_ppgk2")]
 powerup_type = "stinger"
-powerup_cost = 10
+powerup_cost = 20
 
-[node name="Rain" parent="Shop" unique_id=1308663423 instance=ExtResource("5_ppgk2")]
-visible = false
-position = Vector2(-53, 25)
+[node name="Rain" type="TextureRect" parent="Shop/HBoxContainer" unique_id=1262146229]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Rain" parent="Shop/HBoxContainer/Rain" unique_id=1308663423 instance=ExtResource("5_ppgk2")]
 powerup_type = "rain"
-
-[node name="Swarm" parent="Shop" unique_id=742851870 instance=ExtResource("5_ppgk2")]
-visible = false
-position = Vector2(25, 25)
-powerup_type = "swarm"
 powerup_cost = 15
 
-[node name="Speed" parent="Shop" unique_id=1012920229 instance=ExtResource("5_ppgk2")]
-visible = false
-position = Vector2(-16, 24)
-powerup_type = "speed"
+[node name="Swarm" type="TextureRect" parent="Shop/HBoxContainer" unique_id=45527030]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
 
-[node name="Confusion" parent="Shop" unique_id=1427355907 instance=ExtResource("5_ppgk2")]
-visible = false
-position = Vector2(68, 26)
+[node name="Swarm" parent="Shop/HBoxContainer/Swarm" unique_id=742851870 instance=ExtResource("5_ppgk2")]
+powerup_type = "swarm"
+powerup_cost = 30
+
+[node name="Speed" type="TextureRect" parent="Shop/HBoxContainer" unique_id=510887534]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Speed" parent="Shop/HBoxContainer/Speed" unique_id=1012920229 instance=ExtResource("5_ppgk2")]
+powerup_type = "speed"
+powerup_cost = 15
+
+[node name="Confusion" type="TextureRect" parent="Shop/HBoxContainer" unique_id=236434085]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="Confusion" parent="Shop/HBoxContainer/Confusion" unique_id=1427355907 instance=ExtResource("5_ppgk2")]
+powerup_cost = 10
 
 [node name="Red_Hive" parent="." unique_id=1789593573 instance=ExtResource("4_mx8sn")]
 position = Vector2(-140, 5)
@@ -95,13 +119,22 @@ position = Vector2(-90, 66)
 [node name="Red_Flower3" parent="FlowerSpawner" unique_id=888916995 instance=ExtResource("2_w7c3h")]
 position = Vector2(-68, 42)
 
+[node name="Red_Flower5" parent="FlowerSpawner" unique_id=1282202202 instance=ExtResource("2_w7c3h")]
+position = Vector2(76, 39)
+flower_color = "yellow"
+
+[node name="Red_Flower6" parent="FlowerSpawner" unique_id=1317449397 instance=ExtResource("2_w7c3h")]
+position = Vector2(47, 35)
+flower_color = "yellow"
+
 [node name="Blue_Flower" parent="FlowerSpawner" unique_id=685865285 instance=ExtResource("2_w7c3h")]
 position = Vector2(-57, 1)
 flower_color = "blue"
 
 [node name="RoundTimer" type="Timer" parent="." unique_id=117652426]
-wait_time = 5.0
+wait_time = 120.0
 one_shot = true
+autostart = true
 
 [connection signal="body_entered" from="Shop" to="Shop" method="_on_body_entered"]
 [connection signal="body_exited" from="Shop" to="Shop" method="_on_body_exited"]

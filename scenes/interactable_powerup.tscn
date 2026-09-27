@@ -105,7 +105,6 @@ offset_right = 34.0
 offset_bottom = 43.0
 
 [node name="TextureRect" type="TextureRect" parent="Cost" unique_id=1314674960]
-visible = false
 layout_mode = 0
 offset_top = -11.0
 offset_right = 11.0
@@ -113,7 +112,6 @@ offset_bottom = -4.0
 texture = ExtResource("1_gt1rh")
 
 [node name="NumberDisplay" parent="Cost" unique_id=1561342514 instance=ExtResource("2_h273r")]
-visible = false
 layout_mode = 0
 offset_left = 13.0
 offset_top = -12.0

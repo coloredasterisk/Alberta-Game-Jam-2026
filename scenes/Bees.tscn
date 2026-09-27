@@ -8,6 +8,22 @@
 [sub_resource type="Gradient" id="Gradient_xu4xf"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_b8v61"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lexnm"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rj8tm"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j4kyi"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(15, 0, 15, 14)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_csgcu"]
 atlas = ExtResource("2_t2mbh")
 region = Rect2(0, 0, 15, 14)
@@ -16,17 +32,37 @@ region = Rect2(0, 0, 15, 14)
 atlas = ExtResource("2_t2mbh")
 region = Rect2(15, 0, 15, 14)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_i4qo7"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vtfsl"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(15, 0, 15, 14)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
 animations = [{
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b8v61")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lexnm")
+}],
 "loop": 1,
 "name": &"blue",
-"speed": 5.0
+"speed": 3.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rj8tm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j4kyi")
+}],
 "loop": 1,
 "name": &"green",
-"speed": 5.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -39,10 +75,16 @@ animations = [{
 "name": &"red",
 "speed": 3.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i4qo7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vtfsl")
+}],
 "loop": 1,
 "name": &"yellow",
-"speed": 5.0
+"speed": 3.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x7p88"]
@@ -51,29 +93,87 @@ radius = 6.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_f58d2"]
 radius = 11.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_t2mbh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx7m4"]
 atlas = ExtResource("5_csgcu")
 region = Rect2(0, 0, 15, 14)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_b8v61"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_0pwa3"]
 atlas = ExtResource("5_csgcu")
 region = Rect2(15, 0, 15, 14)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_f6auw"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_nv50g"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eqqys"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_635w0"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2mbh"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ike2"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_opnkb"]
+atlas = ExtResource("5_csgcu")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f58d2"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_t2mbh")
+"texture": SubResource("AtlasTexture_tx7m4")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_b8v61")
+"texture": SubResource("AtlasTexture_0pwa3")
 }],
 "loop": 1,
-"name": &"outline",
+"name": &"blue",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nv50g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eqqys")
+}],
+"loop": 1,
+"name": &"green",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_635w0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2mbh")
+}],
+"loop": 1,
+"name": &"red",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ike2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_opnkb")
+}],
+"loop": 1,
+"name": &"yellow",
 "speed": 3.0
 }]
 
 [node name="Bees" type="CharacterBody2D" unique_id=558911984]
+z_index = 10
 script = ExtResource("1_ij6vw")
 
 [node name="PollenParticles" type="CPUParticles2D" parent="." unique_id=1819938340]
@@ -93,12 +193,9 @@ color_ramp = SubResource("Gradient_xu4xf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1893458618]
 z_index = 1
-position = Vector2(-1, -1)
 sprite_frames = SubResource("SpriteFrames_x7p88")
-animation = &"red"
+animation = &"blue"
 autoplay = "red"
-frame = 1
-frame_progress = 0.8769494
 
 [node name="Shadow" type="AnimatedSprite2D" parent="AnimatedSprite2D" unique_id=451097649]
 modulate = Color(0, 0, 0, 0.39215687)
@@ -119,20 +216,18 @@ shape = SubResource("CircleShape2D_x7p88")
 [node name="Collector" type="CollisionShape2D" parent="Area_Interact" unique_id=128156563]
 shape = SubResource("CircleShape2D_f58d2")
 
-[node name="Rainbow_Effect" type="Sprite2D" parent="." unique_id=706921043]
-visible = false
-position = Vector2(1, 1)
-texture = ExtResource("4_t2mbh")
-
-[node name="animated_outline" type="AnimatedSprite2D" parent="." unique_id=1549432555]
-z_index = 2
-position = Vector2(-1, -1)
-sprite_frames = SubResource("SpriteFrames_f6auw")
-animation = &"outline"
-autoplay = "outline"
-frame = 1
-frame_progress = 0.79814994
-
 [node name="Camera2D" type="Camera2D" parent="." unique_id=308300040]
 position_smoothing_enabled = true
 position_smoothing_speed = 3.0
+
+[node name="animated_outline" type="AnimatedSprite2D" parent="." unique_id=1782823448]
+z_index = 11
+sprite_frames = SubResource("SpriteFrames_f58d2")
+animation = &"red"
+autoplay = "red"
+
+[node name="Rainbow_Effect" type="Sprite2D" parent="animated_outline" unique_id=1068418687]
+visible = false
+z_index = 12
+position = Vector2(2, 1)
+texture = ExtResource("4_t2mbh")

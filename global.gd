@@ -1,11 +1,19 @@
 extends Node
 
 
+#power up costs
+var stinger_cost: int = 20
+var rain_cost: int = 15
+var speed_cost: int = 15
+var confusion_cost: int = 10
+var swarm_cost: int = 30
+
 #power up durations
 var stinger_duration: float = 10.0
-var rain_duration: float = 3.0
-var speed_duration: float = 5.0
+var rain_duration: float = 10.0
+var speed_duration: float = 20.0
 var confusion_duration: float = 5.0
+var swarm_cooldown_duration: float = 1
 
 var original_max_capacity: int = 5
 var win_amount = 10

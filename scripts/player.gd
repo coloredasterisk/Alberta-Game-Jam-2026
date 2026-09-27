@@ -23,22 +23,28 @@ var max_pollen_counter: int = 4
 var money_counter: int = 100
 
 var confused: bool = false
-var confused_timer: float = 5.0
+var rain: bool = false
 
 var has_stinger: bool = false:
 	set(value):
 		has_stinger = value
-		$Rainbow_Effect.visible = value
+		stinger_effect.visible = value
 
 @export_enum("red", "blue", "yellow", "green") var player_color: String = "red"
+
 @onready var interaction: Area2D = $Area_Interact
 @onready var bee_animation: AnimatedSprite2D = $AnimatedSprite2D
-@onready var stinger_effect: Sprite2D = $Rainbow_Effect
+@onready var stinger_effect: Sprite2D = $animated_outline/Rainbow_Effect
+@onready var bee_outline_animation: AnimatedSprite2D = $animated_outline
+
+
 
 func _ready():
 	$AnimatedSprite2D/Shadow.play()
-	$animated_outline.modulate = Global.modulate_color[player_color]
+	bee_outline_animation.self_modulate = Global.modulate_color[player_color]
 	bee_animation.play(player_color)
+	bee_outline_animation.play(player_color)
+	
 	current_nectar_capacity = Global.original_max_capacity
 	interaction.body_entered.connect(_on_interaction_body_entered)
 	disable()
@@ -67,7 +73,6 @@ func movement(delta):
 			direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	if confused:
 		direction = -direction
-	
 	acceleration = direction * speed
 	velocity = acceleration * delta + (velocity * 0.98)
 	
@@ -77,7 +82,16 @@ func movement(delta):
 func confusion():
 	confused = true
 	await get_tree().create_timer(Global.confusion_duration).timeout
+	%Confusion.visible = true
 	confused = false
+
+func rain_power():
+	rain = true
+	speed -= 150
+	await get_tree().create_timer(Global.rain_duration).timeout
+	%Rain.visible = true
+	speed += 150
+	rain = false
 
 func pollen():
 	for area in interaction.get_overlapping_areas():
@@ -93,9 +107,10 @@ func interact():
 func stinger():
 	has_stinger = true
 	var blink = create_tween().set_loops()
-	blink.tween_property($Rainbow_Effect, "modulate:a", 0.3, 0.3)
-	blink.tween_property($Rainbow_Effect, "modulate:a", 1.0, 0.3)
+	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.3)
+	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
 	await get_tree().create_timer(Global.stinger_duration).timeout
+	%Stinger.visible = true
 	blink.kill()
 	has_stinger = false
 
@@ -112,18 +127,22 @@ func _on_interaction_body_entered(body: Node2D) -> void:
 		body.get_stung(self)
 
 func animation():
+	if bee_animation.frame == 1:
+		stinger_effect.position.y = 2
+	else:
+		stinger_effect.position.y = 1
 	if direction.x < 0:
 		bee_animation.flip_h = true
 		$animated_outline.flip_h = true
 		stinger_effect.flip_h = true
-		stinger_effect.position.x = -2.0
+		stinger_effect.position.x = -1.0
 		$AnimatedSprite2D/Shadow.flip_h = true
 	elif direction.x > 0:
 		bee_animation.flip_h = false
 		$animated_outline.flip_h = false
 		stinger_effect.flip_h = false
 		$AnimatedSprite2D/Shadow.flip_h = false
-		stinger_effect.position.x = 1.0
+		stinger_effect.position.x = 2.0
 
 func _physics_process(delta: float) -> void:
 	pollen()

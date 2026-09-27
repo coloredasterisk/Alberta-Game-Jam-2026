@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bf3h8mx4kb8eu"]
 
-[ext_resource type="Script" uid="uid://o61q55bi3eca" path="res://scenes/rain_powerup.gd" id="1_3uxwh"]
+[ext_resource type="Script" uid="uid://c1suiyf5xku0i" path="res://scenes/rain_powerup.gd" id="1_3uxwh"]
 [ext_resource type="Texture2D" uid="uid://bh6am0r1dxevl" path="res://art/Rain.png" id="1_xpor1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xpor1"]
