@@ -306,14 +306,19 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -103.0
-offset_right = 20.0
-offset_bottom = -63.0
+offset_left = -300.0
+offset_top = -145.0
+offset_right = 300.0
+offset_bottom = -88.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-text = "Title"
+theme_override_colors/default_color = Color(1, 0.82, 0.18, 1)
+theme_override_colors/font_outline_color = Color(0.20, 0.075, 0.015, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = true
+text = "[center]THE GREAT NECTAR RUSH"
 
 [node name="Selection" type="VBoxContainer" parent="CanvasLayer/Screens/TitleScreen" unique_id=625507326]
 layout_mode = 1
