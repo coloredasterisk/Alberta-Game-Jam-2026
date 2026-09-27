@@ -1,4 +1,5 @@
 class_name Player extends CharacterBody2D
+const POWER_EFFECT = preload("res://scripts/power_effect_2d.gd")
 @export var player_index: int = 1
 
 var speed: int = 200
@@ -82,17 +83,23 @@ func movement(delta):
 
 func confusion():
 	confused = true
+	POWER_EFFECT.spawn(self, "confusion", Global.confusion_duration)
 	await get_tree().create_timer(Global.confusion_duration).timeout
-	%Confusion.visible = true
 	confused = false
 
 func rain_power():
 	rain = true
 	speed -= 150
+	POWER_EFFECT.spawn(self, "rain", Global.rain_duration)
 	await get_tree().create_timer(Global.rain_duration).timeout
-	%Rain.visible = true
 	speed += 150
 	rain = false
+
+func speed_power():
+	speed += 100
+	POWER_EFFECT.spawn(self, "speed", Global.speed_duration)
+	await get_tree().create_timer(Global.speed_duration).timeout
+	speed -= 100
 
 func pollen():
 	for area in interaction.get_overlapping_areas():
@@ -107,6 +114,7 @@ func interact():
 
 func stinger():
 	has_stinger = true
+	POWER_EFFECT.spawn(self, "stinger", Global.stinger_duration)
 	var blink = create_tween().set_loops()
 	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.3)
 	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
@@ -116,7 +124,6 @@ func stinger():
 	sfx.stream = preload("res://Rainbow Stinger Powerup.wav")
 	add_child(sfx)
 	await get_tree().create_timer(Global.stinger_duration).timeout
-	%Stinger.visible = true
 	blink.kill()
 	sfx.queue_free()
 	has_stinger = false
