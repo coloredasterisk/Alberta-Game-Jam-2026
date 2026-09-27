@@ -32,7 +32,7 @@ func movement(delta):
 
 func confusion():
 	confused = true
-	await get_tree().create_timer(5.0).timeout
+	await get_tree().create_timer(Global.confusion_duration).timeout
 	confused = false
 
 func rain():

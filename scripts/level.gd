@@ -18,14 +18,14 @@ func _on_powerup_purchased(type: String, buyer: Player):
 					bee.confusion()
 		"speed":
 			buyer.speed += 50
-			await get_tree().create_timer(5.0).timeout
+			await get_tree().create_timer(Global.speed_duration).timeout
 			buyer.speed -= 50
 		"rain":
 			for bee in [$Red_Bee, $Blue_Bee]:#add players
 				if bee != buyer:
 					rain_spawning(bee)
 					bee.speed -= 50
-					await get_tree().create_timer(3.0).timeout
+					await get_tree().create_timer(Global.rain_duration).timeout
 					bee.speed += 50
 		"stinger":
 			pass
