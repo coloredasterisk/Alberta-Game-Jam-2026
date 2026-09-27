@@ -58,6 +58,9 @@ The values selected in the in-chat tuner are documented beside their implementat
 - Hives: scale `2`
 - Menu-safe width: `46%`
 - Gentle motion: enabled
+- Hedge visibility: `15%` of the original solid silhouette
+- Bee motion: five independent seeded horizontal paths with unique speed,
+  direction, altitude, wave amplitude, and wave frequencies
 
 ## Rendering approach
 

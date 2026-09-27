@@ -26,6 +26,10 @@ uniform vec4 meadow_color : source_color = vec4(0.10, 0.72, 0.13, 1.0);
 uniform vec4 meadow_shadow : source_color = vec4(0.05, 0.53, 0.12, 1.0);
 uniform vec4 path_color : source_color = vec4(1.0, 0.87, 0.48, 1.0);
 
+// The hedge was reduced after visual review. At 0.15 it remains a distant
+// suggestion rather than the solid tree wall used in the first version.
+uniform float hedge_visibility : hint_range(0.0, 1.0, 0.01) = 0.15;
+
 // Final values selected in the interactive tuner. They remain uniforms so a
 // developer can adjust the material without exposing controls to users.
 uniform vec2 sun_position = vec2(0.19, 0.28);
@@ -83,10 +87,10 @@ void fragment() {
 	float hedge_cell = floor(world_pixel.x / 24.0);
 	float hedge_height = mix(12.0, 34.0, hash11(hedge_cell + 4.0));
 	float hedge = step(hedge_line * design_resolution.y - hedge_height, world_pixel.y);
-	color = mix(color, hedge_dark.rgb, hedge);
+	color = mix(color, hedge_dark.rgb, hedge * hedge_visibility);
 	float hedge_highlight = step(hedge_line * design_resolution.y - hedge_height, world_pixel.y)
 		* (1.0 - step(hedge_line * design_resolution.y - hedge_height + 7.0, world_pixel.y));
-	color = mix(color, hedge_light.rgb, hedge_highlight);
+	color = mix(color, hedge_light.rgb, hedge_highlight * hedge_visibility);
 
 	// Meadow begins below the hedge. Sparse eight-pixel marks echo grass.png.
 	float meadow = step(0.50, world_uv.y);

@@ -88,19 +88,29 @@ func _build_flowers() -> void:
 
 
 func _build_bees() -> void:
-	# Five animated bees follow two edge routes, leaving the centre quiet.
-	var positions := [Vector2(112, 245), Vector2(158, 222), Vector2(202, 197), Vector2(480, 218), Vector2(526, 248)]
+	# A fixed seed makes the composition reproducible, while every bee receives
+	# its own randomized horizontal speed, direction, altitude, and wave shape.
+	var random := RandomNumberGenerator.new()
+	random.seed = 20260927
 	for i in BEE_COUNT:
 		var bee := AnimatedSprite2D.new()
 		bee.name = "Bee%d" % (i + 1)
 		bee.sprite_frames = BEE_FRAMES
 		bee.animation = &"blue" if i % 2 == 0 else &"red"
 		bee.autoplay = bee.animation
-		bee.position = positions[i]
+		var base_y := random.randf_range(192.0, 266.0)
+		bee.position = Vector2(random.randf_range(-25.0, 665.0), base_y)
 		bee.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		bee.set_meta("base_position", positions[i])
+		bee.set_meta("base_position", bee.position)
 		bee.set_meta("parallax_depth", 1.12)
-		bee.set_meta("motion_phase", float(i) * 1.37)
+		bee.set_meta("motion_phase", random.randf_range(0.0, TAU))
+		bee.set_meta("flight_speed", random.randf_range(18.0, 42.0))
+		bee.set_meta("flight_direction", -1.0 if i % 2 else 1.0)
+		bee.set_meta("flight_altitude", base_y)
+		bee.set_meta("flight_wave_a", random.randf_range(5.0, 14.0))
+		bee.set_meta("flight_wave_b", random.randf_range(2.0, 7.0))
+		bee.set_meta("flight_frequency_a", random.randf_range(0.75, 1.35))
+		bee.set_meta("flight_frequency_b", random.randf_range(1.7, 2.8))
 		_asset_layer.add_child(bee)
 		_animated_assets.append(bee)
 
@@ -141,10 +151,24 @@ func _update_asset_motion(pointer_delta: Vector2) -> void:
 		var depth: float = item.get_meta("parallax_depth")
 		var phase: float = item.get_meta("motion_phase")
 		var parallax := pointer_delta * Vector2(10.0, 6.0) * depth if pointer_reaction else Vector2.ZERO
-		var bob := Vector2.ZERO
-		if not reduced_motion and item is AnimatedSprite2D:
-			bob.y = sin(time_value * 1.7 + phase) * 2.0
-		item.position = base_position + parallax + bob
+		if item is AnimatedSprite2D and not reduced_motion:
+			# Each bee wraps horizontally across a 700-pixel route and follows a
+			# unique two-frequency wave, producing non-repeating-looking paths.
+			var speed: float = item.get_meta("flight_speed")
+			var direction: float = item.get_meta("flight_direction")
+			var travel := fmod(base_position.x + time_value * speed, 700.0)
+			var x := travel - 30.0 if direction > 0.0 else 670.0 - travel
+			var altitude: float = item.get_meta("flight_altitude")
+			var wave_a: float = item.get_meta("flight_wave_a")
+			var wave_b: float = item.get_meta("flight_wave_b")
+			var frequency_a: float = item.get_meta("flight_frequency_a")
+			var frequency_b: float = item.get_meta("flight_frequency_b")
+			var y := altitude + sin(time_value * frequency_a + phase) * wave_a
+			y += sin(time_value * frequency_b + phase * 1.73) * wave_b
+			item.position = Vector2(x, y) + parallax
+			(item as AnimatedSprite2D).flip_h = direction < 0.0
+		else:
+			item.position = base_position + parallax
 
 
 func _input(event: InputEvent) -> void:
