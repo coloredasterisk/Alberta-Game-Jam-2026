@@ -24,8 +24,10 @@ func interact(player) -> bool:
 		print("stopped at ", bar.position.x, " hit: ", hit)
 		if hit:
 			ant_counter -= 1
+			player.money_counter += 5
 			print("goodjob! ants left: ", ant_counter)
 		else:
+			player.money_counter -= 5
 			player.send_home()
 	return true
 

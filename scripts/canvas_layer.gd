@@ -42,4 +42,4 @@ func update_player_stats() -> void:
 		var player_stats_node = get_node("HUD/Player/Player" + str(i + 1))
 		player_stats_node.get_node("CapacityDisplay").text = str(player.nectar) + "/" + str(player.current_nectar_capacity) 
 		player_stats_node.get_node("MoneyDisplay").text = str(player.money_counter)
-		player_stats_node.get_node("HoneyDisplay").text = str(0)
+		player_stats_node.get_node("HoneyDisplay").text = str(get_node("/root/Main/World").hives[i].current_amount)

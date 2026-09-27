@@ -1,11 +1,23 @@
 extends Panel
 
+
+const POWER_EFFECT = preload("res://scripts/power_effect_2d.gd")
+
 var round_time = 120.0
 var timer = 120.0
 var playing = false
 var round_over = false
 var hives = []
 var players = []
+
+#FOR SHOP
+@onready var stinger_rect: TextureRect = $Player1/SubViewport/Map1/Shop/HBoxContainer/Stinger
+@onready var rain_rect: TextureRect = $Player1/SubViewport/Map1/Shop/HBoxContainer/Rain
+@onready var swarm_rect: TextureRect = $Player1/SubViewport/Map1/Shop/HBoxContainer/Swarm
+@onready var speed_rect: TextureRect = $Player1/SubViewport/Map1/Shop/HBoxContainer/Speed
+@onready var confusion_rect: TextureRect = $Player1/SubViewport/Map1/Shop/HBoxContainer/Confusion
+
+
 
 func _ready() -> void:
 	# get 2D scene (= 2D world) to share
@@ -24,9 +36,10 @@ func _ready() -> void:
 	get_node("../CanvasLayer/HUD/TimerDisplay/TextureProgressBar").max_value = round_time
 	get_node("../CanvasLayer/HUD/TimerDisplay/TextureProgressBar").value = round_time
 	
-	for item in $Player1/SubViewport/Map1/Shop.get_children():
-		if item.has_signal("purchased"):
-			item.purchased.connect(_on_powerup_purchased)
+	for item in $Player1/SubViewport/Map1/Shop/HBoxContainer.get_children():
+		var area = item.get_child(0)
+		if area.has_signal("purchased"):
+			area.purchased.connect(_on_powerup_purchased)
 
 func _process(delta: float) -> void:
 	if playing:
@@ -61,8 +74,8 @@ func _on_start_countdown_timeout() -> void:
 		player.enable()
 		
 func _on_round_timer_timeout() -> void:
-	var hives = get_tree().get_nodes_in_group("hives")
-	hives.sort_custom(func(a, b): return a.current_amount > b.current_amount)
+	#var hives = get_tree().get_nodes_in_group("hives")
+	#hives.sort_custom(func(a, b): return a.current_amount > b.current_amount)
 
 	var place := 0
 	for i in hives.size():
@@ -88,24 +101,54 @@ var rain
 func _on_powerup_purchased(type: String, buyer: Player):
 	match type:
 		"confusion":
-			for bee in players:#add players
-				if bee != buyer:
-					bee.confusion()
+			if buyer.money_counter >= Global.confusion_cost: 
+				buyer.money_counter -= Global.confusion_cost
+				confusion_rect.visible = false
+				for bee in players:#add players
+					if bee != buyer:
+						bee.confusion()
+				await get_tree().create_timer(Global.confusion_duration).timeout
+				confusion_rect.visible = true
 		"speed":
-			buyer.max_velocity += 50
-			await get_tree().create_timer(Global.speed_duration).timeout
-			buyer.max_velocity -= 50
+			if buyer.money_counter >= Global.speed_cost: 
+				buyer.money_counter -= Global.speed_cost
+				speed_rect.visible = false
+				buyer.speed_power()
+				await get_tree().create_timer(Global.speed_duration).timeout
+				speed_rect.visible = true
 		"rain":
-			for bee in players:#add players
-				if bee != buyer:
-					rain_spawning(bee)
-					bee.max_velocity -= 50
-					await get_tree().create_timer(Global.rain_duration).timeout
-					bee.max_velocity += 50
+			if buyer.money_counter >= Global.rain_cost: 
+				buyer.money_counter -= Global.rain_cost
+				rain_rect.visible = false
+				for bees in players:#add players
+					if bees != buyer:
+						rain_spawning(bees)
+						bees.rain_power()
+				await get_tree().create_timer(Global.rain_duration).timeout
+				rain_rect.visible = true
 		"stinger":
-			buyer.stinger()
+			if buyer.money_counter >= Global.stinger_cost: 
+				buyer.money_counter -= Global.stinger_cost
+				stinger_rect.visible = false
+				buyer.stinger()
+				await get_tree().create_timer(Global.stinger_duration).timeout
+				stinger_rect.visible = true
 		"swarm":
-			pass
+			if buyer.money_counter >= Global.swarm_cost:
+				buyer.money_counter -= Global.swarm_cost
+				var all_hives = hives
+				var own_hive = all_hives.filter(func(h): return h.color == buyer.player_color)[0]
+				var enemies = all_hives.filter(func(h): return h.color != buyer.player_color)
+				enemies.sort_custom(func(a, b): return a.current_amount > b.current_amount)
+				var target = enemies[0]
+				var stolen = min(5, target.current_amount)
+				target.current_amount -= stolen
+				own_hive.current_amount += stolen
+				POWER_EFFECT.spawn(target, "swarm", maxf(1.5, Global.swarm_cooldown_duration))
+				swarm_rect.visible = false
+				await get_tree().create_timer(Global.swarm_cooldown_duration).timeout
+				swarm_rect.visible = true
+				print(buyer.player_color, " swarm stole ", stolen, " from ", target.color)
 
 func flower_spawning():
 	flower = FLOWER.instantiate()

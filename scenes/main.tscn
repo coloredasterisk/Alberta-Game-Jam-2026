@@ -197,7 +197,7 @@ visible = false
 [node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
 z_index = 0
 player_index = 4
-player_color = "blue"
+player_color = "yellow"
 
 [node name="Player5" type="SubViewportContainer" parent="World" unique_id=1908158357]
 process_mode = 1
