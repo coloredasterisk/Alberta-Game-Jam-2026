@@ -1,36 +1,21 @@
 [gd_scene format=3 uid="uid://bjnp8g5702l8h"]
 
 [ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player.gd" id="1_ij6vw"]
-[ext_resource type="Texture2D" uid="uid://crwatl5yu6yga" path="res://art/Blue_Bee.png" id="2_635w0"]
-[ext_resource type="Texture2D" uid="uid://d0ykg44156l0o" path="res://art/Red_Bee.png" id="2_g2brh"]
+[ext_resource type="Texture2D" uid="uid://eaei4ea50qmg" path="res://art/Mono_Bee.png" id="2_t2mbh"]
 [ext_resource type="Texture2D" uid="uid://dmectf1na0gqi" path="res://art/Stinger_Rainbow.png" id="4_t2mbh"]
 [ext_resource type="Texture2D" uid="uid://d35bjq8fayu2v" path="res://art/Mono_Bee-outline.png" id="5_csgcu"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_t2mbh"]
-atlas = ExtResource("2_635w0")
-region = Rect2(0, 0, 15, 13)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_csgcu"]
-atlas = ExtResource("2_635w0")
-region = Rect2(15, 0, 15, 13)
+atlas = ExtResource("2_t2mbh")
+region = Rect2(0, 0, 15, 14)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dn4c7"]
-atlas = ExtResource("2_g2brh")
-region = Rect2(0, 0, 15, 13)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_4vejd"]
-atlas = ExtResource("2_g2brh")
-region = Rect2(15, 0, 15, 13)
+[sub_resource type="AtlasTexture" id="AtlasTexture_ybcnv"]
+atlas = ExtResource("2_t2mbh")
+region = Rect2(15, 0, 15, 14)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x7p88"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t2mbh")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_csgcu")
-}],
+"frames": [],
 "loop": 1,
 "name": &"blue",
 "speed": 5.0
@@ -42,10 +27,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dn4c7")
+"texture": SubResource("AtlasTexture_csgcu")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4vejd")
+"texture": SubResource("AtlasTexture_ybcnv")
 }],
 "loop": 1,
 "name": &"red",
@@ -116,7 +101,7 @@ position = Vector2(1, 1)
 texture = ExtResource("4_t2mbh")
 
 [node name="animated_outline" type="AnimatedSprite2D" parent="." unique_id=1834764579]
-position = Vector2(-1, 0)
+position = Vector2(-1, -1)
 sprite_frames = SubResource("SpriteFrames_f58d2")
 animation = &"outline"
 autoplay = "outline"
