@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c1ynq4x0to025"
+path="res://.godot/imported/Raincloud powerup.wav-5a7a7e27252711d55cc02840bfb160fa.sample"
+
+[deps]
+
+source_file="res://Raincloud powerup.wav"
+dest_files=["res://.godot/imported/Raincloud powerup.wav-5a7a7e27252711d55cc02840bfb160fa.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

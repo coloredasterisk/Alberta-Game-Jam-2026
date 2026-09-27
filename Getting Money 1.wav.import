@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bahi3dfgeg5hx"
+path="res://.godot/imported/Getting Money 1.wav-c44eda1c53587df0416f6a254cbdc7b8.sample"
+
+[deps]
+
+source_file="res://Getting Money 1.wav"
+dest_files=["res://.godot/imported/Getting Money 1.wav-c44eda1c53587df0416f6a254cbdc7b8.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

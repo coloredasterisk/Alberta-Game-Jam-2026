@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://j36fge0l8028"]
+
+[ext_resource type="Script" uid="uid://cyg4hqiyuwp5o" path="res://scenes/placement.gd" id="1_a6i1o"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_76cwm"]
+bg_color = Color(0.30980393, 0.25882354, 0.23921569, 0.5411765)
+
+[node name="Placement" type="Panel" unique_id=821759070]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -1.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_76cwm")
+script = ExtResource("1_a6i1o")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=731590574]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 26.0
+offset_bottom = 347.0
+grow_horizontal = 2
+theme_override_font_sizes/normal_font_size = 32
+text = "1st Place
+
+Made 0 Honey"
+horizontal_alignment = 1

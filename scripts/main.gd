@@ -343,13 +343,11 @@ func update_split_screen() -> void:
 	for i in range(amount_of_players):
 		if i >= $World.get_child_count():
 			$World.get_child(i).visible = false
-			players[i].disable()
 			$CanvasLayer/HUD/Player.get_child(i).visible = false
 			
 		else:
 			$World.get_child(i).visible = true
 			$World.get_child(i).size = pos[i]
-			players[i].enable()
 			$CanvasLayer/HUD/Player.get_child(i).visible = true
 		
 
@@ -367,6 +365,7 @@ func _enter_playing() -> void:
 	$CanvasLayer/Screens.visible = false
 	world.visible = true
 	$CanvasLayer/HUD.visible = true
+	$World._start_game()
 
 
 ## Enter/Space on the keyboard, or a phone's start button.

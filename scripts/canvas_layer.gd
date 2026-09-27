@@ -12,12 +12,10 @@ func _on_local_pressed() -> void:
 	Global.local_mode = true
 	Session.mode = Session.Mode.LOCAL
 	$Screens/ChoosePlayerAmount.visible = true
-	$"Screens/ChoosePlayerAmount/Amount/6".visible = false
 
 func _on_online_pressed() -> void:
 	Global.local_mode = false
 	$Screens/OnlineMultiplayerSetup.visible = true
-	$"Screens/ChoosePlayerAmount/Amount/6".visible = true
 
 
 func _on_code_back_pressed() -> void:
@@ -38,11 +36,10 @@ func _on_cancel_pressed() -> void:
 
 
 func update_player_stats() -> void:
-	return
 	# Update the player stats UI elements here
 	for i in range(Global.amount_of_players):
-		var player = Global.players[i]
+		var player = get_node("/root/Main").players[i]
 		var player_stats_node = get_node("HUD/Player/Player" + str(i + 1))
 		player_stats_node.get_node("CapacityDisplay").text = str(player.nectar) + "/" + str(player.current_nectar_capacity) 
 		player_stats_node.get_node("MoneyDisplay").text = str(player.money_counter)
-		#player_stats_node.get_node("HoneyDisplay").text = str(player.honey_counter)
+		player_stats_node.get_node("HoneyDisplay").text = str(0)

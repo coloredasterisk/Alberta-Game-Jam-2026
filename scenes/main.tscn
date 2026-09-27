@@ -2,11 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://2elg8d45uxjs" path="res://scenes/map_1.tscn" id="1_jyhfs"]
 [ext_resource type="Theme" uid="uid://colb7a5ytrq4o" path="res://main_theme.tres" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://b4xlfkqdhwlqf" path="res://scenes/world.gd" id="1_tbgi4"]
 [ext_resource type="Script" uid="uid://cy7876evugj5" path="res://scripts/main.gd" id="1_tipki"]
 [ext_resource type="Script" uid="uid://dy1l2xljudpey" path="res://scripts/title_screen.gd" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://b6yyd712iyjxa" path="res://scripts/world.gd" id="2_dp3eg"]
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
 [ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scripts/canvas_layer.gd" id="4_tipki"]
+[ext_resource type="PackedScene" uid="uid://j36fge0l8028" path="res://scenes/placement.tscn" id="4_yc10j"]
 [ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scripts/online_multiplayer_setup.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scripts/screens.gd" id="7_85g3d"]
 [ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scripts/choose_player_amount.gd" id="10_choun"]
@@ -14,7 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
 [ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
 [ext_resource type="Material" path="res://resources/golden_bloom_valley_material.tres" id="12_golden_bloom"]
-[ext_resource type="Script" path="res://scripts/golden_bloom_valley_controller.gd" id="12_golden_controller"]
+[ext_resource type="Script" uid="uid://8826xiy1lxq6" path="res://scripts/golden_bloom_valley_controller.gd" id="12_golden_controller"]
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
@@ -80,6 +81,7 @@ animations = [{
 }]
 
 [node name="Main" type="Node2D" unique_id=1361628959]
+process_mode = 3
 script = ExtResource("1_tipki")
 
 [node name="World" type="Panel" parent="." unique_id=1789398444]
@@ -88,9 +90,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_tbgi4")
+script = ExtResource("2_dp3eg")
 
 [node name="Player1" type="SubViewportContainer" parent="World" unique_id=399490160]
+process_mode = 1
 layout_mode = 0
 offset_right = 640.0
 offset_bottom = 360.0
@@ -107,16 +110,14 @@ render_target_update_mode = 4
 [node name="Map1" parent="World/Player1/SubViewport" unique_id=585905906 instance=ExtResource("1_jyhfs")]
 
 [node name="BG" type="CanvasLayer" parent="World/Player1/SubViewport" unique_id=2042990104]
-visible = false
 
-[node name="ColorRect" type="ColorRect" parent="World/Player1/SubViewport/BG" unique_id=1799294047]
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.34509805, 0.76862746, 0.29411766, 1)
+[node name="Placement" parent="World/Player1/SubViewport/BG" unique_id=821759070 instance=ExtResource("4_yc10j")]
+visible = false
 
 [node name="Player" parent="World/Player1/SubViewport" unique_id=558911984 instance=ExtResource("2_tbgi4")]
 
 [node name="Player2" type="SubViewportContainer" parent="World" unique_id=2109108224]
+process_mode = 1
 visible = false
 layout_mode = 0
 offset_left = 322.0
@@ -133,19 +134,16 @@ size = Vector2i(318, 360)
 render_target_update_mode = 0
 
 [node name="BG" type="CanvasLayer" parent="World/Player2/SubViewport" unique_id=998388498]
+
+[node name="Placement" parent="World/Player2/SubViewport/BG" unique_id=506912986 instance=ExtResource("4_yc10j")]
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="World/Player2/SubViewport/BG" unique_id=277785482]
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.34509805, 0.76862746, 0.29411766, 1)
-
 [node name="Player" parent="World/Player2/SubViewport" unique_id=1663139987 instance=ExtResource("2_tbgi4")]
-position = Vector2(57, 2)
 player_index = 2
 player_color = "blue"
 
 [node name="Player3" type="SubViewportContainer" parent="World" unique_id=2016832901]
+process_mode = 1
 visible = false
 layout_mode = 0
 offset_top = 182.0
@@ -162,19 +160,16 @@ size = Vector2i(320, 178)
 render_target_update_mode = 0
 
 [node name="BG" type="CanvasLayer" parent="World/Player3/SubViewport" unique_id=1448092236]
+
+[node name="Placement" parent="World/Player3/SubViewport/BG" unique_id=1842952051 instance=ExtResource("4_yc10j")]
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="World/Player3/SubViewport/BG" unique_id=827084602]
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.34509805, 0.76862746, 0.29411766, 1)
-
 [node name="Player" parent="World/Player3/SubViewport" unique_id=837753581 instance=ExtResource("2_tbgi4")]
-position = Vector2(238, 158)
 player_index = 3
 player_color = "green"
 
 [node name="Player4" type="SubViewportContainer" parent="World" unique_id=380069114]
+process_mode = 1
 visible = false
 layout_mode = 0
 offset_left = 322.0
@@ -192,19 +187,16 @@ size = Vector2i(318, 178)
 render_target_update_mode = 0
 
 [node name="BG" type="CanvasLayer" parent="World/Player4/SubViewport" unique_id=987575204]
+
+[node name="Placement" parent="World/Player4/SubViewport/BG" unique_id=925250167 instance=ExtResource("4_yc10j")]
 visible = false
 
-[node name="ColorRect" type="ColorRect" parent="World/Player4/SubViewport/BG" unique_id=1905912618]
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.34509805, 0.76862746, 0.29411766, 1)
-
 [node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
-position = Vector2(0, 2)
 player_index = 4
 player_color = "blue"
 
 [node name="Player5" type="SubViewportContainer" parent="World" unique_id=1908158357]
+process_mode = 1
 visible = false
 layout_mode = 0
 offset_left = 648.0
@@ -232,6 +224,7 @@ position = Vector2(68, 2)
 player_index = 2
 
 [node name="Player6" type="SubViewportContainer" parent="World" unique_id=2125865951]
+process_mode = 1
 visible = false
 layout_mode = 0
 offset_top = 364.0
@@ -261,7 +254,7 @@ player_index = 2
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
 script = ExtResource("4_tipki")
 
-[node name="GoldenBloomValley" type="Control" parent="CanvasLayer"]
+[node name="GoldenBloomValley" type="Control" parent="CanvasLayer" unique_id=28594160]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -271,7 +264,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("12_golden_controller")
 
-[node name="Background" type="ColorRect" parent="CanvasLayer/GoldenBloomValley"]
+[node name="Background" type="ColorRect" parent="CanvasLayer/GoldenBloomValley" unique_id=35406697]
 material = ExtResource("12_golden_bloom")
 layout_mode = 1
 anchors_preset = 15
@@ -280,7 +273,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(1, 1, 1, 1)
 
 [node name="Screens" type="TabContainer" parent="CanvasLayer" unique_id=643847560]
 offset_right = 640.0
@@ -314,11 +306,12 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/default_color = Color(1, 0.82, 0.18, 1)
-theme_override_colors/font_outline_color = Color(0.20, 0.075, 0.015, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/normal_font_size = 28
+theme_override_colors/font_outline_color = Color(0.2, 0.075, 0.015, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 text = "[center]HONEY & MONEY"
+vertical_alignment = 1
 
 [node name="Selection" type="VBoxContainer" parent="CanvasLayer/Screens/TitleScreen" unique_id=625507326]
 layout_mode = 1
@@ -1230,15 +1223,6 @@ position = Vector2(320, 160)
 scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_xu4xf")
 
-[node name="GameCountdown" type="Timer" parent="." unique_id=1752089702]
-wait_time = 120.0
-one_shot = true
-
-[node name="StartCountdown" type="Timer" parent="." unique_id=72226698]
-wait_time = 4.0
-one_shot = true
-autostart = true
-
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1648089543]
 stream = ExtResource("12_eb6dy")
 
@@ -1253,3 +1237,4 @@ stream = ExtResource("12_eb6dy")
 [connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Back" to="CanvasLayer" method="_on_code_back_pressed"]
 [connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Delete" to="CanvasLayer/Screens/EnterCode/Input" method="_delete_last_character"]
 [connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Submit" to="CanvasLayer/Screens/EnterCode/Input" method="submit_code"]
+[connection signal="animation_finished" from="CanvasLayer/321Go" to="World" method="_on_start_countdown_timeout"]
