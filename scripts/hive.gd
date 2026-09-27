@@ -2,7 +2,7 @@ class_name Hive extends Area2D
 var current_amount = 0
 
 @export_enum("red","blue","yellow","green") var color: String = "red"
-
+var oneshot = preload("res://scenes/one_shot.tscn")
 
 func _ready() -> void:
 	$Sprite.animation = color
@@ -17,6 +17,9 @@ func interact(player) -> bool:
 			return false
 		current_amount += player.nectar
 		player.nectar = 0
+		var sfx = oneshot.instantiate()
+		sfx.stream = preload("res://Dropping Nectar At Hive.wav")
+		add_child(sfx)
 	else:
 		# rival hive: steal
 		if current_amount <= 0 or player.nectar >= player.current_nectar_capacity:

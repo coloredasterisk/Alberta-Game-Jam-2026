@@ -115,6 +115,7 @@ render_target_update_mode = 4
 visible = false
 
 [node name="Player" parent="World/Player1/SubViewport" unique_id=558911984 instance=ExtResource("2_tbgi4")]
+z_index = 0
 
 [node name="Player2" type="SubViewportContainer" parent="World" unique_id=2109108224]
 process_mode = 1
@@ -139,6 +140,7 @@ render_target_update_mode = 0
 visible = false
 
 [node name="Player" parent="World/Player2/SubViewport" unique_id=1663139987 instance=ExtResource("2_tbgi4")]
+z_index = 0
 player_index = 2
 player_color = "blue"
 
@@ -165,6 +167,7 @@ render_target_update_mode = 0
 visible = false
 
 [node name="Player" parent="World/Player3/SubViewport" unique_id=837753581 instance=ExtResource("2_tbgi4")]
+z_index = 0
 player_index = 3
 player_color = "green"
 
@@ -192,6 +195,7 @@ render_target_update_mode = 0
 visible = false
 
 [node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
+z_index = 0
 player_index = 4
 player_color = "blue"
 
@@ -220,6 +224,7 @@ offset_bottom = 40.0
 color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player5/SubViewport" unique_id=279821071 instance=ExtResource("2_tbgi4")]
+z_index = 0
 position = Vector2(68, 2)
 player_index = 2
 
@@ -248,6 +253,7 @@ offset_bottom = 40.0
 color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
 [node name="Player" parent="World/Player6/SubViewport" unique_id=549633761 instance=ExtResource("2_tbgi4")]
+z_index = 0
 position = Vector2(57, -27)
 player_index = 2
 
@@ -337,6 +343,7 @@ layout_mode = 2
 text = "Online Multiplayer"
 
 [node name="Settings" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1580457072]
+visible = false
 layout_mode = 2
 text = "Settings"
 
@@ -379,19 +386,26 @@ mouse_filter = 2
 bbcode_enabled = true
 text = "[center]Controls"
 
-[node name="JoystickIcon" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=939024718]
+[node name="ControlsText" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=377402721]
 layout_mode = 0
-offset_left = 87.0
-offset_top = 159.0
-offset_right = 127.0
-offset_bottom = 199.0
+offset_left = 24.0
+offset_top = 110.0
+offset_right = 189.0
+offset_bottom = 334.0
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "There is movement and an interact button for everything
 
-[node name="InteractIcon" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=514803089]
-layout_mode = 0
-offset_left = 224.0
-offset_top = 165.0
-offset_right = 264.0
-offset_bottom = 205.0
+- On phone, use joystick to move and interact to interact
+
+- On LAN, use WASD and E to interact
+
+- On split keyboard:
+	-P1: WASD and E
+	-P2: Arrow Keys and Enter
+	-P3: Mouse move and click
+	-P4: JIKL and O"
 
 [node name="InstructionSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1299993277]
 anchors_preset = 0
@@ -417,7 +431,6 @@ offset_right = 230.0
 offset_bottom = 207.0
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 8
-fit_content = true
 text = "- The winner is the one with the most honey 
 		after 2 minutes
 - Collect Nectar from Flowers
@@ -425,6 +438,7 @@ text = "- The winner is the one with the most honey
 - Can also steal steal honey from rival hives
 - Spend money at the shop to buy powerups
 - Gain money from stealing from ants "
+fit_content = true
 
 [node name="PlayerSection" type="Panel" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1118434159]
 layout_mode = 0
@@ -457,7 +471,7 @@ anchor_bottom = 1.0
 offset_top = 34.0
 offset_bottom = -4.0
 grow_horizontal = 2
-grow_vertical = 1
+grow_vertical = 2
 theme_override_constants/separation = 2
 alignment = 1
 
@@ -660,8 +674,8 @@ offset_right = 126.0
 offset_bottom = -35.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/normal_font_size = 8
 theme_override_colors/default_color = Color(0.94, 0.94, 0.9, 1)
+theme_override_font_sizes/normal_font_size = 8
 bbcode_enabled = true
 text = "[center]Play on the same network/wifi!"
 
@@ -677,7 +691,7 @@ offset_top = -22.0
 offset_right = 70.0
 offset_bottom = 66.0
 grow_horizontal = 2
-grow_vertical = 1
+grow_vertical = 2
 theme_override_constants/separation = 8
 
 [node name="HostGame" type="Button" parent="CanvasLayer/Screens/OnlineMultiplayerSetup/Selection" unique_id=110547270]
@@ -727,7 +741,7 @@ offset_top = -62.0
 offset_right = 219.0
 offset_bottom = 70.0
 grow_horizontal = 2
-grow_vertical = 1
+grow_vertical = 2
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 
@@ -834,7 +848,7 @@ offset_top = -125.0
 offset_right = 101.5
 offset_bottom = 80.0
 grow_horizontal = 2
-grow_vertical = 1
+grow_vertical = 2
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 columns = 6

@@ -4,6 +4,8 @@ class_name Flower extends Area2D
 enum FlowerState {BULB, GROW, BLOOM}
 var current_state
 var can_give_pollen: bool = true
+var oneshot = preload("res://scenes/one_shot.tscn")
+var nectar = [preload("res://Picking Up Nectar At Flower 2 (Yum).wav"), preload("res://Picking Up Nectar At Flower.wav")]
 
 @onready var bloom_color: AnimatedSprite2D = $Color
 @onready var bloom_outline: Sprite2D = $bloom_outline
@@ -30,6 +32,9 @@ func interact(player) -> bool:
 		print(current_state)
 		player.nectar += 1
 		print("picked! nectar counter: ", player.nectar)
+		var sfx = oneshot.instantiate()
+		sfx.stream = nectar.pick_random()
+		add_child(sfx)
 	elif current_state == FlowerState.BULB and player.pollen_counter == 4:
 		current_state = FlowerState.GROW
 		player.pollen_counter = 0
@@ -37,6 +42,9 @@ func interact(player) -> bool:
 		$Pollen_Growth_Cooldown.start()
 		
 		print("you changed to grow ", current_state)
+		var sfx = oneshot.instantiate()
+		sfx.stream = preload("res://Pollenating A Bulb.wav")
+		add_child(sfx)
 	return true
 
 func pollen(player) -> bool:

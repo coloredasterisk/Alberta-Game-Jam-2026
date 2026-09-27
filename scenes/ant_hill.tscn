@@ -17,6 +17,13 @@ shape = SubResource("CircleShape2D_x7p88")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1759631668]
 texture = ExtResource("1_xpm4y")
 
+[node name="Shadow" type="Sprite2D" parent="Sprite2D" unique_id=276269628]
+modulate = Color(0, 0, 0, 0.39215687)
+position = Vector2(7, 27.000002)
+skew = -0.5235988
+texture = ExtResource("1_xpm4y")
+flip_v = true
+
 [node name="TextureProgressBar" type="TextureProgressBar" parent="." unique_id=1100673609]
 offset_left = -19.0
 offset_top = -25.0

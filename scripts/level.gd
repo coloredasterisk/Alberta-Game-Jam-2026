@@ -80,6 +80,8 @@ func rain_spawning(target: Player):
 	rain = RAIN.instantiate()
 	rain.target = target
 	add_child(rain)
+	
+	
 
 func _on_flower_spawner_timeout() -> void:
 	pass

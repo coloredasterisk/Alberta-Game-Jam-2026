@@ -7,6 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://byfkdm40kje5f" path="res://scenes/hive.tscn" id="4_00lji"]
 [ext_resource type="Texture2D" uid="uid://dsocpy70qrlie" path="res://art/rock_sheet.png" id="5_2vcri"]
 [ext_resource type="PackedScene" uid="uid://b2x4j3tmam3pq" path="res://scenes/rock.tscn" id="6_k075t"]
+[ext_resource type="PackedScene" uid="uid://bgycq7fv61ta4" path="res://scenes/shop.tscn" id="8_gbsvo"]
+[ext_resource type="PackedScene" uid="uid://dgpvp2bl1i61d" path="res://scenes/flower.tscn" id="9_fog8g"]
+[ext_resource type="PackedScene" uid="uid://dnfs5r5bqpasw" path="res://scenes/ant_hill.tscn" id="10_2vcri"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2kntv"]
 texture = ExtResource("5_2vcri")
@@ -141,3 +144,161 @@ position = Vector2(132, -100)
 
 [node name="Rock14" parent="Obstacles" unique_id=1420662669 instance=ExtResource("6_k075t")]
 position = Vector2(145, -81)
+
+[node name="Shop" parent="." unique_id=1784644030 instance=ExtResource("8_gbsvo")]
+position = Vector2(0, -13)
+
+[node name="Red" type="Node2D" parent="." unique_id=200539615]
+
+[node name="Flower" parent="Red" unique_id=221364224 instance=ExtResource("9_fog8g")]
+position = Vector2(149, 87)
+
+[node name="Flower2" parent="Red" unique_id=603196889 instance=ExtResource("9_fog8g")]
+position = Vector2(230, 52)
+
+[node name="Flower3" parent="Red" unique_id=704079834 instance=ExtResource("9_fog8g")]
+position = Vector2(330, -76)
+
+[node name="Flower4" parent="Red" unique_id=546028462 instance=ExtResource("9_fog8g")]
+position = Vector2(190, -86)
+
+[node name="Flower5" parent="Red" unique_id=113229419 instance=ExtResource("9_fog8g")]
+position = Vector2(111, -140)
+
+[node name="Flower6" parent="Red" unique_id=121249998 instance=ExtResource("9_fog8g")]
+position = Vector2(229, -186)
+
+[node name="Flower7" parent="Red" unique_id=1728126107 instance=ExtResource("9_fog8g")]
+position = Vector2(43, -214)
+
+[node name="Flower8" parent="Red" unique_id=1576389275 instance=ExtResource("9_fog8g")]
+position = Vector2(-105, -210)
+
+[node name="Flower9" parent="Red" unique_id=936429519 instance=ExtResource("9_fog8g")]
+position = Vector2(-67, 103)
+
+[node name="Blue" type="Node2D" parent="." unique_id=2049327767]
+
+[node name="Flower" parent="Blue" unique_id=1990098236 instance=ExtResource("9_fog8g")]
+position = Vector2(-254, 164)
+flower_color = "blue"
+
+[node name="Flower2" parent="Blue" unique_id=613675743 instance=ExtResource("9_fog8g")]
+position = Vector2(-124, 58)
+flower_color = "blue"
+
+[node name="Flower3" parent="Blue" unique_id=1270991109 instance=ExtResource("9_fog8g")]
+position = Vector2(-24, -70)
+flower_color = "blue"
+
+[node name="Flower4" parent="Blue" unique_id=45524478 instance=ExtResource("9_fog8g")]
+position = Vector2(-283, -66)
+flower_color = "blue"
+
+[node name="Flower5" parent="Blue" unique_id=786944241 instance=ExtResource("9_fog8g")]
+position = Vector2(-130, -284)
+flower_color = "blue"
+
+[node name="Flower6" parent="Blue" unique_id=342617192 instance=ExtResource("9_fog8g")]
+position = Vector2(-125, -180)
+flower_color = "blue"
+
+[node name="Flower7" parent="Blue" unique_id=207810187 instance=ExtResource("9_fog8g")]
+position = Vector2(-247, -257)
+flower_color = "blue"
+
+[node name="Flower8" parent="Blue" unique_id=116181001 instance=ExtResource("9_fog8g")]
+position = Vector2(-176, -82)
+flower_color = "blue"
+
+[node name="Flower9" parent="Blue" unique_id=97020872 instance=ExtResource("9_fog8g")]
+position = Vector2(-356, -157)
+flower_color = "blue"
+
+[node name="Green" type="Node2D" parent="." unique_id=1401980497]
+
+[node name="Flower" parent="Green" unique_id=1271572722 instance=ExtResource("9_fog8g")]
+position = Vector2(43, 74)
+flower_color = "green"
+
+[node name="Flower2" parent="Green" unique_id=1580762126 instance=ExtResource("9_fog8g")]
+position = Vector2(173, -32)
+flower_color = "green"
+
+[node name="Flower3" parent="Green" unique_id=567460518 instance=ExtResource("9_fog8g")]
+position = Vector2(-263, -165)
+flower_color = "green"
+
+[node name="Flower4" parent="Green" unique_id=1752566083 instance=ExtResource("9_fog8g")]
+position = Vector2(14, -156)
+flower_color = "green"
+
+[node name="Flower5" parent="Green" unique_id=2096200945 instance=ExtResource("9_fog8g")]
+position = Vector2(167, -374)
+flower_color = "green"
+
+[node name="Flower6" parent="Green" unique_id=1229276117 instance=ExtResource("9_fog8g")]
+position = Vector2(-227, 13)
+flower_color = "green"
+
+[node name="Flower7" parent="Green" unique_id=591634873 instance=ExtResource("9_fog8g")]
+position = Vector2(-73, 7)
+flower_color = "green"
+
+[node name="Flower8" parent="Green" unique_id=378501213 instance=ExtResource("9_fog8g")]
+position = Vector2(18, 151)
+flower_color = "green"
+
+[node name="Flower9" parent="Green" unique_id=1514519667 instance=ExtResource("9_fog8g")]
+position = Vector2(-59, -247)
+flower_color = "green"
+
+[node name="Yellow" type="Node2D" parent="." unique_id=292108979]
+
+[node name="Flower" parent="Yellow" unique_id=914717269 instance=ExtResource("9_fog8g")]
+position = Vector2(172, 260)
+flower_color = "yellow"
+
+[node name="Flower2" parent="Yellow" unique_id=753304761 instance=ExtResource("9_fog8g")]
+position = Vector2(302, 154)
+flower_color = "yellow"
+
+[node name="Flower3" parent="Yellow" unique_id=1303401070 instance=ExtResource("9_fog8g")]
+position = Vector2(-111, -80)
+flower_color = "yellow"
+
+[node name="Flower4" parent="Yellow" unique_id=798128743 instance=ExtResource("9_fog8g")]
+position = Vector2(175, -214)
+flower_color = "yellow"
+
+[node name="Flower5" parent="Yellow" unique_id=1189596583 instance=ExtResource("9_fog8g")]
+position = Vector2(296, -188)
+flower_color = "yellow"
+
+[node name="Flower6" parent="Yellow" unique_id=494845056 instance=ExtResource("9_fog8g")]
+position = Vector2(-98, 199)
+flower_color = "yellow"
+
+[node name="Flower7" parent="Yellow" unique_id=587956860 instance=ExtResource("9_fog8g")]
+position = Vector2(-207, 263)
+flower_color = "yellow"
+
+[node name="Flower8" parent="Yellow" unique_id=766733509 instance=ExtResource("9_fog8g")]
+position = Vector2(38, 236)
+flower_color = "yellow"
+
+[node name="Flower9" parent="Yellow" unique_id=577388612 instance=ExtResource("9_fog8g")]
+position = Vector2(70, -61)
+flower_color = "yellow"
+
+[node name="ant_hill" parent="." unique_id=848726325 instance=ExtResource("10_2vcri")]
+position = Vector2(307, -309)
+
+[node name="ant_hill2" parent="." unique_id=575984926 instance=ExtResource("10_2vcri")]
+position = Vector2(-339, -324)
+
+[node name="ant_hill3" parent="." unique_id=1974106711 instance=ExtResource("10_2vcri")]
+position = Vector2(-336, 361)
+
+[node name="ant_hill4" parent="." unique_id=1437453737 instance=ExtResource("10_2vcri")]
+position = Vector2(278, 381)

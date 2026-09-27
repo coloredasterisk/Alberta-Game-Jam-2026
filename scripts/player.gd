@@ -60,6 +60,7 @@ func enable():
 	set_physics_process(true)
 	$collider.disabled = false
 	visible = true
+	$Buzzing.play()
 
 
 func movement(delta):
@@ -109,9 +110,15 @@ func stinger():
 	var blink = create_tween().set_loops()
 	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.3)
 	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
+	blink.tween_property($Rainbow_Effect, "modulate:a", 0.3, 0.3)
+	blink.tween_property($Rainbow_Effect, "modulate:a", 1.0, 0.3)
+	var sfx = preload("res://scenes/one_shot.tscn")
+	sfx.stream = preload("res://Rainbow Stinger Powerup.wav")
+	add_child(sfx)
 	await get_tree().create_timer(Global.stinger_duration).timeout
 	%Stinger.visible = true
 	blink.kill()
+	sfx.queue_free()
 	has_stinger = false
 
 func get_stung(attacker: Player):

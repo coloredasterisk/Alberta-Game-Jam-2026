@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cefincl01bn1m"]
+
+[node name="OneShot" type="AudioStreamPlayer" unique_id=2076984972]
+autoplay = true
+bus = &"SFX"
+
+[connection signal="finished" from="." to="." method="queue_free"]

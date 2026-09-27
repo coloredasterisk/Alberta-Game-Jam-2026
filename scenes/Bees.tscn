@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player.gd" id="1_ij6vw"]
 [ext_resource type="Texture2D" uid="uid://eaei4ea50qmg" path="res://art/Mono_Bee.png" id="2_t2mbh"]
 [ext_resource type="Texture2D" uid="uid://dmectf1na0gqi" path="res://art/Stinger_Rainbow.png" id="4_t2mbh"]
+[ext_resource type="AudioStream" uid="uid://7neexati0008" path="res://Bee Buzzing.wav" id="5_b8v61"]
 [ext_resource type="Texture2D" uid="uid://d35bjq8fayu2v" path="res://art/Mono_Bee-outline.png" id="5_csgcu"]
 
 [sub_resource type="Gradient" id="Gradient_xu4xf"]
@@ -231,3 +232,6 @@ visible = false
 z_index = 12
 position = Vector2(2, 1)
 texture = ExtResource("4_t2mbh")
+[node name="Buzzing" type="AudioStreamPlayer" parent="." unique_id=387594474]
+stream = ExtResource("5_b8v61")
+bus = &"SFX"
