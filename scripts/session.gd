@@ -4,7 +4,7 @@ extends Node
 enum Mode { LOCAL, ONLINE_HOST, ONLINE_GUEST }
 
 ## Web build hosted where a ?join=CODE link opens the game and joins straight away.
-const PAGES_URL := "https://jalaad.github.io/GameJam-PvP-Online/"
+const PAGES_URL := "https://coloredasterisk.github.io/Alberta-Game-Jam-2026/"
 
 var mode := Mode.LOCAL
 ## Room code of the online match (guest: the one typed in / from the link).

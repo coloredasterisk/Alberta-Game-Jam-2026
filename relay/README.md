@@ -37,7 +37,7 @@ one set wins:
 
 | Where | How | Needs a rebuild? |
 |---|---|---|
-| Web build | add `?relay=HOST` to the game's address, e.g. `https://YOUR-GAME-URL/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
+| Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
 | Desktop / editor | environment variable `PHONE_RELAY_URL=HOST` before starting Godot or the game | No |
 | Any build | Project Setting `phone_controllers/relay_url` (or an `override.cfg` next to the game) | Editor: no. Exports: re-export |
 | Default | `DEFAULT_RELAY_URL := RELAY_MAIN` / `RELAY_BACKUP` in `phone_control_server.gd` | Yes (one word) |
