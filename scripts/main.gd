@@ -51,8 +51,21 @@ var _guest_id := 0
 var _snapshot_timer := 0.0
 var _guest: OnlineGuest
 
+# True once begin_session() has actually started PhoneControllers / joined as a guest.
+var _session_started := false
+
 
 func _ready() -> void:
+	_show_lobby(true)
+
+
+## Starts phone-controller / relay networking for Session.mode. Called once the player finishes
+## the pre-match menu (amount picked in ChoosePlayerAmount, or a join code submitted) - NOT at
+## scene load, since Session.mode isn't chosen yet at that point.
+func begin_session() -> void:
+	if _session_started:
+		return
+	_session_started = true
 	match Session.mode:
 		Session.Mode.LOCAL:
 			_setup_local()
@@ -60,7 +73,6 @@ func _ready() -> void:
 			_setup_host()
 		Session.Mode.ONLINE_GUEST:
 			_setup_guest()
-	_show_lobby()
 
 
 func _setup_players() -> void:
@@ -74,10 +86,14 @@ func _setup_players() -> void:
 
 ## Called by canvas_layer.gd once the player picks how many are playing (local mode only).
 func set_amount_of_players(amount: int) -> void:
+	print(amount)
 	amount_of_players = amount
-	_setup_players()
-	if Session.mode == Session.Mode.LOCAL:
-		PhoneControllers.max_players = players.size()
+	if not _session_started:
+		begin_session()
+	else:
+		_setup_players()
+		if Session.mode == Session.Mode.LOCAL:
+			PhoneControllers.max_players = players.size()
 	_refresh_names()
 	_update_join_info()
 
@@ -165,10 +181,10 @@ func _leave() -> void:
 
 # --- Flow --------------------------------------------------------------------
 
-func _show_lobby() -> void:
+func _show_lobby(preloading = false) -> void:
 	in_lobby = true
 	_phase = Phase.LOBBY
-	_show_player_setup()
+	_show_player_setup(preloading)
 	$CanvasLayer.visible = true
 	world.visible = false
 	_refresh_names()
@@ -274,10 +290,11 @@ func _show_tutorial() -> void:
 	_tutorial_screen.visible = true
 
 
-func _show_player_setup() -> void:
+func _show_player_setup(preloading = false) -> void:
 	_waiting_to_start = false
 	_tutorial_screen.visible = false
-	_player_setup_screen.visible = true
+	if not preloading:
+		_player_setup_screen.visible = true
 
 
 func _mark_ready(slot: int) -> void:

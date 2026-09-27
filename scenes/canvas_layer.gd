@@ -23,9 +23,11 @@ func _on_online_pressed() -> void:
 
 func _on_code_back_pressed() -> void:
 	$Screens/OnlineMultiplayerSetup.visible = true
-	
-func send_code() -> void:
-	pass
+
+func send_code(code: String) -> void:
+	Session.join_code = code
+	get_parent().begin_session()
+	$Screens/PlayerSetup.visible = true
 
 
 func _on_player_count_back_pressed() -> void:

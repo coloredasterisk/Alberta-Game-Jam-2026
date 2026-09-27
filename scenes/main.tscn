@@ -175,13 +175,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 deselect_enabled = true
 script = ExtResource("7_85g3d")
 
 [node name="TitleScreen" type="Control" parent="CanvasLayer/Screens" unique_id=1018211508]
-visible = false
 layout_mode = 2
 script = ExtResource("2_0wfyh")
 metadata/_tab_index = 0
@@ -232,6 +231,7 @@ layout_mode = 2
 text = "Quit Game"
 
 [node name="TutorialScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=915148859]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_py7os")
 metadata/_tab_index = 1

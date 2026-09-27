@@ -23,7 +23,7 @@ func _on_host_pressed() -> void:
 
 func _on_join_pressed() -> void:
 	Session.mode = Session.Mode.ONLINE_GUEST
-	get_parent().is_hosting = true
+	get_parent().get_parent().is_hosting = true
 	get_parent().get_node("EnterCode").visible = true
 
 
