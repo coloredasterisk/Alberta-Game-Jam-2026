@@ -18,10 +18,45 @@ phone opens               /?r=CODE        ── the controller page the game up
                                              (or the built-in copy in public/, see below)
 ```
 
-The game currently uses the shared relay at `https://pvp-phone-relay.pvp-phone-relay.workers.dev` (`DEFAULT_RELAY_URL` in
-`phone_controller/phone_control_server.gd`). This folder is set up to deploy a separate relay for this game
-named `alberta-game-jam-relay` (see `wrangler.jsonc`); after deploying it, set `DEFAULT_RELAY_URL` to the
-`wss://…workers.dev` address it prints.
+Deployed twice, on two Cloudflare accounts (each has its own free daily allowance). Both addresses are
+constants in `phone_controller/phone_control_server.gd`:
+
+| Constant | Address |
+|---|---|
+| `RELAY_MAIN` | `https://pvp-phone-relay.pvp-phone-relay.workers.dev` |
+| `RELAY_BACKUP` | `https://pvp-phone-relay.gamejam-relay.workers.dev` |
+
+`DEFAULT_RELAY_URL` says which one the game uses (currently `RELAY_BACKUP`, while the main account's
+allowance recovers). Switch by changing that one word; see the next section for switching without a
+rebuild. Deploy code changes to **both** (see "Deploy / update").
+
+## Switching to another relay (and back)
+
+The game picks its relay in this order (`_pick_relay_url()` in `phone_control_server.gd`); the first
+one set wins:
+
+| Where | How | Needs a rebuild? |
+|---|---|---|
+| Web build | add `?relay=HOST` to the game's address, e.g. `https://YOUR-GAME-URL/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
+| Desktop / editor | environment variable `PHONE_RELAY_URL=HOST` before starting Godot or the game | No |
+| Any build | Project Setting `phone_controllers/relay_url` (or an `override.cfg` next to the game) | Editor: no. Exports: re-export |
+| Default | `DEFAULT_RELAY_URL := RELAY_MAIN` / `RELAY_BACKUP` in `phone_control_server.gd` | Yes (one word) |
+
+`HOST` can be a bare host name or a full `wss://…` URL. Phones follow automatically (the QR code points
+at the relay in use), and invite links carry `&relay=…` when it isn't the default, so a friend's game
+joins the same relay.
+
+To run a relay on a **second Cloudflare account** without logging out of the first, give wrangler a
+separate credentials folder (PowerShell):
+
+```powershell
+$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"   # any folder; keep it out of git
+npx wrangler login        # sign in with the other account
+npm run deploy            # prints https://pvp-phone-relay.<that account's subdomain>.workers.dev
+```
+
+Without `XDG_CONFIG_HOME` set, wrangler uses the original login again. Each Cloudflare account has its own
+free daily allowance.
 
 ## Which controller page phones get
 
@@ -46,6 +81,15 @@ cd relay
 npm install
 npx wrangler login     # once; approve in the browser
 npm run deploy         # copies the fallback phone page into public/ and deploys
+```
+
+That deploys to the account wrangler is logged in to (`RELAY_MAIN`). For `RELAY_BACKUP`, which is on the
+second account, point wrangler at that account's login folder first (PowerShell; the folder is the one
+used when logging in to that account, see "Switching to another relay"):
+
+```powershell
+$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"; npm run deploy
+Remove-Item Env:XDG_CONFIG_HOME      # back to the main account
 ```
 
 **Your own relay for another game:** change `"name"` in `wrangler.jsonc` first (e.g. `"my-game-relay"`),
@@ -91,3 +135,10 @@ free allowance; see Cloudflare's current pricing page for exact limits.
 - Up to 8 devices per room. Forwarded messages over 4096 characters are dropped (game messages and WebRTC
   offers are well under that); an uploaded page can be up to 512 KB.
 - Latency is roughly your network's ping to Cloudflare; unstable Wi-Fi shows up as stutter.
+
+## This repo's relay folder
+
+`wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this repo creates a
+separate relay (on whichever Cloudflare account wrangler is logged in to) instead of replacing
+`pvp-phone-relay`. After deploying it, add its address as another constant next to `RELAY_MAIN` /
+`RELAY_BACKUP` in `phone_controller/phone_control_server.gd` and point `DEFAULT_RELAY_URL` at it.
