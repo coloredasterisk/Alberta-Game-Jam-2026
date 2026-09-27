@@ -30,4 +30,9 @@ texture_progress = ExtResource("4_a0p2n")
 position = Vector2(1, 4)
 texture = ExtResource("4_a0p2n")
 
+[node name="Ant_Spawner" type="Timer" parent="." unique_id=175388969]
+wait_time = 10.0
+autostart = true
+
 [connection signal="body_exited" from="." to="." method="_on_body_exited"]
+[connection signal="timeout" from="Ant_Spawner" to="." method="_on_ant_spawner_timeout"]

@@ -117,6 +117,9 @@ func stinger():
 func get_stung(attacker: Player):
 	print(player_color, " bee got stung by ", attacker.player_color)
 	nectar = 0
+	send_home()
+
+func send_home():
 	for hive in get_tree().get_nodes_in_group("hives"):
 		if hive.color == player_color:
 			global_position = hive.global_position

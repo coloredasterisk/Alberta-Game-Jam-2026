@@ -1,38 +1,65 @@
 class_name AntHill extends Area2D
 
-@onready var bar: Sprite2D = $TextureProgressBar/progress_bar
-var move_dir: int
-var bar_speed: int = 100
+var ant_counter: int = 1
 
-func interact(player) -> bool:
-	pass
-	start()
-	return true
+@onready var bar: Sprite2D = $TextureProgressBar/progress_bar
+@onready var progress_bar: TextureProgressBar = $TextureProgressBar
+
+var active := false
+var move_dir := 1
+var bar_speed: Array = [60, 75, 80, 40]
+var current_speed: float
 
 func _ready() -> void:
-	bar.position.x = 0
+	bar.position.x = 1
+
+func interact(player) -> bool:
+	if not active:
+		if ant_counter <= 0:
+			return false
+		start()
+	else:
+		var hit = check()
+		stop()
+		print("stopped at ", bar.position.x, " hit: ", hit)
+		if hit:
+			ant_counter -= 1
+			print("goodjob! ants left: ", ant_counter)
+		else:
+			player.send_home()
+	return true
 
 func start():
-	bar.position.x = 0
+	active = true
+	progress_bar.visible = true
+	bar.position.x = 1
 	move_dir = 1
+	current_speed = bar_speed.pick_random()
+
+func check() -> bool:
+	return bar.position.x > 16 and bar.position.x < 22
+
+func stop() -> void:
+	active = false
+	progress_bar.visible = false
 
 func back_and_forth(delta):
-	bar.position.x += move_dir * bar_speed * delta
-	if bar.position.x > 38:
+	bar.position.x += move_dir * current_speed * delta
+	if bar.position.x >= 38:
 		bar.position.x = 38
 		move_dir = -1
 	elif bar.position.x <= 0:
 		bar.position.x = 0
 		move_dir = 1
 
-
-func stop() -> void:
-	pass
-
 func _on_body_exited(body: Node2D) -> void:
-	stop()
+	if body is Player:
+		stop()
 
 func _physics_process(delta: float) -> void:
-	start()
-	back_and_forth(delta)
-	
+	if active:
+		back_and_forth(delta)
+
+
+func _on_ant_spawner_timeout() -> void:
+	ant_counter += 1
