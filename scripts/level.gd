@@ -47,3 +47,7 @@ func _on_flower_spawner_timeout() -> void:
 	pass
 	#flower_spawning()
 	#print('spawn: ', flower.flower_color)
+
+
+func _on_round_timer_timeout() -> void:
+	pass # Replace with function body.

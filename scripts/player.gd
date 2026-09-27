@@ -19,7 +19,7 @@ var max_nectar_capacity: int
 
 var pollen_counter: int = 0
 var max_pollen_counter: int = 4
-var money_counter: int = 0
+var money_counter: int = 100
 
 var confused: bool = false
 var confused_timer: float = 5.0
@@ -99,14 +99,15 @@ func _on_interaction_body_entered(body: Node2D) -> void:
 func animation():
 	if direction.x < 0:
 		bee_animation.flip_h = true
+		$animated_outline.flip_h = true
 		stinger_effect.flip_h = true
 		stinger_effect.position.x = -2.0
 		$AnimatedSprite2D/Shadow.flip_h = true
 	elif direction.x > 0:
 		bee_animation.flip_h = false
+		$animated_outline.flip_h = false
 		stinger_effect.flip_h = false
 		$AnimatedSprite2D/Shadow.flip_h = false
-
 		stinger_effect.position.x = 1.0
 
 func _physics_process(delta: float) -> void:
