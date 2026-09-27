@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="1_u52ul"]
 [ext_resource type="PackedScene" uid="uid://dgpvp2bl1i61d" path="res://scenes/flower.tscn" id="2_w7c3h"]
 [ext_resource type="PackedScene" uid="uid://byfkdm40kje5f" path="res://scenes/hive.tscn" id="4_mx8sn"]
-[ext_resource type="PackedScene" uid="uid://b3o8dub4bgkxy" path="res://scenes/interactable_powerup.tscn" id="5_ppgk2"]
 [ext_resource type="PackedScene" uid="uid://bgycq7fv61ta4" path="res://scenes/shop.tscn" id="6_2r41h"]
 [ext_resource type="PackedScene" uid="uid://dnfs5r5bqpasw" path="res://scenes/ant_hill.tscn" id="7_klq6b"]
 
@@ -18,58 +17,8 @@ zoom = Vector2(2, 2)
 position = Vector2(-71, -37)
 
 [node name="Shop" parent="." unique_id=1784644030 instance=ExtResource("6_2r41h")]
-z_index = 5
+z_index = 0
 position = Vector2(41, -2)
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Shop" unique_id=1290439749]
-visible = false
-offset_left = -87.0
-offset_top = 14.0
-offset_right = 89.0
-offset_bottom = 54.0
-alignment = 1
-
-[node name="Stinger" type="TextureRect" parent="Shop/HBoxContainer" unique_id=467028347]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 12)
-layout_mode = 2
-
-[node name="Stinger" parent="Shop/HBoxContainer/Stinger" unique_id=417485488 instance=ExtResource("5_ppgk2")]
-powerup_type = "stinger"
-powerup_cost = 20
-
-[node name="Rain" type="TextureRect" parent="Shop/HBoxContainer" unique_id=1262146229]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-
-[node name="Rain" parent="Shop/HBoxContainer/Rain" unique_id=1308663423 instance=ExtResource("5_ppgk2")]
-powerup_type = "rain"
-powerup_cost = 15
-
-[node name="Swarm" type="TextureRect" parent="Shop/HBoxContainer" unique_id=45527030]
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-
-[node name="Swarm" parent="Shop/HBoxContainer/Swarm" unique_id=742851870 instance=ExtResource("5_ppgk2")]
-powerup_type = "swarm"
-powerup_cost = 30
-
-[node name="Speed" type="TextureRect" parent="Shop/HBoxContainer" unique_id=510887534]
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-
-[node name="Speed" parent="Shop/HBoxContainer/Speed" unique_id=1012920229 instance=ExtResource("5_ppgk2")]
-powerup_type = "speed"
-powerup_cost = 15
-
-[node name="Confusion" type="TextureRect" parent="Shop/HBoxContainer" unique_id=236434085]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 0)
-layout_mode = 2
-
-[node name="Confusion" parent="Shop/HBoxContainer/Confusion" unique_id=1427355907 instance=ExtResource("5_ppgk2")]
-powerup_cost = 10
 
 [node name="Red_Hive" parent="." unique_id=1789593573 instance=ExtResource("4_mx8sn")]
 position = Vector2(-140, 5)
@@ -136,7 +85,5 @@ wait_time = 120.0
 one_shot = true
 autostart = true
 
-[connection signal="body_entered" from="Shop" to="Shop" method="_on_body_entered"]
-[connection signal="body_exited" from="Shop" to="Shop" method="_on_body_exited"]
 [connection signal="timeout" from="FlowerSpawner" to="." method="_on_flower_spawner_timeout"]
 [connection signal="timeout" from="RoundTimer" to="." method="_on_round_timer_timeout"]

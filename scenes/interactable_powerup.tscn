@@ -97,6 +97,7 @@ sprite_frames = SubResource("SpriteFrames_tipki")
 animation = &"stinger"
 
 [node name="Cost" type="Control" parent="." unique_id=272745843]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 2.0
