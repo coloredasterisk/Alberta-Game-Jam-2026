@@ -2,6 +2,7 @@ extends Node2D
 
 const FLOWER = preload("res://scenes/flower.tscn")
 const RAIN = preload("res://scenes/rain_powerup.tscn")
+const POWER_EFFECT = preload("res://scripts/power_effect_2d.gd")
 var flower
 var rain
 
@@ -33,14 +34,15 @@ func _on_powerup_purchased(type: String, buyer: Player):
 				for bee in [$Red_Bee, $Blue_Bee, $Yellow_Bee,  $Green_Bee]:#add players
 					if bee != buyer:
 						bee.confusion()
+				await get_tree().create_timer(Global.confusion_duration).timeout
+				confusion_rect.visible = true
 		"speed":
 			if buyer.money_counter >= Global.speed_cost: 
 				buyer.money_counter -= Global.speed_cost
 				speed_rect.visible = false
-				buyer.speed += 100
+				buyer.speed_power()
 				await get_tree().create_timer(Global.speed_duration).timeout
 				speed_rect.visible = true
-				buyer.speed -= 100
 		"rain":
 			if buyer.money_counter >= Global.rain_cost: 
 				buyer.money_counter -= Global.rain_cost
@@ -49,11 +51,15 @@ func _on_powerup_purchased(type: String, buyer: Player):
 					if bees != buyer:
 						rain_spawning(bees)
 						bees.rain_power()
+				await get_tree().create_timer(Global.rain_duration).timeout
+				rain_rect.visible = true
 		"stinger":
 			if buyer.money_counter >= Global.stinger_cost: 
 				buyer.money_counter -= Global.stinger_cost
 				stinger_rect.visible = false
 				buyer.stinger()
+				await get_tree().create_timer(Global.stinger_duration).timeout
+				stinger_rect.visible = true
 		"swarm":
 			if buyer.money_counter >= Global.swarm_cost:
 				buyer.money_counter -= Global.swarm_cost
@@ -65,6 +71,7 @@ func _on_powerup_purchased(type: String, buyer: Player):
 				var stolen = min(5, target.current_amount)
 				target.current_amount -= stolen
 				own_hive.current_amount += stolen
+				POWER_EFFECT.spawn(target, "swarm", maxf(1.5, Global.swarm_cooldown_duration))
 				$Shop/HBoxContainer/Swarm.visible = false
 				await get_tree().create_timer(Global.swarm_cooldown_duration).timeout
 				$Shop/HBoxContainer/Swarm.visible = true

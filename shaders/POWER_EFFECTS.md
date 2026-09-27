@@ -17,11 +17,12 @@ the directions selected and tuned in the visualization:
 
 ## Integration notes
 
-These files are intentionally **not wired into gameplay**. To preview one,
-attach a `ShaderMaterial` using the shader to a transparent `ColorRect` or
-`Sprite2D` sized around the intended target. Animate `progress` from `0.0` to
-`1.0` for its fade envelope. Stinger Strike and Speedy Bee also expose `facing`
-(`1.0` or `-1.0`). The selected tuning values are the shader defaults.
+The shaders are wired to their matching power-ups through
+`scripts/power_effect_2d.gd`. Each purchase creates an independent material on
+the affected bee or hive, follows it for the gameplay duration, animates the
+`progress` fade envelope, and then cleans itself up. Stinger Strike and Speedy
+Bee also follow the player's horizontal facing. The selected tuning values are
+the shader defaults.
 
 ## Sources and credits
 
