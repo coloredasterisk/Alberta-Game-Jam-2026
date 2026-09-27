@@ -84,7 +84,11 @@ func movement(delta):
 func confusion():
 	confused = true
 	POWER_EFFECT.spawn(self, "confusion", Global.confusion_duration)
+	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
+	sfx.stream = preload("res://Confusion Powerup.wav")
+	add_child(sfx)
 	await get_tree().create_timer(Global.confusion_duration).timeout
+	sfx.queue_free()
 	confused = false
 
 func rain_power():
@@ -98,7 +102,11 @@ func rain_power():
 func speed_power():
 	speed += 100
 	POWER_EFFECT.spawn(self, "speed", Global.speed_duration)
+	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
+	sfx.stream = preload("res://Super Speed Powerup.wav")
+	add_child(sfx)
 	await get_tree().create_timer(Global.speed_duration).timeout
+	sfx.queue_free()
 	speed -= 100
 
 func pollen():
@@ -118,8 +126,8 @@ func stinger():
 	var blink = create_tween().set_loops()
 	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.3)
 	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
-	blink.tween_property($Rainbow_Effect, "modulate:a", 0.3, 0.3)
-	blink.tween_property($Rainbow_Effect, "modulate:a", 1.0, 0.3)
+	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 0.3, 0.3)
+	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 1.0, 0.3)
 	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
 	sfx.stream = preload("res://Rainbow Stinger Powerup.wav")
 	add_child(sfx)

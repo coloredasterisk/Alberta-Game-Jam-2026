@@ -232,6 +232,7 @@ visible = false
 z_index = 12
 position = Vector2(2, 1)
 texture = ExtResource("4_t2mbh")
+
 [node name="Buzzing" type="AudioStreamPlayer" parent="." unique_id=387594474]
 stream = ExtResource("5_b8v61")
 bus = &"SFX"
