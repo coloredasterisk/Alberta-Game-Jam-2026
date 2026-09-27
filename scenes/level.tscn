@@ -6,12 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://byfkdm40kje5f" path="res://scenes/hive.tscn" id="4_mx8sn"]
 [ext_resource type="PackedScene" uid="uid://b3o8dub4bgkxy" path="res://scenes/interactable_powerup.tscn" id="5_ppgk2"]
 [ext_resource type="PackedScene" uid="uid://bgycq7fv61ta4" path="res://scenes/shop.tscn" id="6_2r41h"]
+[ext_resource type="PackedScene" uid="uid://dnfs5r5bqpasw" path="res://scenes/ant_hill.tscn" id="7_klq6b"]
 
 [node name="level" type="Node2D" unique_id=1662596204]
 script = ExtResource("1_mx8sn")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=665732631]
 zoom = Vector2(2, 2)
+
+[node name="ant_hill" parent="." unique_id=848726325 instance=ExtResource("7_klq6b")]
+position = Vector2(-71, -37)
 
 [node name="Shop" parent="." unique_id=1784644030 instance=ExtResource("6_2r41h")]
 position = Vector2(17, 19)

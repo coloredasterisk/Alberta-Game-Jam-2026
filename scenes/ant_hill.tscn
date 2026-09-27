@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dnfs5r5bqpasw"]
+
+[ext_resource type="Script" uid="uid://bo484hujj42fe" path="res://scripts/ant_hill.gd" id="1_oqm5y"]
+[ext_resource type="Texture2D" uid="uid://bvsnwf4617jso" path="res://art/Ant_Hill.png" id="1_xpm4y"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x7p88"]
+radius = 15.231546
+
+[node name="ant_hill" type="Area2D" unique_id=848726325]
+script = ExtResource("1_oqm5y")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1616041489]
+shape = SubResource("CircleShape2D_x7p88")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1759631668]
+texture = ExtResource("1_xpm4y")
+
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
