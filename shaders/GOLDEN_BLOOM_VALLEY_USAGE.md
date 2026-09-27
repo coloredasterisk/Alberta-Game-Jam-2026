@@ -59,6 +59,7 @@ The values selected in the in-chat tuner are documented beside their implementat
 - Bees: `5`
 - Bird flocks: removed after visual review
 - Hives: scale `2`
+- Hive teams: exact red hive on the left and exact blue hive on the right
 - Menu-safe width: `46%`
 - Gentle motion: enabled
 - Hedge visibility: `15%` of the original solid silhouette

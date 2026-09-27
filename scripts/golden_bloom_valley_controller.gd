@@ -20,7 +20,7 @@ const HIVE_SCALE := 2.0
 
 const SHOP_TEXTURE := preload("res://art/Shop.png")
 const BLUE_HIVE_TEXTURE := preload("res://art/Blue_Beehive.png")
-const MONO_HIVE_TEXTURE := preload("res://art/Mono_Beehive.png")
+const RED_HIVE_TEXTURE := preload("res://art/Red_Beehive.png")
 const BLUE_FLOWER_TEXTURE := preload("res://art/Blue_Flower.png")
 const RED_FLOWER_TEXTURE := preload("res://art/Red_Flower.png")
 const MONO_FLOWER_TEXTURE := preload("res://art/Mono_Flower.png")
@@ -62,7 +62,7 @@ func _build_exact_asset_layer() -> void:
 	shop.name = "BloomMarketShop"
 
 	# Rival hives frame the menu without entering its 46% safe column.
-	var left_hive := _make_sprite(MONO_HIVE_TEXTURE, Vector2(74.0, 302.0), HIVE_SCALE, 0.88)
+	var left_hive := _make_sprite(RED_HIVE_TEXTURE, Vector2(74.0, 302.0), HIVE_SCALE, 0.88)
 	left_hive.name = "LeftHive"
 	var right_hive := _make_sprite(BLUE_HIVE_TEXTURE, Vector2(566.0, 302.0), HIVE_SCALE, 0.88)
 	right_hive.name = "RightHive"
