@@ -94,6 +94,14 @@ sprite_frames = SubResource("SpriteFrames_x7p88")
 animation = &"red"
 autoplay = "red"
 
+[node name="Shadow" type="AnimatedSprite2D" parent="AnimatedSprite2D" unique_id=1599834197]
+modulate = Color(0, 0, 0, 0.13725491)
+position = Vector2(2, 15)
+skew = -0.5235988
+sprite_frames = ExtResource("2_blpjk")
+animation = &"blue"
+flip_v = true
+
 [node name="collider" type="CollisionShape2D" parent="." unique_id=1951408223]
 shape = SubResource("CircleShape2D_x7p88")
 
@@ -113,3 +121,5 @@ sprite_frames = SubResource("SpriteFrames_f58d2")
 animation = &"outline"
 autoplay = "outline"
 frame_progress = 0.93056184
+[node name="Camera2D" type="Camera2D" parent="." unique_id=308300040]
+position_smoothing_enabled = true

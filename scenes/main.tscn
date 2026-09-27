@@ -3,12 +3,22 @@
 [ext_resource type="PackedScene" uid="uid://2elg8d45uxjs" path="res://scenes/map_1.tscn" id="1_jyhfs"]
 [ext_resource type="Theme" uid="uid://colb7a5ytrq4o" path="res://main_theme.tres" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://b4xlfkqdhwlqf" path="res://scenes/world.gd" id="1_tbgi4"]
+[ext_resource type="Script" uid="uid://cy7876evugj5" path="res://scripts/main.gd" id="1_tipki"]
 [ext_resource type="Script" uid="uid://dy1l2xljudpey" path="res://scripts/title_screen.gd" id="2_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
+[ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scenes/canvas_layer.gd" id="4_tipki"]
+[ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scenes/online_multiplayer_setup.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scenes/screens.gd" id="7_85g3d"]
+[ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scenes/choose_player_amount.gd" id="10_choun"]
+[ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scenes/input.gd" id="11_ya4ey"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_py7os"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py7os"]
+bg_color = Color(0.1254902, 0.03529412, 0.13725491, 0.8980392)
+
 [node name="Main" type="Node2D" unique_id=1361628959]
+script = ExtResource("1_tipki")
 
 [node name="World" type="GridContainer" parent="." unique_id=1438923734]
 offset_right = 644.0
@@ -30,6 +40,7 @@ render_target_update_mode = 4
 [node name="Map1" parent="World/Player1/SubViewport" unique_id=585905906 instance=ExtResource("1_jyhfs")]
 
 [node name="BG" type="CanvasLayer" parent="World/Player1/SubViewport" unique_id=2042990104]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="World/Player1/SubViewport/BG" unique_id=1799294047]
 offset_right = 40.0
@@ -50,6 +61,7 @@ size = Vector2i(320, 360)
 render_target_update_mode = 4
 
 [node name="BG" type="CanvasLayer" parent="World/Player2/SubViewport" unique_id=998388498]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="World/Player2/SubViewport/BG" unique_id=277785482]
 offset_right = 40.0
@@ -60,16 +72,100 @@ color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 position = Vector2(57, 2)
 player_index = 2
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
+[node name="Player3" type="SubViewportContainer" parent="World" unique_id=2016832901]
+layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="CanvasLayer" unique_id=469880766]
+[node name="SubViewport" type="SubViewport" parent="World/Player3" unique_id=762232504]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+scaling_3d_mode = 5
+size = Vector2i(320, 360)
+render_target_update_mode = 4
+
+[node name="BG" type="CanvasLayer" parent="World/Player3/SubViewport" unique_id=1448092236]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="World/Player3/SubViewport/BG" unique_id=827084602]
 offset_right = 40.0
 offset_bottom = 40.0
-columns = 2
+color = Color(0.34509805, 0.76862746, 0.29411766, 1)
 
-[node name="Panel" type="Panel" parent="CanvasLayer/GridContainer" unique_id=872699709]
-custom_minimum_size = Vector2(100, 100)
+[node name="Player" parent="World/Player3/SubViewport" unique_id=837753581 instance=ExtResource("2_tbgi4")]
+position = Vector2(57, 2)
+player_index = 2
+
+[node name="Player4" type="SubViewportContainer" parent="World" unique_id=380069114]
 layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="World/Player4" unique_id=1237773148]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+scaling_3d_mode = 5
+size = Vector2i(320, 360)
+render_target_update_mode = 4
+
+[node name="BG" type="CanvasLayer" parent="World/Player4/SubViewport" unique_id=987575204]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="World/Player4/SubViewport/BG" unique_id=1905912618]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.34509805, 0.76862746, 0.29411766, 1)
+
+[node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
+position = Vector2(57, 2)
+player_index = 2
+
+[node name="Player5" type="SubViewportContainer" parent="World" unique_id=1908158357]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="World/Player5" unique_id=403175719]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+scaling_3d_mode = 5
+size = Vector2i(320, 360)
+render_target_update_mode = 4
+
+[node name="BG" type="CanvasLayer" parent="World/Player5/SubViewport" unique_id=1340959204]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="World/Player5/SubViewport/BG" unique_id=450078036]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.34509805, 0.76862746, 0.29411766, 1)
+
+[node name="Player" parent="World/Player5/SubViewport" unique_id=279821071 instance=ExtResource("2_tbgi4")]
+position = Vector2(57, 2)
+player_index = 2
+
+[node name="Player6" type="SubViewportContainer" parent="World" unique_id=2125865951]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="World/Player6" unique_id=1165741298]
+disable_3d = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+scaling_3d_mode = 5
+size = Vector2i(320, 360)
+render_target_update_mode = 4
+
+[node name="BG" type="CanvasLayer" parent="World/Player6/SubViewport" unique_id=2103846449]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="World/Player6/SubViewport/BG" unique_id=19544828]
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.34509805, 0.76862746, 0.29411766, 1)
+
+[node name="Player" parent="World/Player6/SubViewport" unique_id=549633761 instance=ExtResource("2_tbgi4")]
+position = Vector2(57, 2)
+player_index = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
+script = ExtResource("4_tipki")
 
 [node name="Screens" type="TabContainer" parent="CanvasLayer" unique_id=643847560]
 anchors_preset = 15
@@ -79,11 +175,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 deselect_enabled = true
+script = ExtResource("7_85g3d")
 
 [node name="TitleScreen" type="Control" parent="CanvasLayer/Screens" unique_id=1018211508]
+visible = false
 layout_mode = 2
 script = ExtResource("2_0wfyh")
 metadata/_tab_index = 0
@@ -104,22 +202,26 @@ text = "Title"
 
 [node name="Selection" type="VBoxContainer" parent="CanvasLayer/Screens/TitleScreen" unique_id=625507326]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -70.0
-offset_top = -139.0
-offset_right = 70.0
-offset_bottom = -53.0
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -60.0
+offset_right = 89.0
+offset_bottom = 60.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 theme_override_constants/separation = 8
 
-[node name="NormalMode" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1606082167]
+[node name="Local" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1606082167]
 layout_mode = 2
-text = "Normal Mode"
+text = "Local Multiplayer"
+
+[node name="Online" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1075969202]
+layout_mode = 2
+text = "Online Multiplayer"
 
 [node name="Settings" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1580457072]
 layout_mode = 2
@@ -129,11 +231,403 @@ text = "Settings"
 layout_mode = 2
 text = "Quit Game"
 
-[node name="TutorialScreen" type="Control" parent="CanvasLayer/Screens" unique_id=1695172967]
-visible = false
+[node name="TutorialScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=915148859]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_py7os")
 metadata/_tab_index = 1
 
-[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/NormalMode" to="CanvasLayer/Screens/TitleScreen" method="_on_normal_mode_pressed"]
-[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Settings" to="CanvasLayer/Screens/TitleScreen" method="_on_settings_pressed"]
-[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/QuitGame" to="CanvasLayer/Screens/TitleScreen" method="_on_quit_game_pressed"]
+[node name="TutorialTitle" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1090403743]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 20.0
+offset_right = 358.0
+offset_bottom = 47.0
+text = "Tutorial"
+
+[node name="ControlSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=821096136]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ControlTitle" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=258007211]
+layout_mode = 0
+offset_left = 129.0
+offset_top = 79.0
+offset_right = 223.0
+offset_bottom = 106.0
+text = "Controls"
+
+[node name="JoystickIcon" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=939024718]
+layout_mode = 0
+offset_left = 87.0
+offset_top = 159.0
+offset_right = 127.0
+offset_bottom = 199.0
+
+[node name="InteractIcon" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/ControlSection" unique_id=514803089]
+layout_mode = 0
+offset_left = 224.0
+offset_top = 165.0
+offset_right = 264.0
+offset_bottom = 205.0
+
+[node name="InstructionSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1299993277]
+anchors_preset = 0
+offset_left = 386.0
+offset_top = 75.0
+offset_right = 573.0
+offset_bottom = 274.0
+
+[node name="InstructionTitle" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/InstructionSection" unique_id=586226907]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 4.0
+offset_right = 173.0
+offset_bottom = 31.0
+text = "Instructions"
+
+[node name="InstructionTitle2" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/InstructionSection" unique_id=1433144190]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 41.0
+offset_right = 230.0
+offset_bottom = 207.0
+theme_override_font_sizes/normal_font_size = 8
+text = "- The winner is the one with the most honey 
+		after 2 minutes
+- Collect Nectar from Flowers
+- Bring Nectar back to your hive
+- Can also steal steal honey from rival hives
+- Spend money at the shop to buy powerups
+- Gain money from stealing from ants "
+
+[node name="LocalMultiplayerControl" type="Control" parent="CanvasLayer/Screens" unique_id=1397146521]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="PlayerSetup" type="Panel" parent="CanvasLayer/Screens" unique_id=1028432678]
+visible = false
+self_modulate = Color(0.3372549, 0.3372549, 0.3372549, 0.9372549)
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/PlayerSetup" unique_id=1495684985]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -170.0
+offset_top = -30.0
+offset_right = -45.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.75, 0.75)
+
+[node name="PlayerList" type="VBoxContainer" parent="CanvasLayer/Screens/PlayerSetup" unique_id=1459543763]
+layout_mode = 0
+offset_left = 334.0
+offset_top = 142.0
+offset_right = 554.0
+offset_bottom = 286.0
+
+[node name="Player1" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=1545759244]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 1 - Ready"
+fit_content = true
+
+[node name="Player2" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=919813944]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 2 - Empty"
+fit_content = true
+
+[node name="Player3" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=843771667]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 3 - Empty"
+fit_content = true
+
+[node name="Player4" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=1764369310]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 4 - Empty"
+fit_content = true
+
+[node name="Player5" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=182196101]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 5 - Empty"
+fit_content = true
+
+[node name="Player6" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup/PlayerList" unique_id=99477455]
+layout_mode = 2
+bbcode_enabled = true
+text = "Player 6 - Empty"
+fit_content = true
+
+[node name="Code" type="RichTextLabel" parent="CanvasLayer/Screens/PlayerSetup" unique_id=378638875]
+layout_mode = 0
+offset_left = 328.0
+offset_top = 37.0
+offset_right = 624.0
+offset_bottom = 102.0
+text = "Host Match Code:"
+
+[node name="Skip" type="Button" parent="CanvasLayer/Screens/PlayerSetup" unique_id=1045497130]
+layout_mode = 0
+offset_left = 518.0
+offset_top = 328.0
+offset_right = 632.0
+offset_bottom = 352.0
+text = "Skip Setup"
+
+[node name="Cancel" type="Button" parent="CanvasLayer/Screens/PlayerSetup" unique_id=1267170096]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 330.0
+offset_right = 78.0
+offset_bottom = 354.0
+text = "Cancel"
+
+[node name="OnlineMultiplayerSetup" type="Control" parent="CanvasLayer/Screens" unique_id=2037244466]
+visible = false
+layout_mode = 2
+script = ExtResource("6_o6xl0")
+metadata/_tab_index = 4
+
+[node name="Title" type="RichTextLabel" parent="CanvasLayer/Screens/OnlineMultiplayerSetup" unique_id=1077360220]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -197.5
+offset_top = -82.0
+offset_right = 197.5
+offset_bottom = -42.0
+grow_horizontal = 2
+grow_vertical = 2
+bbcode_enabled = true
+text = "[center]Online Multiplayer
+"
+
+[node name="Subtext" type="RichTextLabel" parent="CanvasLayer/Screens/OnlineMultiplayerSetup" unique_id=788729359]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -126.0
+offset_top = -52.0
+offset_right = 126.0
+offset_bottom = -31.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center]Play on the same network/wifi!
+"
+
+[node name="Selection" type="VBoxContainer" parent="CanvasLayer/Screens/OnlineMultiplayerSetup" unique_id=229808586]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -22.0
+offset_right = 70.0
+offset_bottom = 66.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="HostGame" type="Button" parent="CanvasLayer/Screens/OnlineMultiplayerSetup/Selection" unique_id=110547270]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinGame" type="Button" parent="CanvasLayer/Screens/OnlineMultiplayerSetup/Selection" unique_id=1213108483]
+layout_mode = 2
+text = "Join Game"
+
+[node name="QuitGame" type="Button" parent="CanvasLayer/Screens/OnlineMultiplayerSetup/Selection" unique_id=410305941]
+layout_mode = 2
+text = "Back"
+
+[node name="ChoosePlayerAmount" type="Control" parent="CanvasLayer/Screens" unique_id=1772790010]
+visible = false
+layout_mode = 2
+script = ExtResource("10_choun")
+metadata/_tab_index = 5
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/ChoosePlayerAmount" unique_id=277376304]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -128.0
+offset_right = 210.0
+offset_bottom = -102.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "[center]Choose Player Count"
+
+[node name="Amount" type="GridContainer" parent="CanvasLayer/Screens/ChoosePlayerAmount" unique_id=356432579]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -146.0
+offset_top = -46.0
+offset_right = 146.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="1" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=1049396327]
+layout_mode = 2
+text = "One Player"
+
+[node name="2" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=511425901]
+layout_mode = 2
+text = "Two Players"
+
+[node name="3" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=969298550]
+layout_mode = 2
+text = "Three Players"
+
+[node name="4" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=451079413]
+layout_mode = 2
+text = "Four Players"
+
+[node name="5" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=962004805]
+layout_mode = 2
+text = "Five Players"
+
+[node name="6" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=357572456]
+layout_mode = 2
+text = "Six Players"
+
+[node name="7" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=1916735133]
+visible = false
+layout_mode = 2
+text = "Seven Players"
+
+[node name="8" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount/Amount" unique_id=633133004]
+visible = false
+layout_mode = 2
+text = "Eight Players"
+
+[node name="Back" type="Button" parent="CanvasLayer/Screens/ChoosePlayerAmount" unique_id=328274087]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -73.0
+offset_top = 62.0
+offset_right = 73.0
+offset_bottom = 86.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Back"
+
+[node name="EnterCode" type="Control" parent="CanvasLayer/Screens" unique_id=342267924]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 6
+
+[node name="Title" type="RichTextLabel" parent="CanvasLayer/Screens/EnterCode" unique_id=1238769822]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -128.0
+offset_right = 210.0
+offset_bottom = -102.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+bbcode_enabled = true
+text = "[center]Enter Join Code"
+
+[node name="Input" type="GridContainer" parent="CanvasLayer/Screens/EnterCode" unique_id=851960590]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -146.0
+offset_top = -46.0
+offset_right = 146.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 6
+script = ExtResource("11_ya4ey")
+
+[node name="StaticButtons" type="HBoxContainer" parent="CanvasLayer/Screens/EnterCode" unique_id=1800370031]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -38.0
+offset_right = 160.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="Back" type="Button" parent="CanvasLayer/Screens/EnterCode/StaticButtons" unique_id=480859355]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Back"
+
+[node name="Delete" type="Button" parent="CanvasLayer/Screens/EnterCode/StaticButtons" unique_id=1442582594]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Delete
+"
+
+[node name="Submit" type="Button" parent="CanvasLayer/Screens/EnterCode/StaticButtons" unique_id=1778405084]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Submit"
+
+[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Local" to="CanvasLayer" method="_on_local_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Online" to="CanvasLayer" method="_on_online_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Settings" to="CanvasLayer/Screens" method="_on_settings_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/QuitGame" to="CanvasLayer/Screens" method="_on_quit_game_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/PlayerSetup/Cancel" to="CanvasLayer" method="_on_cancel_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/ChoosePlayerAmount/Back" to="CanvasLayer" method="_on_player_count_back_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Back" to="CanvasLayer" method="_on_code_back_pressed"]
+[connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Delete" to="CanvasLayer/Screens/EnterCode/Input" method="_delete_last_character"]
+[connection signal="pressed" from="CanvasLayer/Screens/EnterCode/StaticButtons/Submit" to="CanvasLayer/Screens/EnterCode/Input" method="submit_code"]

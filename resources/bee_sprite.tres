@@ -1,0 +1,45 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://cwhfh4hornpvn"]
+
+[ext_resource type="Texture2D" uid="uid://crwatl5yu6yga" path="res://art/Blue_Bee.png" id="1_bvisf"]
+[ext_resource type="Texture2D" uid="uid://d0ykg44156l0o" path="res://art/Red_Bee.png" id="2_btied"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t2mbh"]
+atlas = ExtResource("1_bvisf")
+region = Rect2(0, 0, 15, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_csgcu"]
+atlas = ExtResource("1_bvisf")
+region = Rect2(15, 0, 15, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dn4c7"]
+atlas = ExtResource("2_btied")
+region = Rect2(0, 0, 15, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vejd"]
+atlas = ExtResource("2_btied")
+region = Rect2(15, 0, 15, 13)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t2mbh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_csgcu")
+}],
+"loop": 1,
+"name": &"blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dn4c7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vejd")
+}],
+"loop": 1,
+"name": &"red",
+"speed": 3.0
+}]

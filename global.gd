@@ -10,6 +10,7 @@ var confusion_duration: float = 5.0
 var original_max_capacity: int = 5
 var win_amount = 10
 var max_time = 60
+var amount_of_players = 1
 
 var modulate_color = {
 "red": Color.RED,
@@ -34,6 +35,8 @@ var num_to_art = [
 enum PlayerSim { AUTHORITY, REPLICA, PREDICTED }
 var PLAYER_SPAWN_FROM_CENTER = Vector2(640, 360)
 const COLOR_NAMES := ["red", "blue","green","yellow","purple","orange","pink","light_blue"]
+const CHAR_INPUT = "ABCDEFGHIJKLMNOPQRSTUVWXY1234567890"
+
 
 const ACTIONS = {
 	

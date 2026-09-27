@@ -5,6 +5,13 @@ var speed: int = 100
 var direction: Vector2
 var acceleration: Vector2
 var max_velocity: int = 50
+var touch: TouchControls
+
+## Non-zero while a phone controller (or, on the host, a remote online guest) is driving this
+## player; overrides the keyboard input for movement (see main.gd).
+var phone_id: int = 0
+var external_stick := Vector2.ZERO
+
 
 var nectar: int = 0
 var current_nectar_capacity: int
@@ -28,14 +35,18 @@ var has_stinger: bool = false:
 @onready var stinger_effect: Sprite2D = $Rainbow_Effect
 
 func _ready():
-	
+	$AnimatedSprite2D/Shadow.play()
 	$animated_outline.modulate = Global.modulate_color[player_color]
 	bee_animation.play(player_color)
 	current_nectar_capacity = Global.original_max_capacity
 	interaction.body_entered.connect(_on_interaction_body_entered)
 
 func movement(delta):
-	direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
+
+	if phone_id > 0:
+		direction = external_stick
+	else:
+		direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	if confused:
 		direction = -direction
 	
@@ -90,10 +101,11 @@ func animation():
 		bee_animation.flip_h = true
 		stinger_effect.flip_h = true
 		stinger_effect.position.x = -2.0
-
+		$AnimatedSprite2D/Shadow.flip_h = true
 	elif direction.x > 0:
 		bee_animation.flip_h = false
 		stinger_effect.flip_h = false
+		$AnimatedSprite2D/Shadow.flip_h = false
 
 		stinger_effect.position.x = 1.0
 
