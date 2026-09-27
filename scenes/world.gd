@@ -1,4 +1,4 @@
-extends GridContainer
+extends Panel
 
 
 
@@ -11,3 +11,5 @@ func _ready() -> void:
 	var world = $Player1/SubViewport.find_world_2d()
 	# give it to render to the viewport of Player 2
 	$Player2/SubViewport.world_2d = world
+	$Player3/SubViewport.world_2d = world
+	$Player4/SubViewport.world_2d = world

@@ -5,10 +5,9 @@ extends Node2D
 ##   LOCAL        Players scan the QR code to use their phones as controllers, or share the
 ##                keyboard. Supports any number of players (see amount_of_players), one per
 ##                SubViewport under $World (see world.gd).
-##   ONLINE_HOST  Phone vs phone: this device runs the match and plays Player 1. The friend
-##                joins with the match code through the relay, like a phone controller would,
-##                and drives Player 2 remotely.
-##   ONLINE_GUEST The friend's side: watches a position snapshot of both players streamed from
+##   ONLINE_HOST  This device runs the match and plays Player 1. Other players join through the
+##                relay and drive their assigned slots remotely.
+##   ONLINE_GUEST A remote player joins the host's match and watches all positions streamed from
 ##                the host ~30 times a second.
 
 enum Phase { LOBBY, PLAYING }
@@ -46,8 +45,7 @@ var _phase := Phase.LOBBY
 var _waiting_to_start := false
 var _ready_to_start: Array[bool] = []
 
-# Online host / guest (phone vs phone is always exactly 2 players: 0 = host, 1 = guest)
-var _guest_id := 0
+# Online host / guest (slot 0 is the host; relay IDs 1..N-1 map to the other slots)
 var _snapshot_timer := 0.0
 var _guest: OnlineGuest
 
@@ -82,20 +80,23 @@ func _setup_players() -> void:
 	for i in range(count):
 		players.append(world.get_child(i).get_node("SubViewport/Player"))
 		_phone_ids.append(0)
+	players[0].username = "Host!"
 
 
-## Called by canvas_layer.gd once the player picks how many are playing (local mode only).
+## Called by canvas_layer.gd once the player picks how many are playing
 func set_amount_of_players(amount: int) -> void:
-	print(amount)
 	amount_of_players = amount
 	if not _session_started:
 		begin_session()
-	else:
 		_setup_players()
 		if Session.mode == Session.Mode.LOCAL:
 			PhoneControllers.max_players = players.size()
+		elif Session.mode == Session.Mode.ONLINE_HOST:
+			PhoneControllers.max_players = maxi(players.size() - 1, 0)
 	_refresh_names()
 	_update_join_info()
+
+	
 
 
 func _setup_local() -> void:
@@ -112,9 +113,8 @@ func _setup_local() -> void:
 
 
 func _setup_host() -> void:
-	amount_of_players = 2
 	_setup_players()
-	PhoneControllers.max_players = 1
+	PhoneControllers.max_players = maxi(players.size() - 1, 0)
 	PhoneControllers.start("relay")  # the relay is how the friend's device reaches us
 	PhoneControllers.player_joined.connect(_on_guest_joined)
 	PhoneControllers.player_left.connect(_on_guest_left)
@@ -124,12 +124,13 @@ func _setup_host() -> void:
 	PhoneControllers.status_changed.connect(func(_ok: bool, _msg: String) -> void: _update_join_info())
 	_update_join_info()
 
+	
+
 
 func _setup_guest() -> void:
 	amount_of_players = 2
 	_setup_players()
-	for p in players:
-		p.set_physics_process(false)  # positions come from the host's snapshots instead
+	_set_guest_players_physics(false)
 
 	_guest = OnlineGuest.new()
 	add_child(_guest)
@@ -157,8 +158,9 @@ func _process(delta: float) -> void:
 				if _phone_ids[i] > 0:
 					players[i].external_stick = PhoneControllers.get_stick(_phone_ids[i])
 		Session.Mode.ONLINE_HOST:
-			if _guest_id > 0:
-				players[1].external_stick = PhoneControllers.get_stick(_guest_id)
+			for i in range(1, players.size()):
+				if _phone_ids[i] > 0:
+					players[i].external_stick = PhoneControllers.get_stick(_phone_ids[i])
 			_snapshot_timer += delta
 			if _snapshot_timer >= SNAPSHOT_SEC:
 				_snapshot_timer = fmod(_snapshot_timer, SNAPSHOT_SEC)
@@ -192,6 +194,13 @@ func _show_lobby(preloading = false) -> void:
 
 func _start_match() -> void:
 	_phase = Phase.PLAYING
+	var pos = Global.SPLIT_SCREEN_DIMENSIONS[amount_of_players - 1]
+	for i in range(amount_of_players):
+		if i >= $World.get_child_count():
+			$World.get_child(i).visible = false
+		else:
+			$World.get_child(i).visible = true
+			$World.get_child(i).size = pos[i]
 	_enter_playing()
 
 
@@ -219,6 +228,7 @@ func _on_phone_joined(id: int) -> void:
 	_phone_ids[slot] = id
 	players[slot].phone_id = id
 	var p := PhoneControllers.get_player(id)
+	players[slot].username = p.name if p else ""
 	var color_name: String = Global.COLOR_NAMES[slot % Global.COLOR_NAMES.size()]
 	PhoneControllers.set_player_theme(id, Color.WHITE, "P%d · %s" % [slot + 1, p.name])
 	PhoneControllers.send_text(id, "You're Player %d (%s)" % [slot + 1, color_name])
@@ -226,12 +236,12 @@ func _on_phone_joined(id: int) -> void:
 	_refresh_names()
 	_check_all_joined()
 
-
 func _on_phone_left(id: int) -> void:
 	var slot := _phone_ids.find(id)
 	if slot != -1:
 		_phone_ids[slot] = 0
 		players[slot].phone_id = 0
+		players[slot].username = ""
 		players[slot].external_stick = Vector2.ZERO
 	if _waiting_to_start:
 		_show_player_setup()
@@ -244,8 +254,6 @@ func _on_phone_button(id: int, button: StringName) -> void:
 			_on_start_pressed()
 		return
 	var slot := _phone_ids.find(id)
-	if slot == -1 and id == _guest_id:
-		slot = 1
 	_mark_ready(slot)
 
 
@@ -260,10 +268,11 @@ func _refresh_names() -> void:
 			Session.Mode.LOCAL:
 				is_ready = _phone_ids[i] > 0
 			Session.Mode.ONLINE_HOST:
-				is_ready = i == 0 or _guest_id > 0
+				is_ready = i == 0 or _phone_ids[i] > 0
 			Session.Mode.ONLINE_GUEST:
 				is_ready = i == 0 or (_guest != null and _guest.is_connected_to_host())
-		_player_labels[i].text = "Player %d - %s" % [i + 1, "Ready" if is_ready else "Empty"]
+		var status := players[i].username if is_ready and players[i].username != "" else ("Ready" if is_ready else "Empty")
+		_player_labels[i].text = "Player %d - %s" % [i + 1, status]
 
 
 ## Everyone has a slot: show the tutorial and wait for each player to press a button.
@@ -277,7 +286,10 @@ func _all_slots_filled() -> bool:
 		Session.Mode.LOCAL:
 			return _phone_ids.all(func(pid: int) -> bool: return pid > 0)
 		Session.Mode.ONLINE_HOST:
-			return _guest_id > 0
+			for i in range(1, _phone_ids.size()):
+				if _phone_ids[i] == 0:
+					return false
+			return true
 		_:
 			return true
 
@@ -289,10 +301,16 @@ func _show_tutorial() -> void:
 	_player_setup_screen.visible = false
 	_tutorial_screen.visible = true
 
+	for i in range(world.get_child_count()):
+		if i > players.size() - 1:
+			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).visible = false
+		else:
+			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).text = "[center]" + players[i].username + "\nWaiting"
+			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).visible = true
+
 
 func _show_player_setup(preloading = false) -> void:
 	_waiting_to_start = false
-	_tutorial_screen.visible = false
 	if not preloading:
 		_player_setup_screen.visible = true
 
@@ -301,6 +319,7 @@ func _mark_ready(slot: int) -> void:
 	if slot < 0 or slot >= _ready_to_start.size() or _ready_to_start[slot]:
 		return
 	_ready_to_start[slot] = true
+	$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(slot+1)).text = "[center]" + players[slot].username + "\nReady!"
 	if _ready_to_start.all(func(r: bool) -> bool: return r):
 		_start_match()
 
@@ -330,36 +349,45 @@ func _update_join_info() -> void:
 # --- Online: host ------------------------------------------------------------
 
 func _on_guest_joined(id: int) -> void:
-	if _guest_id > 0 and _guest_id != id:
+	if id <= 0 or id >= players.size():
 		PhoneControllers.kick(id)
 		return
-	_guest_id = id
-	players[1].phone_id = id
-	PhoneControllers.send_text(id, "You're Player 2 (%s)" % Global.COLOR_NAMES[1])
+	_phone_ids[id] = id
+	players[id].phone_id = id
+	var p := PhoneControllers.get_player(id)
+	players[id].username = p.name if p else ""
+	var color_name: String = Global.COLOR_NAMES[id % Global.COLOR_NAMES.size()]
+	PhoneControllers.set_player_theme(id, Global.COLOR_NAMES[id], "P%d" % (id + 1))
+	PhoneControllers.send_text(id, "You're Player %d (%s)" % [id + 1, color_name])
 	PhoneControllers.vibrate(id, 60)
 	_refresh_names()
 	_check_all_joined()
 
 
 func _on_guest_left(id: int) -> void:
-	if id != _guest_id:
+	if id <= 0 or id >= _phone_ids.size() or _phone_ids[id] != id:
 		return
-	_guest_id = 0
-	players[1].phone_id = 0
-	players[1].external_stick = Vector2.ZERO
-	_show_lobby()
+	_phone_ids[id] = 0
+	players[id].phone_id = 0
+	players[id].username = ""
+	players[id].external_stick = Vector2.ZERO
+	if _waiting_to_start:
+		_show_lobby()
+	_refresh_names()
 
 
 func _send_snapshot() -> void:
-	if _guest_id == 0:
-		return
 	var phase := Phase.LOBBY if in_lobby else Phase.PLAYING
-	PhoneControllers.send_fast(_guest_id, {
+	var snapshot := {
 		"t": "st",
 		"ts": Time.get_ticks_msec(),
 		"ph": phase,
+		"n": players.size(),
 		"p": players.map(func(p: Player) -> Array: return [p.global_position.x, p.global_position.y]),
-	})
+	}
+	for id in _phone_ids:
+		if id > 0:
+			PhoneControllers.send_fast(id, snapshot)
 
 
 # --- Online: guest -------------------------------------------------------------
@@ -388,6 +416,17 @@ func _on_snapshot(msg: Dictionary) -> void:
 			_enter_playing()
 	var positions: Variant = msg.get("p")
 	if positions is Array:
+		var player_count := int(msg.get("n", positions.size()))
+		if player_count != players.size():
+			amount_of_players = player_count
+			_setup_players()
+			_set_guest_players_physics(false)
 		for i in mini(positions.size(), players.size()):
-			var pos: Array = positions[i]
-			players[i].global_position = Vector2(pos[0], pos[1])
+			if positions[i] is Array and positions[i].size() >= 2:
+				var pos: Array = positions[i]
+				players[i].global_position = Vector2(pos[0], pos[1])
+
+
+func _set_guest_players_physics(enabled: bool) -> void:
+	for player in players:
+		player.set_physics_process(enabled)

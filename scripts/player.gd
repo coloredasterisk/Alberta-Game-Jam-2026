@@ -10,6 +10,7 @@ var touch: TouchControls
 ## Non-zero while a phone controller (or, on the host, a remote online guest) is driving this
 ## player; overrides the keyboard input for movement (see main.gd).
 var phone_id: int = 0
+var username := ""
 var external_stick := Vector2.ZERO
 
 

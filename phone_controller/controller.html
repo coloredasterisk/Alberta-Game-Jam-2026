@@ -132,10 +132,10 @@
     filter: brightness(1.2);
   }
   .face { font-size: calc(var(--face) * .2); letter-spacing: .5px; }
-  .face[data-btn="dash"] { grid-area: 1 / 2; }
-  .face[data-btn="block"] { grid-area: 2 / 1; }
-  .face[data-btn="shoot"] { grid-area: 2 / 3; }
-  .face[data-btn="attack"] { grid-area: 3 / 2; }
+  #gameView { width: min(100%, 280px); aspect-ratio: 8 / 9; justify-self: center; border: 2px solid var(--accent); border-radius: 12px; background: #101722; image-rendering: pixelated; }
+  #buttons { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; padding: 12px; }
+  #interact { width: min(100%, 280px); min-height: 92px; justify-self: center; border: 2px solid var(--accent); border-radius: 18px; background: var(--accent); color: #0b0d12; font-size: clamp(22px, 5vw, 34px); font-weight: 800; }
+  #interact.down { transform: translateY(3px); filter: brightness(1.2); }
 
   #overlay {
     position: absolute; inset: 0; display: grid; place-items: center;
@@ -169,7 +169,6 @@
     <span id="pname">Player</span>
     <span id="ping" class="muted"></span>
     <span class="spacer"></span>
-    <button class="small" data-btn="start">NEXT ROUND</button>
     <button class="icon" id="fsBtn" aria-label="Toggle fullscreen">⛶</button>
   </header>
   <main>
@@ -178,12 +177,8 @@
       <span class="hint">Drag anywhere here</span>
     </div>
     <div id="buttons">
-      <div class="diamond">
-        <button class="face" data-btn="dash" style="--c:#ffc83d">DASH</button>
-        <button class="face" data-btn="block" style="--c:#4d9fff">BLOCK</button>
-        <button class="face" data-btn="shoot" style="--c:#ff5c5c">SHOOT</button>
-        <button class="face" data-btn="attack" style="--c:#3ddc84">ATTACK</button>
-      </div>
+      <canvas id="gameView" width="320" height="360" aria-label="Your player view"></canvas>
+      <button id="interact" data-btn="interact">INTERACT</button>
     </div>
   </main>
   <div id="overlay" class="hidden">Reconnecting…</div>
@@ -239,7 +234,53 @@
   // ---------- UI helpers ----------
   const joinStatus = $('joinStatus');
   const dot = $('dot');
+  const gameView = $('gameView');
+  const gameContext = gameView.getContext('2d');
   let toastTimer = 0;
+  let playerIndex = 0;
+
+  function updatePlayerName() {
+    $('pname').textContent = `P${playerIndex || '?'} ${playerName || 'Player'}`;
+  }
+
+  function drawPlayerView(positions) {
+    const width = gameView.width;
+    const height = gameView.height;
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4cc9f0';
+    gameContext.clearRect(0, 0, width, height);
+    gameContext.fillStyle = '#101722';
+    gameContext.fillRect(0, 0, width, height);
+    gameContext.strokeStyle = '#263346';
+    gameContext.lineWidth = 1;
+    for (let x = 40; x < width; x += 40) {
+      gameContext.beginPath();
+      gameContext.moveTo(x, 0);
+      gameContext.lineTo(x, height);
+      gameContext.stroke();
+    }
+    for (let y = 40; y < height; y += 40) {
+      gameContext.beginPath();
+      gameContext.moveTo(0, y);
+      gameContext.lineTo(width, y);
+      gameContext.stroke();
+    }
+    const position = Array.isArray(positions) ? positions[playerIndex - 1] : null;
+    if (!Array.isArray(position) || position.length < 2) return;
+    const x = Math.max(0, Math.min(width, Number(position[0])));
+    const y = Math.max(0, Math.min(height, Number(position[1])));
+    gameContext.fillStyle = accent;
+    gameContext.beginPath();
+    gameContext.arc(x, y, 14, 0, Math.PI * 2);
+    gameContext.fill();
+    gameContext.strokeStyle = '#ffffff';
+    gameContext.lineWidth = 2;
+    gameContext.stroke();
+    gameContext.fillStyle = '#0b0d12';
+    gameContext.font = '700 12px system-ui, sans-serif';
+    gameContext.textAlign = 'center';
+    gameContext.textBaseline = 'middle';
+    gameContext.fillText(`P${playerIndex}`, x, y);
+  }
 
   function toast(text, ms = 2500) {
     const el = $('toast');
@@ -343,8 +384,10 @@
     switch (m.t) {
       case 'welcome':
         joined = true;
+        playerIndex = Number(m.id) || 0;
+        playerName = String(m.name || playerName || 'Player');
         if (m.color) document.documentElement.style.setProperty('--accent', m.color);
-        $('pname').textContent = m.name || 'Player ' + m.id;
+        updatePlayerName();
         showPad();
         setStatus('connected');
         buzz(30);
@@ -355,7 +398,10 @@
         break;
       case 'theme': // the game re-colours / renames this controller (e.g. to match your fighter)
         if (m.color) document.documentElement.style.setProperty('--accent', m.color);
-        if (m.name) $('pname').textContent = m.name;
+        updatePlayerName();
+        break;
+      case 'st':
+        drawPlayerView(m.p);
         break;
       case 'pong':
         if (typeof m.ts === 'number') $('ping').textContent = Math.round(performance.now() - m.ts) + ' ms';
@@ -501,7 +547,7 @@
   });
 
   // ---------- Keyboard (handy for testing from a laptop browser) ----------
-  const KEY_BUTTONS = { k: 'attack', l: 'shoot', j: 'block', i: 'dash', enter: 'start' };
+  const KEY_BUTTONS = { k: 'test', l: 'shoot', j: 'block', i: 'dash', enter: 'start' };
   const KEY_DIRS = { w: [0, -1], arrowup: [0, -1], s: [0, 1], arrowdown: [0, 1], a: [-1, 0], arrowleft: [-1, 0], d: [1, 0], arrowright: [1, 0] };
   const keysDown = new Set();
   function keyStick() {

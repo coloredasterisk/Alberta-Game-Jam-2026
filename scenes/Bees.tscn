@@ -112,3 +112,4 @@ frame_progress = 0.79814994
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=308300040]
 position_smoothing_enabled = true
+position_smoothing_speed = 3.0

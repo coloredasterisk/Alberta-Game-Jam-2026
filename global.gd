@@ -34,7 +34,7 @@ var num_to_art = [
 
 enum PlayerSim { AUTHORITY, REPLICA, PREDICTED }
 var PLAYER_SPAWN_FROM_CENTER = Vector2(640, 360)
-const COLOR_NAMES := ["red", "blue","green","yellow","purple","orange","pink","light_blue"]
+const COLOR_NAMES := ["red", "blue","green","yellow","pink","cyan","purple","orange"]
 const CHAR_INPUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 
@@ -53,6 +53,13 @@ const ACTIONS = {
 	"p2_interact": KEY_ENTER
 
 }
+
+const SPLIT_SCREEN_DIMENSIONS = [
+	[Vector2(640, 360)],
+	[Vector2(318, 360), Vector2(318, 360)],
+	[Vector2(318, 180), Vector2(318, 180), Vector2(318, 180)],
+	[Vector2(318, 180), Vector2(318, 180), Vector2(318, 180), Vector2(318, 180)],
+]
 	
 
 func _ready() -> void:
