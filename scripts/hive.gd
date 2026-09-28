@@ -16,7 +16,8 @@ func interact(player) -> bool:
 		if player.nectar <= 0:
 			return false
 		current_amount += player.nectar
-		player.nectar = 0
+		player.update_capacity(-player.nectar)
+		$DepositNectar.emitting = true
 		var sfx = oneshot.instantiate()
 		sfx.stream = preload("res://Dropping Nectar At Hive.wav")
 		add_child(sfx)
@@ -25,6 +26,7 @@ func interact(player) -> bool:
 		if current_amount <= 0 or player.nectar >= player.current_nectar_capacity:
 			return false
 		current_amount -= 1
-		player.nectar += 1
+		player.update_capacity(1)
+		$StealNectar.emitting = true
 	print(color, " hive: ", current_amount, " | bee nectar: ", player.nectar)
 	return true

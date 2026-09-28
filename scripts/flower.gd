@@ -30,8 +30,9 @@ func interact(player) -> bool:
 		bulb_outline.show()
 		$Growing_Cooldown.start()
 		print(current_state)
-		player.nectar += 1
+		player.update_capacity(1)
 		print("picked! nectar counter: ", player.nectar)
+		$Shadow.play("bulb")
 		var sfx = oneshot.instantiate()
 		sfx.stream = nectar.pick_random()
 		add_child(sfx)
@@ -40,6 +41,7 @@ func interact(player) -> bool:
 		player.pollen_counter = 0
 		$Growing_Cooldown.stop()
 		$Pollen_Growth_Cooldown.start()
+		$Shadow.play("default")
 		
 		print("you changed to grow ", current_state)
 		var sfx = oneshot.instantiate()
@@ -63,6 +65,7 @@ func _on_growing_cooldown_timeout() -> void:
 	bulb_color.hide()
 	bulb_outline.hide()
 	print(current_state, "flower grown")
+	$Shadow.play("default")
 
 
 func _on_pollen_growth_cooldown_timeout() -> void:
@@ -72,3 +75,7 @@ func _on_pollen_growth_cooldown_timeout() -> void:
 	bulb_color.hide()
 	bulb_outline.hide()
 	print(current_state, "flower grown")
+	$Shadow.play("default")
+	
+func disable():
+	visible = false

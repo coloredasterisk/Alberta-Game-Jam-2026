@@ -109,6 +109,69 @@ position = Vector2(-179, -144)
 [node name="Rock2" parent="Obstacles" unique_id=88813427 instance=ExtResource("6_k075t")]
 position = Vector2(-199, -147)
 
+[node name="Rock15" parent="Obstacles" unique_id=151486387 instance=ExtResource("6_k075t")]
+position = Vector2(-212, -130)
+
+[node name="Rock16" parent="Obstacles" unique_id=1639656428 instance=ExtResource("6_k075t")]
+position = Vector2(-340, -33)
+
+[node name="Rock17" parent="Obstacles" unique_id=243316888 instance=ExtResource("6_k075t")]
+position = Vector2(-349, -16)
+
+[node name="Rock18" parent="Obstacles" unique_id=1733349263 instance=ExtResource("6_k075t")]
+position = Vector2(-351, 4)
+
+[node name="Rock19" parent="Obstacles" unique_id=1711696968 instance=ExtResource("6_k075t")]
+position = Vector2(-348, 23)
+
+[node name="Rock20" parent="Obstacles" unique_id=920688452 instance=ExtResource("6_k075t")]
+position = Vector2(-324, 62)
+
+[node name="Rock21" parent="Obstacles" unique_id=2077582507 instance=ExtResource("6_k075t")]
+position = Vector2(-340, 42)
+
+[node name="Rock22" parent="Obstacles" unique_id=795771842 instance=ExtResource("6_k075t")]
+position = Vector2(-55, 321)
+
+[node name="Rock23" parent="Obstacles" unique_id=1008145945 instance=ExtResource("6_k075t")]
+position = Vector2(-42, 338)
+
+[node name="Rock24" parent="Obstacles" unique_id=1377537673 instance=ExtResource("6_k075t")]
+position = Vector2(-17, 343)
+
+[node name="Rock25" parent="Obstacles" unique_id=1515215402 instance=ExtResource("6_k075t")]
+position = Vector2(4, 342)
+
+[node name="Rock26" parent="Obstacles" unique_id=1487225786 instance=ExtResource("6_k075t")]
+position = Vector2(26, 343)
+
+[node name="Rock27" parent="Obstacles" unique_id=1274089795 instance=ExtResource("6_k075t")]
+position = Vector2(40, 333)
+
+[node name="Rock28" parent="Obstacles" unique_id=132989449 instance=ExtResource("6_k075t")]
+position = Vector2(54, 319)
+
+[node name="Rock29" parent="Obstacles" unique_id=782865773 instance=ExtResource("6_k075t")]
+position = Vector2(327, 47)
+
+[node name="Rock30" parent="Obstacles" unique_id=988885024 instance=ExtResource("6_k075t")]
+position = Vector2(343, 35)
+
+[node name="Rock31" parent="Obstacles" unique_id=1284474056 instance=ExtResource("6_k075t")]
+position = Vector2(344, 16)
+
+[node name="Rock32" parent="Obstacles" unique_id=2041624277 instance=ExtResource("6_k075t")]
+position = Vector2(342, -7)
+
+[node name="Rock33" parent="Obstacles" unique_id=1746904791 instance=ExtResource("6_k075t")]
+position = Vector2(331, -24)
+
+[node name="Rock34" parent="Obstacles" unique_id=988385546 instance=ExtResource("6_k075t")]
+position = Vector2(327, -47)
+
+[node name="Rock35" parent="Obstacles" unique_id=939564539 instance=ExtResource("6_k075t")]
+position = Vector2(315, -68)
+
 [node name="Rock3" parent="Obstacles" unique_id=1117427871 instance=ExtResource("6_k075t")]
 position = Vector2(-191, -131)
 
@@ -139,6 +202,24 @@ position = Vector2(123, -81)
 [node name="Rock12" parent="Obstacles" unique_id=470182328 instance=ExtResource("6_k075t")]
 position = Vector2(111, -102)
 
+[node name="Rock36" parent="Obstacles" unique_id=1810296761 instance=ExtResource("6_k075t")]
+position = Vector2(58, -313)
+
+[node name="Rock37" parent="Obstacles" unique_id=1604720008 instance=ExtResource("6_k075t")]
+position = Vector2(44, -331)
+
+[node name="Rock38" parent="Obstacles" unique_id=2084838997 instance=ExtResource("6_k075t")]
+position = Vector2(21, -344)
+
+[node name="Rock39" parent="Obstacles" unique_id=1321292054 instance=ExtResource("6_k075t")]
+position = Vector2(-1, -348)
+
+[node name="Rock40" parent="Obstacles" unique_id=1071850235 instance=ExtResource("6_k075t")]
+position = Vector2(-27, -337)
+
+[node name="Rock41" parent="Obstacles" unique_id=440267097 instance=ExtResource("6_k075t")]
+position = Vector2(-51, -320)
+
 [node name="Rock13" parent="Obstacles" unique_id=1075862414 instance=ExtResource("6_k075t")]
 position = Vector2(132, -100)
 
@@ -158,13 +239,13 @@ position = Vector2(149, 87)
 position = Vector2(230, 52)
 
 [node name="Flower3" parent="Red" unique_id=704079834 instance=ExtResource("9_fog8g")]
-position = Vector2(330, -76)
+position = Vector2(104, -206)
 
 [node name="Flower4" parent="Red" unique_id=546028462 instance=ExtResource("9_fog8g")]
 position = Vector2(190, -86)
 
 [node name="Flower5" parent="Red" unique_id=113229419 instance=ExtResource("9_fog8g")]
-position = Vector2(111, -140)
+position = Vector2(125, -148)
 
 [node name="Flower6" parent="Red" unique_id=121249998 instance=ExtResource("9_fog8g")]
 position = Vector2(229, -186)

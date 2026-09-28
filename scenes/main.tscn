@@ -8,19 +8,39 @@
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
 [ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scripts/canvas_layer.gd" id="4_tipki"]
 [ext_resource type="PackedScene" uid="uid://j36fge0l8028" path="res://scenes/placement.tscn" id="4_yc10j"]
+[ext_resource type="Script" uid="uid://vxxg3jlq7jua" path="res://scenes/splash_world.gd" id="6_gqmmt"]
 [ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scripts/online_multiplayer_setup.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scripts/screens.gd" id="7_85g3d"]
+[ext_resource type="Texture2D" uid="uid://dk6xkuixlnj8y" path="res://art/Shop.png" id="7_pm3ni"]
+[ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="8_y6deb"]
+[ext_resource type="Texture2D" uid="uid://dmh0sbq2u4wci" path="res://art/Blue_Beehive.png" id="9_og1vs"]
 [ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scripts/choose_player_amount.gd" id="10_choun"]
 [ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scripts/input.gd" id="11_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
 [ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
-[ext_resource type="Material" path="res://resources/golden_bloom_valley_material.tres" id="12_golden_bloom"]
-[ext_resource type="Script" uid="uid://8826xiy1lxq6" path="res://scripts/golden_bloom_valley_controller.gd" id="12_golden_controller"]
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
 [ext_resource type="Texture2D" uid="uid://61s8dv5acwqm" path="res://art/Money.png" id="15_gqmmt"]
 [ext_resource type="Texture2D" uid="uid://rx46n3k5ufg3" path="res://art/Honey.png" id="16_yc10j"]
+
+[sub_resource type="Gradient" id="Gradient_pm3ni"]
+offsets = PackedFloat32Array(0, 0.25, 0.5090361, 1)
+colors = PackedColorArray(0.78269285, 0.4102979, 3.85046e-07, 1, 0.8208742, 0.596969, 0.36079767, 1, 0.7438099, 0.8000522, 0.93718994, 1, 0.51282334, 0.96896976, 0.99999934, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_py7os"]
+gradient = SubResource("Gradient_pm3ni")
+width = 320
+height = 320
+fill = 1
+fill_from = Vector2(0.96304345, 0.3847826)
+fill_to = Vector2(0.13043478, 0.12826087)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gqmmt"]
+size = Vector2(789, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_py7os"]
+size = Vector2(22, 598)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_py7os"]
 
@@ -257,28 +277,89 @@ z_index = 0
 position = Vector2(57, -27)
 player_index = 2
 
+[node name="SplashWorld" type="Node2D" parent="." unique_id=277831803]
+process_mode = 1
+script = ExtResource("6_gqmmt")
+
+[node name="TextureRect" type="TextureRect" parent="SplashWorld" unique_id=290062698]
+offset_right = 640.0
+offset_bottom = 640.0
+texture = SubResource("GradientTexture2D_py7os")
+
+[node name="ColorRect" type="ColorRect" parent="SplashWorld" unique_id=1183026967]
+visible = false
+custom_minimum_size = Vector2(640, 360)
+color = Color(0.5218943, 0.9999998, 0.9985549, 1)
+
+[node name="World" type="Node2D" parent="SplashWorld" unique_id=705749606]
+
+[node name="Polygon2D2" type="Polygon2D" parent="SplashWorld/World" unique_id=166300121]
+position = Vector2(0, 64)
+color = Color(0.229949, 0.49954748, 0.25176018, 0.8862745)
+polygon = PackedVector2Array(650, 211, 653, 175, 641, 165, 625, 157, 611, 157, 598, 160, 580, 166, 570, 169, 562, 173, 551, 177, 537, 180, 523, 178, 515, 173, 503, 169, 489, 162, 481, 159, 469, 157, 462, 157, 456, 160, 443, 166, 437, 169, 429, 171, 421, 172, 411, 165, 402, 161, 390, 154, 377, 149, 363, 146, 348, 144, 337, 148, 327, 154, 316, 158, 298, 156, 276, 151, 261, 141, 250, 136, 240, 132, 227, 133, 221, 138, 212, 144, 204, 151, 189, 154, 176, 152, 162, 149, 150, 141, 145, 136, 135, 128, 122, 121, 107, 116, 97, 116, 88, 119, 80, 125, 63, 133, 48, 141, 40, 144, 28, 141, 17, 135, 9, 130, 0, 124, -13, 124, -51, 282, -37, 388, 666, 398)
+
+[node name="Polygon2D" type="Polygon2D" parent="SplashWorld/World" unique_id=1699729956]
+position = Vector2(0, 52)
+color = Color(0.38825953, 0.79752743, 0.31826273, 1)
+polygon = PackedVector2Array(11, 365, 648, 365, 645, 241, 618, 222, 597, 210, 575, 205, 558, 205, 547, 206, 527, 212, 517, 215, 508, 218, 498, 223, 486, 228, 474, 232, 462, 234, 445, 234, 427, 230, 414, 225, 401, 221, 386, 217, 370, 209, 358, 205, 313, 191, 292, 187, 262, 187, 243, 191, 223, 196, 210, 202, 193, 209, 172, 215, 156, 219, 140, 217, 121, 209, 107, 198, 91, 187, 72, 179, 56, 177, 41, 179, 27, 182, 10, 189, -12, 207, -16, 366)
+
+[node name="Decor" type="Node2D" parent="SplashWorld/World" unique_id=2067110042]
+
+[node name="Shop" type="Sprite2D" parent="SplashWorld/World/Decor" unique_id=869873845]
+position = Vector2(317, 290)
+texture = ExtResource("7_pm3ni")
+
+[node name="Shadow" type="Sprite2D" parent="SplashWorld/World/Decor/Shop" unique_id=872745965]
+modulate = Color(0, 0, 0, 0.39215687)
+show_behind_parent = true
+position = Vector2(4.0000153, 19.000015)
+scale = Vector2(1, 0.75)
+skew = -0.5235988
+texture = ExtResource("7_pm3ni")
+flip_v = true
+
+[node name="RedBeehive" type="Sprite2D" parent="SplashWorld/World/Decor" unique_id=1604571221]
+position = Vector2(72, 311)
+texture = ExtResource("8_y6deb")
+
+[node name="RedBeehive2" type="Sprite2D" parent="SplashWorld/World/Decor/RedBeehive" unique_id=1669487990]
+modulate = Color(0, 0, 0, 0.39215687)
+show_behind_parent = true
+position = Vector2(6.9999995, 39.999996)
+scale = Vector2(1, 0.75)
+skew = -0.5235988
+texture = ExtResource("8_y6deb")
+flip_v = true
+
+[node name="RedBeehive2" type="Sprite2D" parent="SplashWorld/World/Decor" unique_id=1794090504]
+position = Vector2(556, 308)
+texture = ExtResource("9_og1vs")
+
+[node name="RedBeehive2" type="Sprite2D" parent="SplashWorld/World/Decor/RedBeehive2" unique_id=876991923]
+modulate = Color(0, 0, 0, 0.39215687)
+show_behind_parent = true
+position = Vector2(6.9999995, 39.999996)
+scale = Vector2(1, 0.75)
+skew = -0.5235988
+texture = ExtResource("8_y6deb")
+flip_v = true
+
+[node name="Bees" type="Node2D" parent="SplashWorld" unique_id=1805338133]
+
+[node name="Objects" type="Node2D" parent="SplashWorld" unique_id=1599526700]
+
+[node name="Destroyer" type="Area2D" parent="SplashWorld" unique_id=964610166]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SplashWorld/Destroyer" unique_id=1577815834]
+position = Vector2(310, 585)
+shape = SubResource("RectangleShape2D_gqmmt")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="SplashWorld/Destroyer" unique_id=1440942361]
+position = Vector2(715, 302)
+shape = SubResource("RectangleShape2D_py7os")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=73309065]
 script = ExtResource("4_tipki")
-
-[node name="GoldenBloomValley" type="Control" parent="CanvasLayer" unique_id=28594160]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("12_golden_controller")
-
-[node name="Background" type="ColorRect" parent="CanvasLayer/GoldenBloomValley" unique_id=35406697]
-material = ExtResource("12_golden_bloom")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="Screens" type="TabContainer" parent="CanvasLayer" unique_id=643847560]
 offset_right = 640.0
@@ -1240,6 +1321,7 @@ sprite_frames = SubResource("SpriteFrames_xu4xf")
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1648089543]
 stream = ExtResource("12_eb6dy")
 
+[connection signal="body_entered" from="SplashWorld/Destroyer" to="SplashWorld" method="_on_destroyer_body_entered"]
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Local" to="CanvasLayer" method="_on_local_pressed"]
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Online" to="CanvasLayer" method="_on_online_pressed"]
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Settings" to="CanvasLayer/Screens" method="_on_settings_pressed"]

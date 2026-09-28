@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bfx36il622tl4"]
+
+[ext_resource type="Script" uid="uid://wdrqy0b44s0x" path="res://minimap.gd" id="1_lj7mc"]
+
+[node name="Minimap" type="Control" unique_id=532366771]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_lj7mc")
+
+[node name="Assets" type="Control" parent="." unique_id=1035103336]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="World" type="Control" parent="." unique_id=312788409]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

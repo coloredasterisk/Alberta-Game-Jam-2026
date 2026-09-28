@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://d4bsy56k6q3kv"]
+
+[ext_resource type="Texture2D" uid="uid://cg5ga0xlyvdp1" path="res://art/Mono_Bee.png" id="1_e7jey"]
+[ext_resource type="Texture2D" uid="uid://d35bjq8fayu2v" path="res://art/Mono_Bee-outline.png" id="2_afnyo"]
+[ext_resource type="Script" uid="uid://bfekb3k616sxi" path="res://scripts/random_color.gd" id="3_afnyo"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a08ua"]
+atlas = ExtResource("1_e7jey")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wyu3k"]
+atlas = ExtResource("1_e7jey")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_py7os"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a08ua")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wyu3k")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppkbt"]
+atlas = ExtResource("2_afnyo")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtawl"]
+atlas = ExtResource("2_afnyo")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_t1jsv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppkbt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtawl")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_py7os"]
+size = Vector2(16, 10)
+
+[node name="SplashBee" type="RigidBody2D" unique_id=1439058313]
+mass = 1000.0
+gravity_scale = 0.0
+lock_rotation = true
+linear_velocity = Vector2(50, 0)
+constant_force = Vector2(1000, 0)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1005850165]
+sprite_frames = SubResource("SpriteFrames_py7os")
+autoplay = "default"
+
+[node name="Outline" type="AnimatedSprite2D" parent="Sprite" unique_id=584032833]
+sprite_frames = SubResource("SpriteFrames_t1jsv")
+autoplay = "default"
+script = ExtResource("3_afnyo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1790786193]
+position = Vector2(1, 2)
+shape = SubResource("RectangleShape2D_py7os")

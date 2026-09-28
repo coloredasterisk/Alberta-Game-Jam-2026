@@ -27,7 +27,6 @@ const SNAPSHOT_SEC := 1.0 / 30.0
 @onready var _tutorial_screen: Control = $CanvasLayer/Screens/TutorialScreen
 ## Full-screen menu background. It stays below Screens and is hidden at the
 ## exact moment the arena becomes interactive.
-@onready var _golden_bloom: GoldenBloomValleyController = $CanvasLayer/GoldenBloomValley
 @onready var _player_labels: Array[RichTextLabel] = [
 	$CanvasLayer/Screens/PlayerSetup/PlayerList/Player1,
 	$CanvasLayer/Screens/PlayerSetup/PlayerList/Player2,
@@ -57,142 +56,7 @@ var _session_started := false
 
 
 func _ready() -> void:
-	_apply_pregame_text_contrast()
 	_show_lobby(true)
-
-
-## Applies the themed pixel frames to every pre-game label and button. The HUD
-## is outside Screens, so gameplay visuals remain completely unchanged.
-func _apply_pregame_text_contrast() -> void:
-	var honey_backdrop := _create_pixel_panel(false, false, false)
-	var royal_title := _create_pixel_panel(true, false, false)
-	var compact_player_backdrop := _create_pixel_panel(false, false, false, true)
-	var game_title := $CanvasLayer/Screens/TitleScreen/RichTextLabel as RichTextLabel
-
-	for node in $CanvasLayer/Screens.find_children("*", "RichTextLabel", true, false):
-		var label := node as RichTextLabel
-		label.add_theme_stylebox_override(
-			"normal",
-			royal_title.duplicate() if label == game_title else honey_backdrop.duplicate()
-		)
-		# RichTextLabel defaults to top alignment. Centre text vertically within
-		# its authored rectangle so every pixel frame has even space above/below.
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-
-	# Buttons use the same Honey Frame silhouette. Separate textures provide
-	# clear interaction feedback without exposing settings in the game UI.
-	var button_normal := _create_pixel_panel(false, false, false)
-	var button_hover := _create_pixel_panel(false, true, false)
-	var button_pressed := _create_pixel_panel(false, false, true)
-	for node in $CanvasLayer/Screens.find_children("*", "Button", true, false):
-		var button := node as Button
-		button.add_theme_stylebox_override("normal", button_normal.duplicate())
-		button.add_theme_stylebox_override("hover", button_hover.duplicate())
-		button.add_theme_stylebox_override("pressed", button_pressed.duplicate())
-		button.add_theme_stylebox_override("focus", button_hover.duplicate())
-		button.add_theme_stylebox_override("disabled", button_normal.duplicate())
-		button.add_theme_color_override("font_color", Color("fff8dc"))
-		button.add_theme_color_override("font_hover_color", Color.WHITE)
-		button.add_theme_color_override("font_pressed_color", Color("2b2116"))
-		button.add_theme_color_override("font_focus_color", Color.WHITE)
-
-	# Keep player identities colourful without tinting their dark frame. These
-	# brighter hues remain distinguishable against the neutral Honey Frame.
-	var player_colours := [
-		Color("ff6652"), Color("72b4ff"), Color("69e879"),
-		Color("ffe56b"), Color("ff7aeb"), Color("66e9f2"),
-	]
-	for i in range(player_colours.size()):
-		var lobby_label := _player_labels[i]
-		var ready_label := $CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node(
-			"Player" + str(i + 1)
-		) as RichTextLabel
-		for label in [lobby_label, ready_label]:
-			label.modulate = Color.WHITE
-			label.add_theme_color_override("default_color", player_colours[i])
-			label.add_theme_font_size_override("normal_font_size", 10)
-			label.add_theme_stylebox_override("normal", compact_player_backdrop.duplicate())
-
-
-## Creates the pre-game frames from pixels at runtime. This keeps the styling
-## resolution-independent, locally authored, and separate from the scenery
-## shader. `royal` is reserved for the main game title; all other labels and
-## buttons use the simpler Honey Frame. Hover/pressed variants only alter the
-## Honey Frame colours, never its geometry or layout.
-func _create_pixel_panel(
-	royal: bool,
-	hovered: bool,
-	pressed: bool,
-	compact: bool = false,
-) -> StyleBoxTexture:
-	const SIZE := 32
-	var image := Image.create(SIZE, SIZE, false, Image.FORMAT_RGBA8)
-	image.fill(Color.TRANSPARENT)
-
-	var edge := Color("e3a315") if royal else Color("f7b81b")
-	var highlight := Color("ffd42b") if royal else Color("ffe05a")
-	var centre := Color(0.071, 0.11, 0.21, 0.94) if royal else Color(0.17, 0.13, 0.086, 0.88)
-	if hovered:
-		edge = Color("ffd23f")
-		highlight = Color("fff0a0")
-		centre = Color(0.22, 0.16, 0.08, 0.94)
-	elif pressed:
-		edge = Color("b9780b")
-		highlight = Color("e3a315")
-		centre = Color("f3b71d")
-
-	for y in range(SIZE):
-		for x in range(SIZE):
-			var outer := _pixel_panel_contains(x, y, royal, false, SIZE)
-			if not outer:
-				continue
-			var inner := _pixel_panel_contains(x, y, royal, true, SIZE)
-			if inner:
-				image.set_pixel(x, y, centre)
-			else:
-				var lit := y < 4 or x < (6 if royal else 4)
-				image.set_pixel(x, y, highlight if lit else edge)
-
-	var panel := StyleBoxTexture.new()
-	panel.texture = ImageTexture.create_from_image(image)
-	var slice_margin := 5.0 if compact else 10.0
-	panel.texture_margin_left = slice_margin
-	panel.texture_margin_top = slice_margin
-	panel.texture_margin_right = slice_margin
-	panel.texture_margin_bottom = slice_margin
-	panel.expand_margin_left = 2.0 if compact else (6.0 if royal else 4.0)
-	panel.expand_margin_top = 1.0 if compact else (4.0 if royal else 3.0)
-	panel.expand_margin_right = 2.0 if compact else (6.0 if royal else 4.0)
-	panel.expand_margin_bottom = 1.0 if compact else (4.0 if royal else 3.0)
-	return panel
-
-
-## Pixel mask for the nine-slice texture. Honey Frame uses two clipped corner
-## steps. Royal Hive adds a crown and side wings while retaining the same dark,
-## high-contrast reading area.
-func _pixel_panel_contains(x: int, y: int, royal: bool, inner: bool, size: int) -> bool:
-	if royal:
-		if inner:
-			return y >= 7 and y < size - 7 and x >= 7 and x < size - 7
-		var crown := y < 4 and x >= 9 and x < size - 9
-		var shoulder := y >= 4 and y < 7 and x >= 5 and x < size - 5
-		var body := y >= 7 and y < size - 7 and x >= 3 and x < size - 3
-		var wings := y >= 12 and y < 20
-		var lower_shoulder := y >= size - 7 and y < size - 4 and x >= 5 and x < size - 5
-		var base := y >= size - 4 and x >= 9 and x < size - 9
-		return crown or shoulder or body or wings or lower_shoulder or base
-
-	var inset := 3 if inner else 0
-	if y < inset or y >= size - inset:
-		return false
-	var local_y := y - inset
-	var local_size := size - inset * 2
-	if local_y < 2 or local_y >= local_size - 2:
-		return x >= 5 + inset and x < size - 5 - inset
-	if local_y < 5 or local_y >= local_size - 5:
-		return x >= 2 + inset and x < size - 2 - inset
-	return x >= inset and x < size - inset
-
 
 ## Starts phone-controller / relay networking for Session.mode. Called once the player finishes
 ## the pre-match menu (amount picked in ChoosePlayerAmount, or a join code submitted) - NOT at
@@ -294,6 +158,10 @@ func _process(delta: float) -> void:
 		for i in players.size():
 			if _phone_ids[i] == 0 and Input.is_action_just_pressed("p%d_interact" % players[i].player_index):
 				_mark_ready(i)
+	else:
+		for i in players.size():
+			if _phone_ids[i] != 0 and Input.is_action_just_pressed("p%d_interact" % players[i].player_index):
+				players[i].interact(true)
 	match Session.mode:
 		Session.Mode.LOCAL:
 			for i in players.size():
@@ -329,7 +197,6 @@ func _leave() -> void:
 func _show_lobby(preloading = false) -> void:
 	in_lobby = true
 	_phase = Phase.LOBBY
-	_golden_bloom.visible = true
 	_show_player_setup(preloading)
 	$CanvasLayer.visible = true
 	$CanvasLayer/Screens.visible = true
@@ -361,8 +228,9 @@ func _enter_playing() -> void:
 	update_split_screen()
 	in_lobby = false
 	_waiting_to_start = false
-	_golden_bloom.visible = false
 	$CanvasLayer/Screens.visible = false
+	$SplashWorld.visible = false
+	$SplashWorld.paused = true
 	world.visible = true
 	$CanvasLayer/HUD.visible = true
 	$World._start_game()
@@ -432,9 +300,6 @@ func _refresh_names() -> void:
 		_player_labels[i].text = "[center]Player %d - %s" % [i + 1, status]
 		if is_ready:
 			joined_count += 1
-	# The concept has four rival hives; additional supported player slots still
-	# work normally but intentionally do not add more background hive lights.
-	_golden_bloom.set_joined_players(mini(joined_count, 4))
 
 
 ## Everyone has a slot: show the tutorial and wait for each player to press a button.
@@ -469,8 +334,6 @@ func _show_tutorial() -> void:
 		else:
 			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).text = "[center]" + players[i].username + "\nWaiting"
 			$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(i+1)).visible = true
-	for i in 4:
-		_golden_bloom.set_player_ready(i, false)
 
 
 func _show_player_setup(preloading = false) -> void:
@@ -483,8 +346,7 @@ func _mark_ready(slot: int) -> void:
 	if slot < 0 or slot >= _ready_to_start.size() or _ready_to_start[slot]:
 		return
 	_ready_to_start[slot] = true
-	if slot < 4:
-		_golden_bloom.set_player_ready(slot, true)
+
 	$CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady.get_node("Player" + str(slot+1)).text = "[center]" + players[slot].username + "\nReady!"
 	if _ready_to_start.all(func(r: bool) -> bool: return r):
 		_start_match()
@@ -570,7 +432,7 @@ func _send_guest_input() -> void:
 	if _guest == null or not _guest.is_connected_to_host():
 		return
 	if Input.is_action_just_pressed("p1_interact"):
-		_guest.send({"t": "in", "b": ["start"]})
+		_guest.send({"t": "in", "b": ["interact"]})
 	var move := Input.get_vector("p1_move_left", "p1_move_right", "p1_move_up", "p1_move_down")
 	_guest.send_fast({"t": "in", "x": snappedf(move.x, 0.01), "y": snappedf(move.y, 0.01)})
 

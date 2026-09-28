@@ -25,6 +25,7 @@ var money_counter: int = 100
 
 var confused: bool = false
 var rain: bool = false
+var capacity_tween
 
 var has_stinger: bool = false:
 	set(value):
@@ -63,7 +64,23 @@ func enable():
 	visible = true
 	$Buzzing.play()
 
-
+func update_capacity(num) -> void:
+	nectar += num
+	$Capacity.self_modulate = Color.WHITE
+	if capacity_tween:
+		capacity_tween.kill()
+	if nectar >= current_nectar_capacity:
+		$Capacity.text = "Full!"
+		$Capacity.modulate = Color.RED
+		
+	else:
+		$Capacity.text = str(nectar) +"/"+ str(current_nectar_capacity)
+		$Capacity.modulate = Color.WHITE
+		capacity_tween = get_tree().create_tween()
+		capacity_tween.set_ease(Tween.EASE_IN_OUT)
+		capacity_tween.tween_property($Capacity, "self_modulate", Color.TRANSPARENT, 5.0)
+		capacity_tween.play()
+		
 func movement(delta):
 
 	if phone_id > 0:
@@ -114,11 +131,13 @@ func pollen():
 		if area is Flower and area.pollen(self):
 			break
 
-func interact():
+func interact(is_phone = false):
+	print(is_phone)
 	if Input.is_action_just_pressed("p%d_interact" % player_index):
 		for area in interaction.get_overlapping_areas():
 			if area.has_method("interact") and area.interact(self):
 				break
+
 
 func stinger():
 	has_stinger = true
@@ -144,6 +163,7 @@ func get_stung(attacker: Player):
 func send_home():
 	for hive in get_tree().get_nodes_in_group("hives"):
 		if hive.color == player_color:
+			update_capacity(-nectar)
 			global_position = hive.global_position
 			break
 

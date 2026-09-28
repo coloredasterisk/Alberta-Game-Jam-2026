@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cythjuhv724ml" path="res://art/Red_Beehive.png" id="3_6xwxf"]
 [ext_resource type="Texture2D" uid="uid://c7ruatby8tdr4" path="res://art/Mono_Beehive.png" id="3_qn66l"]
 [ext_resource type="Texture2D" uid="uid://byesjsb8x07s5" path="res://art/Mono_Beehive-outline.png" id="5_c550q"]
+[ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="6_xgw1h"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c550q"]
 atlas = ExtResource("3_qn66l")
@@ -52,6 +53,14 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_py7os"]
 radius = 19.0
 
+[sub_resource type="Gradient" id="Gradient_c550q"]
+offsets = PackedFloat32Array(0.52861035, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="Gradient_q7y6d"]
+offsets = PackedFloat32Array(0, 0.52861035, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
 [node name="Hive" type="Area2D" unique_id=2080311839]
 script = ExtResource("1_u1ead")
 
@@ -75,3 +84,35 @@ shape = SubResource("CircleShape2D_py7os")
 [node name="outline" type="Sprite2D" parent="." unique_id=1946670321]
 position = Vector2(0, -11)
 texture = ExtResource("5_c550q")
+
+[node name="DepositNectar" type="CPUParticles2D" parent="." unique_id=483176547]
+emitting = false
+amount = 16
+texture = ExtResource("6_xgw1h")
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 490)
+initial_velocity_min = 180.0
+initial_velocity_max = 270.0
+damping_min = 180.0
+damping_max = 180.0
+color_ramp = SubResource("Gradient_c550q")
+
+[node name="StealNectar" type="CPUParticles2D" parent="." unique_id=1258256623]
+emitting = false
+amount = 16
+texture = ExtResource("6_xgw1h")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+emission_shape = 6
+emission_ring_inner_radius = 27.0
+emission_ring_radius = 27.0
+spread = 0.0
+gravity = Vector2(0, 0)
+radial_accel_min = -150.0
+radial_accel_max = -150.0
+tangential_accel_min = 60.0
+tangential_accel_max = 90.0
+color_ramp = SubResource("Gradient_q7y6d")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cg5ga0xlyvdp1"
-path="res://.godot/imported/Mono_Bee.png-9a6da30cf7da169a4ceeac5daff20a5e.ctex"
+uid="uid://b3s8yhwwov7oo"
+path="res://.godot/imported/Itch Cover Art.png-efd71587047416c803f4ad9ed9ea4a2e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/Mono_Bee.png"
-dest_files=["res://.godot/imported/Mono_Bee.png-9a6da30cf7da169a4ceeac5daff20a5e.ctex"]
+source_file="res://art/Itch Cover Art.png"
+dest_files=["res://.godot/imported/Itch Cover Art.png-efd71587047416c803f4ad9ed9ea4a2e.ctex"]
 
 [params]
 

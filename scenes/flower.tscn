@@ -112,7 +112,34 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Flower" type="Area2D" unique_id=221364224]
+[sub_resource type="AtlasTexture" id="AtlasTexture_6s0i7"]
+atlas = ExtResource("6_bv3ss")
+region = Rect2(0, 0, 21, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1a2qq"]
+atlas = ExtResource("3_ym8cu")
+region = Rect2(0, 0, 23, 33)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_py7os"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6s0i7")
+}],
+"loop": 1,
+"name": &"bulb",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1a2qq")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Flower" type="Area2D" unique_id=221364224 groups=["flower"]]
 script = ExtResource("1_yoh7s")
 
 [node name="Color" type="AnimatedSprite2D" parent="." unique_id=1375704492]
@@ -141,6 +168,16 @@ texture = ExtResource("7_vlpni")
 
 [node name="bloom_outline" type="Sprite2D" parent="." unique_id=608064076]
 texture = ExtResource("4_rqhtc")
+
+[node name="Shadow" type="AnimatedSprite2D" parent="." unique_id=196392367]
+modulate = Color(0, 0, 0, 0.39215687)
+z_index = -10
+position = Vector2(6, 27)
+scale = Vector2(1, 0.75)
+skew = -0.5235988
+sprite_frames = SubResource("SpriteFrames_py7os")
+autoplay = "default"
+flip_v = true
 
 [connection signal="timeout" from="Growing_Cooldown" to="." method="_on_growing_cooldown_timeout"]
 [connection signal="timeout" from="Pollen_Growth_Cooldown" to="." method="_on_pollen_growth_cooldown_timeout"]

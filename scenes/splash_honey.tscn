@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://f7sqladipctg"]
+
+[ext_resource type="Texture2D" uid="uid://rx46n3k5ufg3" path="res://art/Honey.png" id="1_6lljc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_afnyo"]
+size = Vector2(7, 9)
+
+[node name="SplashHoney" type="RigidBody2D" unique_id=23257286]
+gravity_scale = 0.5
+lock_rotation = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1797256084]
+texture = ExtResource("1_6lljc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1137992250]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_afnyo")
