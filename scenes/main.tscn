@@ -21,8 +21,14 @@
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
+[ext_resource type="Texture2D" uid="uid://n6vftv675xj6" path="res://art/shop_hex.png" id="14_yq6so"]
+[ext_resource type="Texture2D" uid="uid://cborspwch6dmm" path="res://art/Confusion_Icon.png" id="15_fv21b"]
 [ext_resource type="Texture2D" uid="uid://61s8dv5acwqm" path="res://art/Money.png" id="15_gqmmt"]
+[ext_resource type="Texture2D" uid="uid://cxtl1edjf4d0r" path="res://art/Speed_Icon.png" id="16_tel4y"]
 [ext_resource type="Texture2D" uid="uid://rx46n3k5ufg3" path="res://art/Honey.png" id="16_yc10j"]
+[ext_resource type="Texture2D" uid="uid://jm5no2lt5isb" path="res://art/Swarm_Icon.png" id="17_qkpxi"]
+[ext_resource type="Texture2D" uid="uid://cvo4xkwjp4aw3" path="res://art/Stinger_Icon.png" id="18_5q0nq"]
+[ext_resource type="Texture2D" uid="uid://b2rcy3ewsxhk2" path="res://art/Rain_Powerup_Icon.png" id="19_dgi5k"]
 
 [sub_resource type="Gradient" id="Gradient_pm3ni"]
 offsets = PackedFloat32Array(0, 0.25, 0.5090361, 1)
@@ -48,7 +54,7 @@ size = Vector2(22, 598)
 bg_color = Color(0.7019608, 0.53333336, 0.7058824, 0.14901961)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py7os"]
-bg_color = Color(0.1254902, 0.03529412, 0.13725491, 0.42)
+bg_color = Color(0.1254902, 0.03529412, 0.13725491, 0.8117647)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xu4xf"]
 bg_color = Color(0.6, 0.6, 0.6, 0.14509805)
@@ -480,8 +486,6 @@ text = "There is movement and an interact button for everything
 
 - On phone, use joystick to move and interact to interact
 
-- On LAN, use WASD and E to interact
-
 - On split keyboard:
 	-P1: WASD and E
 	-P2: Arrow Keys and Enter
@@ -514,12 +518,157 @@ mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 8
 text = "- The winner is the one with the most honey 
 		after 2 minutes
-- Collect Nectar from Flowers
+- Collect Nectar from your own color Flowers
 - Bring Nectar back to your hive
 - Can also steal steal honey from rival hives
 - Spend money at the shop to buy powerups
 - Gain money from stealing from ants "
 fit_content = true
+
+[node name="PowerupSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=541425424]
+anchors_preset = 0
+offset_left = 15.0
+offset_top = 221.0
+offset_right = 461.0
+offset_bottom = 349.0
+
+[node name="PowerupTitle" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection" unique_id=387649263]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 4.0
+offset_right = 439.0
+offset_bottom = 31.0
+bbcode_enabled = true
+text = "[center]Powerups"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection" unique_id=878343311]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 88.0
+offset_right = 351.0
+offset_bottom = 128.0
+theme_override_constants/separation = 38
+
+[node name="Confusion" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1524725619]
+layout_mode = 2
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Confusion" unique_id=2119128611]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("15_fv21b")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Confusion" unique_id=1526854362]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -52.0
+offset_right = 51.0
+offset_bottom = -12.0
+theme_override_font_sizes/normal_font_size = 8
+text = "   Confusion
+Inverts rivals controls"
+
+[node name="Speed" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=518563922]
+layout_mode = 2
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Speed" unique_id=1692151703]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("16_tel4y")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Speed" unique_id=812470007]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -52.0
+offset_right = 51.0
+offset_bottom = -12.0
+theme_override_font_sizes/normal_font_size = 8
+text = "   Speed
+Makes you
+Speedy!"
+
+[node name="Swarm" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1144117380]
+layout_mode = 2
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Swarm" unique_id=2045832632]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("17_qkpxi")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Swarm" unique_id=201454915]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -52.0
+offset_right = 54.0
+offset_bottom = -2.0
+theme_override_font_sizes/normal_font_size = 8
+text = "   Swarm
+Steals Honey from hives! (max 5)"
+
+[node name="Stinger" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=2109703597]
+layout_mode = 2
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Stinger" unique_id=1605047185]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("18_5q0nq")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Stinger" unique_id=689433558]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -52.0
+offset_right = 53.0
+offset_bottom = -2.0
+theme_override_font_sizes/normal_font_size = 8
+text = "   Stinger
+Steals Honey from rivals and push them"
+
+[node name="Rain" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1475875512]
+layout_mode = 2
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Rain" unique_id=79415199]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("19_dgi5k")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Rain" unique_id=722489637]
+layout_mode = 0
+offset_left = -16.0
+offset_top = -52.0
+offset_right = 59.0
+offset_bottom = -12.0
+theme_override_font_sizes/normal_font_size = 8
+text = "   Rain
+Make your rivals slow!"
 
 [node name="PlayerSection" type="Panel" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1118434159]
 layout_mode = 0
