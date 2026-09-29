@@ -2,24 +2,40 @@ extends Node
 
 
 #power up costs
-var stinger_cost: int = 20
-var rain_cost: int = 15
-var speed_cost: int = 15
-var confusion_cost: int = 10
-var swarm_cost: int = 30
+var powerup_costs = {
+	"confusion" : 10,
+	"speed" : 15,
+	"rain" : 25,
+	"stinger" : 20,
+	"wind" : 25,
+	"swarm" : 30,
+	"capacity" : 50,
+	"collection" : 100,
+}
+
 
 #power up durations
-var stinger_duration: float = 10.0
-var rain_duration: float = 10.0
-var speed_duration: float = 20.0
-var confusion_duration: float = 5.0
-var swarm_cooldown_duration: float = 1
+var powerup_durations = {
+	"confusion" : 10,
+	"speed" : 20,
+	"rain" : 10,
+	"stinger" : 10,
+	"wind" : 10,
+}
 
 var original_max_capacity: int = 5
 var win_amount = 10
 var max_time = 60
 var amount_of_players = 1
 var local_mode = false
+
+var original_player_speed = 200
+var rain_slow_speed = 50
+var drag_factor = 0.98
+var additive_speed_up = 100
+var speed_up_drag_factor = 0.5
+var normal_knockback = 100
+var stinger_knockback = 1000
 
 var modulate_color = {
 "red": Color.RED,
@@ -92,3 +108,13 @@ func _ready() -> void:
 				ev = InputEventKey.new()
 				ev.physical_keycode = Global.ACTIONS[action]
 			InputMap.action_add_event(action, ev)
+
+
+func play_sound(sound, timer = 0) -> void:
+	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
+	sfx.stream = sound
+	if timer > 0:
+		sfx.get_node("Timer").wait_time = timer
+		sfx.get_node("Timer").autostart = true
+	get_node("/root/Main").add_child(sfx)
+	

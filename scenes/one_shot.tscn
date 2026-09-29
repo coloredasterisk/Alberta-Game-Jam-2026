@@ -4,4 +4,8 @@
 autoplay = true
 bus = &"SFX"
 
+[node name="Timer" type="Timer" parent="." unique_id=798496740]
+one_shot = true
+
 [connection signal="finished" from="." to="." method="queue_free"]
+[connection signal="timeout" from="Timer" to="." method="queue_free"]

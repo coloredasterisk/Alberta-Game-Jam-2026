@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://dg2yq835giomk"
-path="res://.godot/imported/Rainbow Stinger Powerup.wav-fd043058923e5788155ae2a6c6807e09.sample"
+path="res://.godot/imported/Rainbow Stinger Powerup.wav-95a03c94d1be604ed1f7d6a3f12c5558.sample"
 
 [deps]
 
-source_file="res://Rainbow Stinger Powerup.wav"
-dest_files=["res://.godot/imported/Rainbow Stinger Powerup.wav-fd043058923e5788155ae2a6c6807e09.sample"]
+source_file="res://music/Rainbow Stinger Powerup.wav"
+dest_files=["res://.godot/imported/Rainbow Stinger Powerup.wav-95a03c94d1be604ed1f7d6a3f12c5558.sample"]
 
 [params]
 

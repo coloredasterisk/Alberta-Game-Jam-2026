@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://7neexati0008"
-path="res://.godot/imported/Bee Buzzing.wav-9ea89cf0ce854a4474eebfd42590f751.sample"
+path="res://.godot/imported/Bee Buzzing.wav-5ffdccfa3e48a51fc72ca68c2195f008.sample"
 
 [deps]
 
-source_file="res://Bee Buzzing.wav"
-dest_files=["res://.godot/imported/Bee Buzzing.wav-9ea89cf0ce854a4474eebfd42590f751.sample"]
+source_file="res://music/Bee Buzzing.wav"
+dest_files=["res://.godot/imported/Bee Buzzing.wav-5ffdccfa3e48a51fc72ca68c2195f008.sample"]
 
 [params]
 

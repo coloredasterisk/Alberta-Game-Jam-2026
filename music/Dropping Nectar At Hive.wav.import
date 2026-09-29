@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bg7rlfjnpbko6"
-path="res://.godot/imported/Dropping Nectar At Hive.wav-43919604ada1ff100495333359354e4b.sample"
+path="res://.godot/imported/Dropping Nectar At Hive.wav-a47e8edfec10612109f64ed0cc15c075.sample"
 
 [deps]
 
-source_file="res://Dropping Nectar At Hive.wav"
-dest_files=["res://.godot/imported/Dropping Nectar At Hive.wav-43919604ada1ff100495333359354e4b.sample"]
+source_file="res://music/Dropping Nectar At Hive.wav"
+dest_files=["res://.godot/imported/Dropping Nectar At Hive.wav-a47e8edfec10612109f64ed0cc15c075.sample"]
 
 [params]
 

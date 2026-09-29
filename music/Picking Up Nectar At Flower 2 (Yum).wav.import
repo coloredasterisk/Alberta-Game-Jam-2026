@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://d32sikcrk4p0t"
+path="res://.godot/imported/Picking Up Nectar At Flower 2 (Yum).wav-6725581656ffa443decfc09c9d3f74dd.sample"
+
+[deps]
+
+source_file="res://music/Picking Up Nectar At Flower 2 (Yum).wav"
+dest_files=["res://.godot/imported/Picking Up Nectar At Flower 2 (Yum).wav-6725581656ffa443decfc09c9d3f74dd.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

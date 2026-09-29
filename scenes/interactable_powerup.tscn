@@ -3,23 +3,23 @@
 [ext_resource type="Texture2D" uid="uid://61s8dv5acwqm" path="res://art/Money.png" id="1_gt1rh"]
 [ext_resource type="Texture2D" uid="uid://b2rcy3ewsxhk2" path="res://art/Rain_Powerup_Icon.png" id="1_h273r"]
 [ext_resource type="Script" uid="uid://dk6iuepburaoe" path="res://scripts/interactable_powerup.gd" id="1_mil0u"]
+[ext_resource type="Texture2D" uid="uid://n6vftv675xj6" path="res://art/shop_hex.png" id="2_6wps5"]
 [ext_resource type="PackedScene" uid="uid://bti365s467xvk" path="res://scenes/number_display.tscn" id="2_h273r"]
 [ext_resource type="Texture2D" uid="uid://cborspwch6dmm" path="res://art/Confusion_Icon.png" id="2_p8htm"]
+[ext_resource type="Texture2D" uid="uid://b0lj8vp8i638o" path="res://art/backpack.png" id="3_yqh80"]
 [ext_resource type="Texture2D" uid="uid://cxtl1edjf4d0r" path="res://art/Speed_Icon.png" id="4_h5esu"]
+[ext_resource type="Texture2D" uid="uid://dbp1tylb6xt22" path="res://art/flower_upgrade.png" id="4_y8tbs"]
 [ext_resource type="Texture2D" uid="uid://cvo4xkwjp4aw3" path="res://art/Stinger_Icon.png" id="5_h5esu"]
 [ext_resource type="Texture2D" uid="uid://jm5no2lt5isb" path="res://art/Swarm_Icon.png" id="6_pp3ut"]
+[ext_resource type="Texture2D" uid="uid://du47n02bo3wuo" path="res://art/swirl.png" id="10_61bbt"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py7os"]
-bg_color = Color(0.85773873, 0.80415976, 0.56986713, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.9218136, 0.79165584, 0.32217553, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="AtlasTexture" id="AtlasTexture_8o0h1"]
+atlas = ExtResource("3_yqh80")
+region = Rect2(0, 0, 12, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qrr2"]
+atlas = ExtResource("4_y8tbs")
+region = Rect2(0, 0, 12, 12)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_445kk"]
 atlas = ExtResource("2_p8htm")
@@ -37,8 +37,28 @@ region = Rect2(0, 0, 12, 12)
 atlas = ExtResource("6_pp3ut")
 region = Rect2(0, 0, 12, 12)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_eb3wm"]
+atlas = ExtResource("10_61bbt")
+region = Rect2(0, 0, 12, 12)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_tipki"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8o0h1")
+}],
+"loop": 1,
+"name": &"capacity",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qrr2")
+}],
+"loop": 1,
+"name": &"collection",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_445kk")
@@ -78,6 +98,14 @@ animations = [{
 "loop": 1,
 "name": &"swarm",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eb3wm")
+}],
+"loop": 1,
+"name": &"wind",
+"speed": 5.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_py7os"]
@@ -86,15 +114,15 @@ radius = 16.0
 [node name="InteractablePowerup" type="Area2D" unique_id=417485488]
 script = ExtResource("1_mil0u")
 
-[node name="Panel" type="Panel" parent="." unique_id=304665049]
+[node name="Panel" type="TextureRect" parent="." unique_id=1812470884]
 offset_right = 32.0
 offset_bottom = 32.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_py7os")
+texture = ExtResource("2_6wps5")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=110210692]
 position = Vector2(16, 17)
 sprite_frames = SubResource("SpriteFrames_tipki")
-animation = &"stinger"
+animation = &"wind"
 
 [node name="Cost" type="Control" parent="." unique_id=272745843]
 visible = false

@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://o61q55bi3eca" path="res://scripts/rain_powerup.gd" id="1_3uxwh"]
 [ext_resource type="Texture2D" uid="uid://bh6am0r1dxevl" path="res://art/Rain.png" id="1_xpor1"]
-[ext_resource type="AudioStream" uid="uid://c1ynq4x0to025" path="res://Raincloud powerup.wav" id="3_3jorm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xpor1"]
 atlas = ExtResource("1_xpor1")
@@ -53,9 +52,3 @@ frame_progress = 0.53197294
 position = Vector2(0, 18)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_x7p88")
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1541482619]
-stream = ExtResource("3_3jorm")
-volume_db = -10.0
-autoplay = true
-bus = &"SFX"

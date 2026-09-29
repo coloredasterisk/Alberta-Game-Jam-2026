@@ -1,10 +1,11 @@
 class_name Player extends CharacterBody2D
-const POWER_EFFECT = preload("res://scripts/power_effect_2d.gd")
+
 @export var player_index: int = 1
 
-var speed: int = 200
+var speed: int = Global.original_player_speed
 var direction: Vector2
 var acceleration: Vector2
+var drag_factor : float = Global.drag_factor
 var max_velocity: int = 50
 var touch: TouchControls
 
@@ -13,7 +14,6 @@ var touch: TouchControls
 var phone_id: int = 0
 var username := ""
 var external_stick := Vector2.ZERO
-
 
 var nectar: int = 0
 var current_nectar_capacity: int
@@ -26,6 +26,12 @@ var money_counter: int = 100
 var confused: bool = false
 var rain: bool = false
 var capacity_tween
+
+var sound_list = {
+	"stinger" : preload("res://music/Rainbow Stinger Powerup.wav"),
+	"confusion" : preload("res://music/Confusion Powerup.wav"),
+	"speed" : preload("res://music/Super Speed Powerup.wav"),
+}
 
 var has_stinger: bool = false:
 	set(value):
@@ -86,79 +92,85 @@ func movement(delta):
 	if phone_id > 0:
 		direction = external_stick
 	else:
-		if player_index == 3:
+		if player_index == 3: #mouse input
 			direction = (get_global_mouse_position() - global_position).normalized()
 		else:
 			direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	if confused:
 		direction = -direction
+	if speed > Global.original_player_speed:
+		$SpeedParticles.direction = -direction
 	acceleration = direction * speed
-	velocity = acceleration * delta + (velocity * 0.98)
+	velocity = acceleration * delta + (velocity * drag_factor)
 	
-	#if velocity.length() > max_velocity:
-	#	velocity = velocity.normalized() * max_velocity
 
 func confusion():
 	confused = true
-	POWER_EFFECT.spawn(self, "confusion", Global.confusion_duration)
-	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
-	sfx.stream = preload("res://Confusion Powerup.wav")
-	add_child(sfx)
-	await get_tree().create_timer(Global.confusion_duration).timeout
-	sfx.queue_free()
+	$Birds.visible = true
+	play_sound("confusion")
+	get_tree().create_timer(Global.powerup_durations["confusion"]).timeout.connect(end_confusion)
+	
+func end_confusion():
 	confused = false
+	$Birds.visible = false
 
 func rain_power():
 	rain = true
-	speed -= 150
-	POWER_EFFECT.spawn(self, "rain", Global.rain_duration)
-	await get_tree().create_timer(Global.rain_duration).timeout
-	speed += 150
-	rain = false
+	$Rain.visible = true
+	speed = Global.rain_slow_speed
+	get_tree().create_timer(Global.powerup_durations["rain"]).timeout.connect(end_rain)
 
+func end_rain():
+	$Rain.visible = false
+	speed = Global.original_player_speed
+	rain = false
+	
 func speed_power():
-	speed += 100
-	POWER_EFFECT.spawn(self, "speed", Global.speed_duration)
-	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
-	sfx.stream = preload("res://Super Speed Powerup.wav")
-	add_child(sfx)
-	await get_tree().create_timer(Global.speed_duration).timeout
-	sfx.queue_free()
+	speed += Global.additive_speed_up
+	$SpeedParticles.visible = true
+	play_sound("speed")
+	get_tree().create_timer(Global.powerup_durations["speed"]).timeout.connect(end_speed)
+	
+func end_speed():
 	speed -= 100
+	$SpeedParticles.visible = false
 
 func pollen():
 	for area in interaction.get_overlapping_areas():
 		if area is Flower and area.pollen(self):
 			break
 
-func interact(is_phone = false):
-	print(is_phone)
+func interact():
 	if Input.is_action_just_pressed("p%d_interact" % player_index):
 		for area in interaction.get_overlapping_areas():
-			if area.has_method("interact") and area.interact(self):
-				break
+			apply_interact()
 
+func apply_interact():
+	for area in interaction.get_overlapping_areas():
+		if area.has_method("interact") and area.interact(self):
+			break
 
 func stinger():
 	has_stinger = true
-	POWER_EFFECT.spawn(self, "stinger", Global.stinger_duration)
+	$StingerIcon.visible = true
 	var blink = create_tween().set_loops()
-	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.3)
-	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.3)
-	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 0.3, 0.3)
-	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 1.0, 0.3)
-	var sfx = preload("res://scenes/one_shot.tscn").instantiate()
-	sfx.stream = preload("res://Rainbow Stinger Powerup.wav")
-	add_child(sfx)
-	await get_tree().create_timer(Global.stinger_duration).timeout
+	blink.tween_property(stinger_effect, "modulate:a", 0.3, 0.2)
+	blink.tween_property(stinger_effect, "modulate:a", 1.0, 0.2)
+	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 0.3, 0.2)
+	blink.tween_property($animated_outline/Rainbow_Effect, "modulate:a", 1.0, 0.2)
+	get_tree().create_timer(Global.powerup_durations["stinger"]).timeout.connect(end_stinger.bind(blink))
+	play_sound("stinger")
+	
+func end_stinger(blink):
 	blink.kill()
-	sfx.queue_free()
 	has_stinger = false
+	$StingerIcon.visible = false
 
 func get_stung(attacker: Player):
 	print(player_color, " bee got stung by ", attacker.player_color)
-	nectar = 0
-	send_home()
+	attacker.update_capacity(nectar)
+	update_capacity(-nectar)
+	velocity += attacker.global_position.direction_to(global_position) * Global.stinger_knockback
 
 func send_home():
 	for hive in get_tree().get_nodes_in_group("hives"):
@@ -168,26 +180,34 @@ func send_home():
 			break
 
 func _on_interaction_body_entered(body: Node2D) -> void:
-	if has_stinger and body is Player and body != self:
-		body.get_stung(self)
-
+	if body is Player and body != self:
+		if has_stinger:
+			body.get_stung(self)
+		else:
+			velocity += body.global_position.direction_to(global_position) * Global.normal_knockback
 func animation():
 	if bee_animation.frame == 1:
 		stinger_effect.position.y = 2
+		$StingerIcon.position.y = 2
 	else:
 		stinger_effect.position.y = 1
+		$StingerIcon.position.y = 1
 	if direction.x < 0:
 		bee_animation.flip_h = true
 		$animated_outline.flip_h = true
 		stinger_effect.flip_h = true
 		stinger_effect.position.x = -1.0
 		$AnimatedSprite2D/Shadow.flip_h = true
+		$StingerIcon.flip_h = false
+		$StingerIcon.position.x = 6
 	elif direction.x > 0:
 		bee_animation.flip_h = false
 		$animated_outline.flip_h = false
 		stinger_effect.flip_h = false
 		$AnimatedSprite2D/Shadow.flip_h = false
 		stinger_effect.position.x = 2.0
+		$StingerIcon.flip_h = true
+		$StingerIcon.position.x = -6
 
 func _physics_process(delta: float) -> void:
 	pollen()
@@ -195,3 +215,6 @@ func _physics_process(delta: float) -> void:
 	animation()
 	movement(delta)
 	move_and_slide()
+	
+func play_sound(sound_name):
+	Global.play_sound(sound_list[sound_name], Global.powerup_durations[sound_name])

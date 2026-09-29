@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bahi3dfgeg5hx"
-path="res://.godot/imported/Getting Money 1.wav-c44eda1c53587df0416f6a254cbdc7b8.sample"
+path="res://.godot/imported/Getting Money 1.wav-89cb04b8c39e22c3731e3639283a799d.sample"
 
 [deps]
 
-source_file="res://Getting Money 1.wav"
-dest_files=["res://.godot/imported/Getting Money 1.wav-c44eda1c53587df0416f6a254cbdc7b8.sample"]
+source_file="res://music/Getting Money 1.wav"
+dest_files=["res://.godot/imported/Getting Money 1.wav-89cb04b8c39e22c3731e3639283a799d.sample"]
 
 [params]
 

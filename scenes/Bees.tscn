@@ -3,8 +3,11 @@
 [ext_resource type="Script" uid="uid://cup323ixjs1ec" path="res://scripts/player.gd" id="1_ij6vw"]
 [ext_resource type="Texture2D" uid="uid://cg5ga0xlyvdp1" path="res://art/Mono_Bee.png" id="2_t2mbh"]
 [ext_resource type="Texture2D" uid="uid://dmectf1na0gqi" path="res://art/Stinger_Rainbow.png" id="4_t2mbh"]
-[ext_resource type="AudioStream" uid="uid://7neexati0008" path="res://Bee Buzzing.wav" id="5_b8v61"]
+[ext_resource type="AudioStream" uid="uid://7neexati0008" path="res://music/Bee Buzzing.wav" id="5_b8v61"]
 [ext_resource type="Texture2D" uid="uid://d35bjq8fayu2v" path="res://art/Mono_Bee-outline.png" id="5_csgcu"]
+[ext_resource type="Texture2D" uid="uid://ch0pfrvlf6akf" path="res://art/Birds-Sheet.png" id="5_lexnm"]
+[ext_resource type="Texture2D" uid="uid://bh6am0r1dxevl" path="res://art/Rain.png" id="6_lexnm"]
+[ext_resource type="Texture2D" uid="uid://cvo4xkwjp4aw3" path="res://art/Stinger_Icon.png" id="8_ybcnv"]
 
 [sub_resource type="Gradient" id="Gradient_xu4xf"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -173,6 +176,57 @@ animations = [{
 "speed": 3.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_xl7ei"]
+atlas = ExtResource("5_lexnm")
+region = Rect2(0, 0, 17, 9)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j3y0n"]
+atlas = ExtResource("5_lexnm")
+region = Rect2(17, 0, 17, 9)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xu4xf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xl7ei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j3y0n")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fvj6"]
+atlas = ExtResource("6_lexnm")
+region = Rect2(0, 0, 66, 67)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6tldd"]
+atlas = ExtResource("6_lexnm")
+region = Rect2(66, 0, 66, 67)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jpkh0"]
+atlas = ExtResource("6_lexnm")
+region = Rect2(132, 0, 66, 67)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1l46r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fvj6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6tldd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jpkh0")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 12.0
+}]
+
 [node name="Bees" type="CharacterBody2D" unique_id=558911984]
 z_index = 10
 script = ExtResource("1_ij6vw")
@@ -190,6 +244,22 @@ initial_velocity_max = 50.0
 damping_min = 70.0
 damping_max = 70.0
 color = Color(1, 1, 0, 1)
+color_ramp = SubResource("Gradient_xu4xf")
+
+[node name="SpeedParticles" type="CPUParticles2D" parent="." unique_id=2064758316]
+visible = false
+amount = 32
+lifetime = 0.5
+randomness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(5, 1)
+spread = 1.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 150.0
+damping_min = 70.0
+damping_max = 70.0
+color = Color(0.99999994, 0.94476587, 0.9308713, 1)
 color_ramp = SubResource("Gradient_xu4xf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1893458618]
@@ -233,6 +303,30 @@ z_index = 12
 position = Vector2(2, 1)
 texture = ExtResource("4_t2mbh")
 
+[node name="Birds" type="AnimatedSprite2D" parent="." unique_id=177288712]
+visible = false
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_xu4xf")
+autoplay = "default"
+frame_progress = 0.036832634
+
+[node name="Rain" type="AnimatedSprite2D" parent="." unique_id=1153385429]
+visible = false
+position = Vector2(0, -22)
+sprite_frames = SubResource("SpriteFrames_1l46r")
+autoplay = "default"
+frame_progress = 0.92534924
+
+[node name="Rain2" type="AnimatedSprite2D" parent="Rain" unique_id=1083386984]
+modulate = Color(0, 0, 0, 0.39215687)
+position = Vector2(11.000001, 53)
+scale = Vector2(1, 0.75)
+skew = -0.5235988
+sprite_frames = SubResource("SpriteFrames_1l46r")
+autoplay = "default"
+frame_progress = 0.71928924
+flip_v = true
+
 [node name="Buzzing" type="AudioStreamPlayer" parent="." unique_id=387594474]
 stream = ExtResource("5_b8v61")
 bus = &"SFX"
@@ -246,3 +340,9 @@ offset_bottom = -5.0
 theme_override_font_sizes/normal_font_size = 8
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="StingerIcon" type="Sprite2D" parent="." unique_id=943679249]
+visible = false
+position = Vector2(-6, 1)
+texture = ExtResource("8_ybcnv")
+flip_h = true

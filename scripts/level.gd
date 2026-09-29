@@ -24,7 +24,6 @@ func _ready():
 	$Green_Bee.enable()
 
 func _on_powerup_purchased(type: String, buyer: Player):
-	print()
 	match type:
 		
 		"confusion":

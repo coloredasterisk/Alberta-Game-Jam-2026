@@ -421,7 +421,7 @@ text = "Local Multiplayer"
 
 [node name="Online" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1075969202]
 layout_mode = 2
-text = "LAN Multiplayer"
+text = "Online Multiplayer"
 
 [node name="Settings" type="Button" parent="CanvasLayer/Screens/TitleScreen/Selection" unique_id=1580457072]
 visible = false

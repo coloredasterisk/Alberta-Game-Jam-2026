@@ -7,13 +7,6 @@ var round_over = false
 var hives = []
 var players = []
 
-const FLOWER = preload("res://scenes/flower.tscn")
-const RAIN = preload("res://scenes/rain_powerup.tscn")
-var flower
-var rain
-
-
-
 func _ready() -> void:
 	# get 2D scene (= 2D world) to share
 	var world = $Player1/SubViewport.find_world_2d()
@@ -31,9 +24,7 @@ func _ready() -> void:
 	get_node("../CanvasLayer/HUD/TimerDisplay/TextureProgressBar").max_value = round_time
 	get_node("../CanvasLayer/HUD/TimerDisplay/TextureProgressBar").value = round_time
 	
-	for item in $Player1/SubViewport/Map1/Shop.get_children():
-		if item.has_signal("purchased"):
-			item.purchased.connect(_on_powerup_purchased)
+	
 
 func _process(delta: float) -> void:
 	if playing:
@@ -88,51 +79,12 @@ func _on_round_timer_timeout() -> void:
 			place = i + 1
 		var result = place_name(place)
 		var score =  hives[i].current_amount
-		if i == 0 or hives[i].current_amount < hives[i - 1].current_amount:
-			place = i + 1
 		get_node("/root/Main/World").get_child(i).get_node("SubViewport/BG/Placement").update_display(result, score)
 	get_tree().paused = true
 	round_over = true
 
 func place_name(place: int) -> String:
 	return ["1st", "2nd", "3rd", "4th"][place - 1]
-	
-
-
-
-func _on_powerup_purchased(type: String, buyer: Player):
-	match type:
-		"confusion":
-			for bee in players:#add players
-				if bee != buyer:
-					bee.confusion()
-		"speed":
-			buyer.max_velocity += 50
-			await get_tree().create_timer(Global.speed_duration).timeout
-			buyer.max_velocity -= 50
-		"rain":
-			for bee in players:#add players
-				if bee != buyer:
-					rain_spawning(bee)
-					bee.max_velocity -= 50
-					await get_tree().create_timer(Global.rain_duration).timeout
-					bee.max_velocity += 50
-		"stinger":
-			buyer.stinger()
-		"swarm":
-			pass
-
-func flower_spawning():
-	flower = FLOWER.instantiate()
-	flower.flower_color = ["red", "blue", "green", "yellow"].pick_random()
-	flower.position = Vector2(randf_range(-160, 160), randf_range(-90, 90))
-	add_child(flower)
-
-func rain_spawning(target: Player):
-	rain = RAIN.instantiate()
-	rain.target = target
-	add_child(rain)
-	
 	
 
 func _on_flower_spawner_timeout() -> void:

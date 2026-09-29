@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://jc74fxkpi6hl"
-path="res://.godot/imported/Super Speed Powerup.wav-83a30c6511f99e1159485efa59dcee39.sample"
+path="res://.godot/imported/Super Speed Powerup.wav-bb6caf2503600d527fd349fcd82063d4.sample"
 
 [deps]
 
-source_file="res://Super Speed Powerup.wav"
-dest_files=["res://.godot/imported/Super Speed Powerup.wav-83a30c6511f99e1159485efa59dcee39.sample"]
+source_file="res://music/Super Speed Powerup.wav"
+dest_files=["res://.godot/imported/Super Speed Powerup.wav-bb6caf2503600d527fd349fcd82063d4.sample"]
 
 [params]
 

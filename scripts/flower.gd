@@ -5,7 +5,7 @@ enum FlowerState {BULB, GROW, BLOOM}
 var current_state
 var can_give_pollen: bool = true
 var oneshot = preload("res://scenes/one_shot.tscn")
-var nectar = [preload("res://Picking Up Nectar At Flower 2 (Yum).wav"), preload("res://Picking Up Nectar At Flower.wav")]
+var nectar = [preload("res://music/Picking Up Nectar At Flower 2 (Yum).wav"), preload("res://music/Picking Up Nectar At Flower.wav")]
 
 @onready var bloom_color: AnimatedSprite2D = $Color
 @onready var bloom_outline: Sprite2D = $bloom_outline
@@ -45,7 +45,7 @@ func interact(player) -> bool:
 		
 		print("you changed to grow ", current_state)
 		var sfx = oneshot.instantiate()
-		sfx.stream = preload("res://Pollenating A Bulb.wav")
+		sfx.stream = preload("res://music/Pollenating A Bulb.wav")
 		add_child(sfx)
 	return true
 

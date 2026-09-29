@@ -18,9 +18,8 @@ func interact(player) -> bool:
 		current_amount += player.nectar
 		player.update_capacity(-player.nectar)
 		$DepositNectar.emitting = true
-		var sfx = oneshot.instantiate()
-		sfx.stream = preload("res://Dropping Nectar At Hive.wav")
-		add_child(sfx)
+		Global.play_sound(preload("res://music/Dropping Nectar At Hive.wav"))
+
 	else:
 		# rival hive: steal
 		if current_amount <= 0 or player.nectar >= player.current_nectar_capacity:

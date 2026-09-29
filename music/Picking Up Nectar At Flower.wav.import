@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://b0skhq55ko362"
-path="res://.godot/imported/Picking Up Nectar At Flower.wav-b618763b59911789eba2dafe8870e2e2.sample"
+path="res://.godot/imported/Picking Up Nectar At Flower.wav-83617e886a4101598163b937ef0b9466.sample"
 
 [deps]
 
-source_file="res://Picking Up Nectar At Flower.wav"
-dest_files=["res://.godot/imported/Picking Up Nectar At Flower.wav-b618763b59911789eba2dafe8870e2e2.sample"]
+source_file="res://music/Picking Up Nectar At Flower.wav"
+dest_files=["res://.godot/imported/Picking Up Nectar At Flower.wav-83617e886a4101598163b937ef0b9466.sample"]
 
 [params]
 
