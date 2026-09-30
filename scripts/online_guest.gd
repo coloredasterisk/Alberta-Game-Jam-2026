@@ -16,7 +16,7 @@ extends Node
 ##   # every physics tick:
 ##   guest.send_fast({"t": "in", "q": seq, "x": stick.x, "y": stick.y, "b": held, "pc": press_counts})
 ##
-## Needs the PhoneControllers autoload only for get_relay_url() and the shared constants.
+## Needs the PhoneControllers autoload only for get_relay_candidates() and the shared constants.
 
 ## The host accepted us; player_id is our slot on the host (PhoneControllers id there).
 signal joined(player_id: int)
@@ -52,6 +52,12 @@ var _welcomed := false
 var _hello_sent := false
 var _given_up := false
 var _last_ping := 0.0
+## Where the host's room may be: the relay in use first, then the others (the host picks a relay
+## by itself and can move to another one mid-match, keeping its code). A failed attempt moves on
+## to the next; "no match with this code" counts only once every relay has said so.
+var _relays: Array[String] = []
+var _relay_i := 0
+var _no_game_count := 0
 var _rtc: WebRTCPeerConnection
 var _channel: WebRTCDataChannel
 
@@ -73,6 +79,9 @@ func join(room_code: String, player_name := "") -> void:
 	_given_up = false
 	_retry_delay = _RETRY_FIRST_SEC
 	_failing_since = -1.0
+	_relays = PhoneControllers.get_relay_candidates()
+	_relay_i = 0
+	_no_game_count = 0
 	_connect()
 
 
@@ -112,9 +121,14 @@ func _connect() -> void:
 	_hello_sent = false
 	_retry_at = -1.0
 	_ws = WebSocketPeer.new()
-	if _ws.connect_to_url("%s/ws/phone/%s" % [PhoneControllers.get_relay_url(), code]) != OK:
+	if _ws.connect_to_url("%s/ws/phone/%s" % [_relays[_relay_i], code]) != OK:
 		_ws = null
+		_next_relay()
 		_schedule_retry(_now())
+
+
+func _next_relay() -> void:
+	_relay_i = (_relay_i + 1) % _relays.size()
 
 
 ## Next attempt after a growing delay; gives up once the host has been gone for _GIVE_UP_SEC.
@@ -159,10 +173,17 @@ func _process(_delta: float) -> void:
 			if _given_up:
 				return
 			if close_code == 4004 and player_id == 0:
-				_give_up("No match with code %s. Check the code, or ask your friend to create one." % code)
+				_no_game_count += 1
+				if _no_game_count >= _relays.size():
+					_give_up("No match with code %s. Check the code, or ask your friend to create one." % code)
+				else:
+					_next_relay()  # the host may be on another relay
+					_connect()
 			elif close_code == 4001 and reason in ["full", "old_session", "kicked"]:
 				_give_up("That match is full." if reason != "old_session" else "That match has ended.")
 			else:
+				# Relay down or over its limit, or the host moved: look on the next relay.
+				_next_relay()
 				reconnecting.emit()
 				_schedule_retry(now)
 	_poll_rtc()
@@ -182,6 +203,7 @@ func _on_text(text: String) -> void:
 			_welcomed = true
 			_retry_delay = _RETRY_FIRST_SEC  # connected for real (the relay alone doesn't count)
 			_failing_since = -1.0
+			_no_game_count = 0
 			player_id = int(msg.get("id", 0))
 			joined.emit(player_id)
 		"reject":

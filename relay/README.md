@@ -26,21 +26,40 @@ constants in `phone_controller/phone_control_server.gd`:
 | `RELAY_MAIN` | `https://pvp-phone-relay.pvp-phone-relay.workers.dev` |
 | `RELAY_BACKUP` | `https://pvp-phone-relay.gamejam-relay.workers.dev` |
 
-`DEFAULT_RELAY_URL` says which one the game uses (currently `RELAY_BACKUP`, while the main account's
-allowance recovers). Switch by changing that one word; see the next section for switching without a
-rebuild. Deploy code changes to **both** (see "Deploy / update").
+The game chooses between them by itself (`RELAYS` in that file, most preferred first), so one account
+running out of its free allowance doesn't stop anyone playing. Deploy code changes to **both** (see
+"Deploy / update").
 
-## Switching to another relay (and back)
+## Automatic relay choice and failover
 
-The game picks its relay in this order (`_pick_relay_url()` in `phone_control_server.gd`); the first
-one set wins:
+- **New session** (lobby opens): the game asks every relay's `/status` at once (a few seconds at most)
+  and uses the first in `RELAYS` order that answers and is below `RELAY_SWITCH_AT` (90 %) of today's
+  allowance. If all are above it, the one with the most left. A relay over its Workers limit answers 429
+  (error 1027) without running any code, so it simply doesn't count as answering.
+- **Mid-session**: if the game's relay connection fails twice in a row without opening the room, it moves
+  to the next relay in `RELAYS` **with the same room code**. Phones get the other relays in the QR code
+  (`&alt=…`) and try them in turn when theirs stops answering. An online guest does the same with
+  `PhoneControllers.get_relay_candidates()`. Everyone finds the room again, usually within a few seconds,
+  and keeps their player slot.
+- **Joining by code**: a guest (or phone) told "no game with this code" asks the other relays before
+  giving up, because the host may be on a different one.
+- If every relay is down, retries keep backing off (up to 30 s), so a game left open doesn't burn
+  requests.
+
+Forcing one relay (next section) turns the automatic choice off; phones and guests still have the others
+as fallbacks.
+
+## Forcing a relay
+
+Normally not needed (see above). To pin the game to one relay, set one of these (`_relay_override()` in
+`phone_control_server.gd`); the first one set wins:
 
 | Where | How | Needs a rebuild? |
 |---|---|---|
 | Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
 | Desktop / editor | environment variable `PHONE_RELAY_URL=HOST` before starting Godot or the game | No |
 | Any build | Project Setting `phone_controllers/relay_url` (or an `override.cfg` next to the game) | Editor: no. Exports: re-export |
-| Default | `DEFAULT_RELAY_URL := RELAY_MAIN` / `RELAY_BACKUP` in `phone_control_server.gd` | Yes (one word) |
+| Order of preference | the `RELAYS` list in `phone_control_server.gd` | Yes |
 
 `HOST` can be a bare host name or a full `wss://…` URL. Phones follow automatically (the QR code points
 at the relay in use), and invite links carry `&relay=…` when it isn't the default, so a friend's game
@@ -105,13 +124,51 @@ mode="relay"
 relay_url="ws://127.0.0.1:8787"
 ```
 
+## Is a relay over its limit? (status and usage)
+
+From the `relay` folder:
+
+```bash
+npm run status
+```
+
+```
+pvp-phone-relay.pvp-phone-relay.workers.dev
+  up; Workers 12,408 (12%), Durable Objects 71,230 (71%) of 100,000/day; resets in 5h12m
+pvp-phone-relay.gamejam-relay.workers.dev
+  OVER DAILY LIMIT (429 / error 1027) - games use the other relay until 00:00 UTC
+```
+
+It reads each relay's `GET /status`, which the games use too:
+
+```json
+{"ok": true, "used": 0.71, "workers": 12408, "durableObjects": 71230, "limit": 100000, "resetsInSec": 18720}
+```
+
+- `ok: false` means the relay runs but can't open rooms (usually its Durable Object allowance is used up).
+- No answer, or 429, means the Workers allowance is used up (or the relay is down).
+- **`used` needs a read-only analytics token** on each account, otherwise it's `null` and a relay only
+  counts as full once it stops answering. Per account (both, once):
+  1. Cloudflare dashboard → My Profile → API Tokens → Create Token → Custom token, permission
+     **Account · Account Analytics · Read**, that account only.
+  2. From `relay/` (for the backup account, with `XDG_CONFIG_HOME` set as in "Deploy / update"):
+     ```bash
+     npx wrangler secret put CF_API_TOKEN     # paste the token
+     npx wrangler secret put CF_ACCOUNT_ID    # the account ID from `npx wrangler whoami`
+     ```
+  The numbers come from Cloudflare's analytics, which lag a few minutes; the relay caches them for 2.
+
 ## Costs and the free plan's daily limit
 
-The free Workers plan allows **100,000 requests a day** (resets at 00:00 UTC). Every page load and every
-WebSocket connect is a request; messages over an open connection are not. A match uses a handful, but
-something that reconnects in a loop uses them up fast. When the limit is hit, *everything* on the relay
-answers **429 / Cloudflare error 1027** ("temporarily rate limited") until the reset: phones can't join,
-online matches can't connect.
+The free plan allows, per Cloudflare account, **100,000 Worker requests a day** and **100,000 Durable
+Object requests a day** (both reset at 00:00 UTC). Every page load and every WebSocket connect is a
+Worker request. Messages over an open connection aren't Worker requests, but every room is a Durable
+Object and **messages arriving at it count as Durable Object requests (20 messages = 1 request)**, so
+the relay's traffic, not only connects, uses up that allowance. Phones only send when the input changes;
+an online match over the relay (no direct WebRTC link) sends the guest's input and the host's 30 Hz
+snapshots through it, a few requests a second. When the Workers limit is hit, *everything* on the relay
+answers **429 / Cloudflare error 1027** ("temporarily rate limited") until the reset; when the Durable
+Object limit is hit, rooms stop working. Either way the games move to the other relay (see above).
 
 To stay well under it, every client backs off when the other side is gone:
 
@@ -141,4 +198,4 @@ free allowance; see Cloudflare's current pricing page for exact limits.
 `wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this repo creates a
 separate relay (on whichever Cloudflare account wrangler is logged in to) instead of replacing
 `pvp-phone-relay`. After deploying it, add its address as another constant next to `RELAY_MAIN` /
-`RELAY_BACKUP` in `phone_controller/phone_control_server.gd` and point `DEFAULT_RELAY_URL` at it.
+`RELAY_BACKUP` in `phone_controller/phone_control_server.gd` and put it in `RELAYS` (first = preferred).

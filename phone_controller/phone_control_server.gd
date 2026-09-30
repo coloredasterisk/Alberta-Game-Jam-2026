@@ -83,10 +83,22 @@ const CODE_CHARS := "ABCDEFGHJKLMNPQRSTUVWXYZ123456789"
 ## free daily request allowance, see relay/README.md).
 const RELAY_MAIN := "wss://pvp-phone-relay.pvp-phone-relay.workers.dev"
 const RELAY_BACKUP := "wss://pvp-phone-relay.gamejam-relay.workers.dev"
-## The relay to use when nothing overrides it (see _pick_relay_url: ?relay=, PHONE_RELAY_URL,
-## the Project Setting phone_controllers/relay_url). To switch, change this one word:
-## RELAY_BACKUP while the main relay is over its daily limit, RELAY_MAIN normally.
-const DEFAULT_RELAY_URL := RELAY_BACKUP
+## Relays the game picks from by itself, most preferred first. Unless a relay is forced (?relay=,
+## PHONE_RELAY_URL, the Project Setting phone_controllers/relay_url; see _relay_override), every
+## new session asks each one's /status and uses the first that works and has allowance left
+## (choose_relay), and a relay that stops answering is swapped for the next one mid-session with
+## the same room code (phones and guests follow, see controller.html and OnlineGuest).
+const RELAYS := [RELAY_MAIN, RELAY_BACKUP]
+## The first choice; invite links name the relay only when it's a different one.
+const DEFAULT_RELAY_URL := RELAY_MAIN
+## Move new sessions off a relay once this share of its daily allowance is used. Only known when
+## the relay has an analytics token (relay/README.md); otherwise a relay counts as fine until it
+## stops answering. The headroom is for rooms still running there.
+const RELAY_SWITCH_AT := 0.9
+## A relay that fails this many connection attempts in a row (no room opened) is replaced by the
+## next one in RELAYS.
+const _RELAY_FAILS_BEFORE_SWITCH := 2
+const _RELAY_STATUS_TIMEOUT_SEC := 4.0
 ## "auto" = relay in web builds, LAN elsewhere. Override with phone_controllers/mode ("lan" / "relay").
 const DEFAULT_MODE := "auto"
 const _RELAY_PING_SEC := 20.0
@@ -159,6 +171,12 @@ var _relay_retry_at := -1.0
 var _relay_retry_delay := _RELAY_RETRY_SEC
 var _relay_last_ping := 0.0
 var _relay_no_delay_set := false
+var _relay_room_open := false  # the current relay connection got its "_room"
+var _relay_fails := 0          # connection attempts in a row that opened no room
+var _start_id := 0             # bumped by start(), so a relay choice still in flight can tell it's stale
+## Last /status answer per relay URL (see choose_relay), e.g. for a debug overlay:
+## {"ok": true, "used": 0.42, "workers": 42000, ...}, or {"ok": false} when it didn't answer.
+var relay_status := {}
 
 
 func _ready() -> void:
@@ -168,13 +186,12 @@ func _ready() -> void:
 		start()
 
 
-## Which relay to use, first match wins (so a relay can be swapped without editing code):
+## A relay forced from outside the code, first match wins ("" = none, the game picks from RELAYS):
 ##   1. web builds: ?relay=... in the page address (e.g. ?relay=my-relay.me.workers.dev)
 ##   2. desktop: the PHONE_RELAY_URL environment variable
 ##   3. the Project Setting phone_controllers/relay_url (or an override.cfg)
-##   4. DEFAULT_RELAY_URL
 ## Accepts a full wss:// / ws:// URL or just a host name (wss:// is assumed).
-static func _pick_relay_url() -> String:
+static func _relay_override() -> String:
 	var url := ""
 	if OS.has_feature("web"):
 		url = str(JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('relay') || ''"))
@@ -184,10 +201,26 @@ static func _pick_relay_url() -> String:
 		url = str(ProjectSettings.get_setting("phone_controllers/relay_url", ""))
 	url = url.strip_edges()
 	if url == "":
-		url = DEFAULT_RELAY_URL
+		return ""
 	if not url.begins_with("ws://") and not url.begins_with("wss://"):
 		url = "wss://" + url.trim_prefix("https://").trim_prefix("http://")
 	return url.trim_suffix("/")
+
+
+## The forced relay, else DEFAULT_RELAY_URL (start() may then choose a better one from RELAYS).
+static func _pick_relay_url() -> String:
+	var url := _relay_override()
+	return url if url != "" else DEFAULT_RELAY_URL
+
+
+## wss://host -> https://host (ws:// -> http://).
+static func _http_base(relay_url: String) -> String:
+	return relay_url.replace("wss://", "https://").replace("ws://", "http://")
+
+
+## True when the game picks the relay itself (nothing forces one, see _relay_override).
+static func is_relay_auto() -> bool:
+	return _relay_override() == ""
 
 
 ## True when the relay in use isn't DEFAULT_RELAY_URL (e.g. picked with ?relay=). Invite links
@@ -209,6 +242,63 @@ func get_relay_url() -> String:
 	return _relay_url
 
 
+## The relay in use first, then the other RELAYS: where to look for a room whose host may have
+## moved to another relay (OnlineGuest, and the phones' alt= list in get_join_url()).
+func get_relay_candidates() -> Array[String]:
+	var list: Array[String] = [get_relay_url()]
+	for url: String in RELAYS:
+		if url not in list:
+			list.append(url)
+	return list
+
+
+## Asks every relay in RELAYS for its /status (all at once, a few seconds at most) and returns the
+## best: the first, in RELAYS order, that answers ok and is below RELAY_SWITCH_AT; else the one
+## that answers ok with the most allowance left; else DEFAULT_RELAY_URL (the reconnect loop then
+## keeps trying and moving on). A relay over its daily Workers limit answers 429 without CORS
+## headers, which shows up here as no answer.
+func choose_relay() -> String:
+	var results := {}
+	for url: String in RELAYS:
+		_fetch_relay_status(url, results)  # not awaited: the requests run side by side
+	var deadline := Time.get_ticks_msec() + int((_RELAY_STATUS_TIMEOUT_SEC + 1.0) * 1000.0)
+	while results.size() < RELAYS.size() and Time.get_ticks_msec() < deadline:
+		await get_tree().process_frame
+	relay_status = results
+	var fallback := ""
+	var fallback_left := -1.0
+	for url: String in RELAYS:
+		var st: Dictionary = results.get(url, {})
+		if not st.get("ok", false):
+			continue
+		var used: Variant = st.get("used")
+		if used == null or float(used) < RELAY_SWITCH_AT:
+			return url
+		if 1.0 - float(used) > fallback_left:
+			fallback_left = 1.0 - float(used)
+			fallback = url
+	return fallback if fallback != "" else DEFAULT_RELAY_URL
+
+
+func _fetch_relay_status(url: String, results: Dictionary) -> void:
+	var http := HTTPRequest.new()
+	http.timeout = _RELAY_STATUS_TIMEOUT_SEC
+	add_child(http)
+	if http.request(_http_base(url) + "/status") != OK:
+		http.queue_free()
+		results[url] = {"ok": false}
+		return
+	var r: Array = await http.request_completed  # [result, response_code, headers, body]
+	http.queue_free()
+	var st: Variant = null
+	if r[0] == HTTPRequest.RESULT_SUCCESS and r[1] == 200:
+		st = JSON.parse_string((r[3] as PackedByteArray).get_string_from_utf8())
+	elif r[0] == HTTPRequest.RESULT_SUCCESS and r[1] == 404:
+		st = {"ok": true, "used": null}  # a relay deployed before /status existed: it's up
+	results[url] = st if st is Dictionary else {"ok": false, "http": r[1]}
+	print("PhoneControllers: relay %s status %s" % [url, results[url]])
+
+
 ## True when devices connect through the relay (see start()).
 func is_relay_mode() -> bool:
 	return _use_relay
@@ -227,16 +317,31 @@ func start(force_mode := "") -> Error:
 	get_relay_url()  # make sure the relay is picked even if start() runs before _ready()
 	_load_page()
 	_relay_retry_delay = _RELAY_RETRY_SEC
+	_relay_fails = 0
 	_new_session_code()
 	_running = true
+	_start_id += 1
 	if _use_relay:
 		if _relay_url == "":
 			_set_status(false, "No relay configured (DEFAULT_RELAY_URL in phone_control_server.gd)")
 			push_error("PhoneControllers: relay mode needs phone_controllers/relay_url")
 			return ERR_UNCONFIGURED
-		_connect_relay()
+		if is_relay_auto():
+			_choose_relay_and_connect()
+		else:
+			_connect_relay()
 		return OK
 	return _start_lan()
+
+
+func _choose_relay_and_connect() -> void:
+	var id := _start_id
+	_set_status(false, "Finding a relay server…")
+	var url := await choose_relay()
+	if id != _start_id or not _running:
+		return  # stop() or another start() happened meanwhile
+	_relay_url = url
+	_connect_relay()
 
 
 ## Disconnects everyone and closes the servers / relay room (player_left fires for each player).
@@ -254,6 +359,7 @@ func stop() -> void:
 	_http_server.stop()
 	_ws_server.stop()
 	_running = false
+	_start_id += 1
 	can_join = false
 	for id in players.keys():
 		players.erase(id)
@@ -263,8 +369,13 @@ func stop() -> void:
 ## The URL a phone opens to join (what the QR code contains).
 func get_join_url() -> String:
 	if _use_relay:
-		var base := _relay_url.replace("wss://", "https://").replace("ws://", "http://")
-		return "%s/?r=%s" % [base, session_code]
+		# alt= lists the other relays, so a phone whose relay stops answering can find the room
+		# again after the game moves it (same code) to another relay.
+		var alts := PackedStringArray()
+		for url in get_relay_candidates().slice(1):
+			alts.append(_http_base(url).trim_prefix("https://").trim_prefix("http://"))
+		var alt := "" if alts.is_empty() else "&alt=" + ",".join(alts)
+		return "%s/?r=%s%s" % [_http_base(_relay_url), session_code, alt]
 	return "http://%s:%d/?s=%s" % [get_lan_ip(), http_port, session_code]
 
 
@@ -523,13 +634,30 @@ func _connect_relay() -> void:
 	_relay.outbound_buffer_size = 1 << 20  # room for the page upload (desktop; browsers ignore it)
 	_relay_retry_at = -1.0
 	_relay_no_delay_set = false
+	_relay_room_open = false
 	var err := _relay.connect_to_url("%s/ws/host/%s" % [_relay_url, session_code])
 	if err != OK:
 		_relay = null
+		_relay_failed()
 		_relay_retry_at = Time.get_ticks_msec() / 1000.0 + _next_relay_retry_delay()
 		_set_status(false, "Can't reach the relay server, retrying…")
 		return
 	_set_status(false, "Connecting to the relay server…")
+
+
+## A connection attempt opened no room. After a few in a row (relay down, or over its daily limit:
+## Cloudflare then refuses the WebSocket with 429), move to the next relay in RELAYS. The room code
+## stays the same, so phones and guests that try their alternatives find the room there.
+func _relay_failed() -> void:
+	_relay_fails += 1
+	if _relay_fails < _RELAY_FAILS_BEFORE_SWITCH or RELAYS.size() < 2 or not is_relay_auto():
+		return
+	var i := RELAYS.find(_relay_url)
+	_relay_url = RELAYS[(i + 1) % RELAYS.size()]
+	_relay_fails = 0
+	# The retry delay keeps growing across switches (reset only once a room opens), so a game left
+	# running while every relay is down doesn't hammer them.
+	print("PhoneControllers: relay not answering, switching to ", _relay_url)
 
 
 ## Delay before the next relay reconnect attempt; grows each time until a room opens.
@@ -570,6 +698,10 @@ func _poll_relay(now: float) -> void:
 				can_join = false
 				_connect_relay()
 			else:
+				if not _relay_room_open:
+					_relay_failed()
+				else:
+					_relay_retry_delay = minf(_relay_retry_delay, 0.5)  # just dropped: retry at once
 				_relay_retry_at = now + _next_relay_retry_delay()
 				_set_status(false, "Lost the relay server, reconnecting…")
 
@@ -582,6 +714,8 @@ func _on_relay_text(text: String, now: float) -> void:
 		return  # "pong" and anything unexpected
 	if msg.get("t") == "_room":
 		_relay_retry_delay = _RELAY_RETRY_SEC  # connected: next drop retries quickly again
+		_relay_room_open = true
+		_relay_fails = 0
 		# Phones load the page from the relay, so hand it ours first: edits to controller.html
 		# then show up without redeploying the relay.
 		if upload_page_to_relay and not _page_html.is_empty():

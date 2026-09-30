@@ -5,6 +5,8 @@
 //                             for that room, or the built-in copy (public/index.html) if it didn't
 //   WS  /ws/host/CODE      -> the game opens room CODE
 //   WS  /ws/phone/CODE     -> a device joins room CODE
+//   GET /status            -> JSON: can this relay take new rooms, and how much of today's free
+//                             allowance is used (games pick a relay with it, see below)
 //
 // Each room is one Durable Object, so the game and all its devices meet in the same place.
 // The relay doesn't understand the game protocol; it just wraps device messages with an id
@@ -15,6 +17,12 @@ const MAX_PHONES = 8;
 const MAX_MESSAGE_CHARS = 4096;        // any forwarded message (input, state, WebRTC setup)
 const MAX_PAGE_CHARS = 512 * 1024;     // a controller page uploaded by the game
 const ROOM_RE = /^[A-Za-z0-9]{4,8}$/;
+// Free plan: 100,000 Worker requests and 100,000 Durable Object requests per account per day,
+// reset at 00:00 UTC. Set DAILY_LIMIT (wrangler.jsonc "vars") on a paid account.
+const FREE_DAILY_LIMIT = 100000;
+const USAGE_CACHE_MS = 2 * 60 * 1000;  // the analytics API lags a few minutes anyway
+// Browser builds read /status with fetch(), so it must allow any origin.
+const CORS = { "Access-Control-Allow-Origin": "*", "Cache-Control": "no-store" };
 
 export default {
   async fetch(request, env) {
@@ -24,9 +32,15 @@ export default {
       if (request.headers.get("Upgrade") !== "websocket") {
         return new Response("Expected a WebSocket upgrade", { status: 426 });
       }
-      return roomStub(env, match[2]).fetch(request);
+      try {
+        return await roomStub(env, match[2]).fetch(request);
+      } catch (e) {
+        // Usually the account's Durable Object allowance for today is used up.
+        return new Response(`Room unavailable: ${e}`, { status: 503 });
+      }
     }
-    if (url.pathname === "/health") return new Response("ok");
+    if (url.pathname === "/health") return new Response("ok", { headers: CORS });
+    if (url.pathname === "/status") return Response.json(await status(env), { headers: CORS });
 
     // The phone page: the room's own page if its game uploaded one, else the built-in copy.
     const room = url.searchParams.get("r") || "";
@@ -42,6 +56,64 @@ function roomStub(env, code) {
   return env.ROOMS.get(env.ROOMS.idFromName(code.toUpperCase()));
 }
 
+// What a game needs to choose between relays:
+//   {"ok": true,               new rooms work (the Worker ran and a Durable Object answered)
+//    "used": 0.42,             share of today's allowance used (max of Workers / Durable Objects),
+//                              or null when the relay has no analytics token (see README)
+//    "workers": 42000, "durableObjects": 3100, "limit": 100000,
+//    "resetsInSec": 3600}      until 00:00 UTC
+// When the Workers allowance is used up, Cloudflare answers 429 (error 1027) without running this
+// code and without CORS headers, so a browser's fetch() simply fails: callers treat any failure
+// or non-200 as "unavailable".
+async function status(env) {
+  const now = new Date();
+  const resetsInSec = Math.ceil((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) - now) / 1000);
+  const limit = Number(env.DAILY_LIMIT) || FREE_DAILY_LIMIT;
+  let ok = true;
+  let error;
+  try {
+    const res = await roomStub(env, "_STATUS").fetch(new Request("https://relay/ping"));
+    ok = res.ok;
+  } catch (e) {
+    ok = false;
+    error = String(e).slice(0, 200);
+  }
+  const usage = await dailyUsage(env, now);
+  const used = usage ? Math.max(usage.workers, usage.durableObjects) / limit : null;
+  return { ok, used, limit, resetsInSec, ...usage, ...(error && { error }) };
+}
+
+// Today's request counts for this Cloudflare account, from its GraphQL analytics API. Needs two
+// secrets: CF_ACCOUNT_ID and CF_API_TOKEN (a token with only "Account Analytics: Read").
+let usageCache = null;  // {at, value}, per Worker instance
+async function dailyUsage(env, now) {
+  if (!env.CF_API_TOKEN || !env.CF_ACCOUNT_ID) return null;
+  if (usageCache && now - usageCache.at < USAGE_CACHE_MS) return usageCache.value;
+  const since = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
+  const query = `query($a: String!, $since: Time!, $until: Time!) {
+    viewer { accounts(filter: {accountTag: $a}) {
+      workers: workersInvocationsAdaptive(limit: 1000, filter: {datetime_geq: $since, datetime_leq: $until}) { sum { requests } }
+      objects: durableObjectsInvocationsAdaptiveGroups(limit: 1000, filter: {datetime_geq: $since, datetime_leq: $until}) { sum { requests } }
+    } } }`;
+  try {
+    const res = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${env.CF_API_TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables: { a: env.CF_ACCOUNT_ID, since, until: now.toISOString() } }),
+    });
+    const body = await res.json();
+    const account = body?.data?.viewer?.accounts?.[0];
+    if (!account) throw new Error(JSON.stringify(body?.errors ?? body).slice(0, 200));
+    const total = (rows) => (rows ?? []).reduce((n, r) => n + (r.sum?.requests ?? 0), 0);
+    const value = { workers: total(account.workers), durableObjects: total(account.objects) };
+    usageCache = { at: now, value };
+    return value;
+  } catch (e) {
+    console.log("usage query failed:", String(e));
+    return usageCache?.value ?? null;  // keep the last good numbers rather than none
+  }
+}
+
 // Uses plain (non-hibernating) WebSockets: a room stays in memory while anyone is connected,
 // which keeps forwarding instant. Rooms only exist while a game is running.
 export class Room extends DurableObject {
@@ -52,6 +124,7 @@ export class Room extends DurableObject {
 
   async fetch(request) {
     const [, first, role, code] = new URL(request.url).pathname.split("/");
+    if (first === "ping") return new Response("pong");  // /status: can this account run Durable Objects?
     if (first === "page") {
       if (!this.page) return new Response("No page uploaded", { status: 404 });
       return new Response(this.page, {
@@ -75,7 +148,9 @@ export class Room extends DurableObject {
         for (const phone of this.phones.values()) close(phone, 4005, "host_left");
         this.phones.clear();
       };
-      server.addEventListener("close", hostGone);
+      // Answer the close handshake (not automatic on this compatibility date), else the other side
+      // waits in "closing" until it times out.
+      server.addEventListener("close", (e) => { close(server, e.code === 1005 ? 1000 : e.code, "bye"); hostGone(); });
       server.addEventListener("error", hostGone);
       server.send(JSON.stringify({ t: "_room", room }));
     } else {
@@ -89,7 +164,7 @@ export class Room extends DurableObject {
         this.phones.delete(cid);
         send(this.host, JSON.stringify({ c: cid, closed: true }));
       };
-      server.addEventListener("close", phoneGone);
+      server.addEventListener("close", (e) => { close(server, e.code === 1005 ? 1000 : e.code, "bye"); phoneGone(); });
       server.addEventListener("error", phoneGone);
       send(this.host, JSON.stringify({ c: cid, open: true }));
     }
