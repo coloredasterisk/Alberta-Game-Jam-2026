@@ -358,6 +358,10 @@ func _mark_ready(slot: int) -> void:
 		_start_match()
 
 
+## Shows the QR code / match code, or the connection status while there's none. The QR
+## TextureRect in main.tscn scales the code to fit a fixed square (expand_mode Ignore Size,
+## stretch Keep Aspect Centered): the join URL's length changes the code's size (it lists the
+## backup relays, see PhoneControllers.get_join_url()) and must not push it off screen.
 func _update_join_info() -> void:
 	match Session.mode:
 		Session.Mode.LOCAL:

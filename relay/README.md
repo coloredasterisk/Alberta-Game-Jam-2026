@@ -71,7 +71,7 @@ separate credentials folder (PowerShell):
 ```powershell
 $env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"   # any folder; keep it out of git
 npx wrangler login        # sign in with the other account
-npm run deploy            # prints https://pvp-phone-relay.<that account's subdomain>.workers.dev
+npm run deploy            # prints https://alberta-game-jam-relay.<that account's subdomain>.workers.dev
 ```
 
 Without `XDG_CONFIG_HOME` set, wrangler uses the original login again. Each Cloudflare account has its own
@@ -103,17 +103,24 @@ npm run deploy         # copies the fallback phone page into public/ and deploys
 ```
 
 That deploys to the account wrangler is logged in to (`RELAY_MAIN`). For `RELAY_BACKUP`, which is on the
-second account, point wrangler at that account's login folder first (PowerShell; the folder is the one
-used when logging in to that account, see "Switching to another relay"):
+second account, point wrangler at that account's login folder **and** its account ID first. Wrangler
+caches the account ID of the last deploy in `node_modules/.cache`, so without `CLOUDFLARE_ACCOUNT_ID`
+it tries the main account with the second login and fails with "Authentication error [code: 10000]".
+(PowerShell; the folder is the one used when logging in to that account, see "Forcing a relay"):
 
 ```powershell
-$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"; npm run deploy
-Remove-Item Env:XDG_CONFIG_HOME      # back to the main account
+$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"
+$env:CLOUDFLARE_ACCOUNT_ID = "<second account's ID>"   # npx wrangler whoami shows it
+npm run deploy
+Remove-Item Env:XDG_CONFIG_HOME, Env:CLOUDFLARE_ACCOUNT_ID   # back to the main account
 ```
 
+Always deploy to **both** accounts, then check with `npm run status`. A relay change must stay compatible
+with builds already out there (players don't all reload at once).
+
 **Your own relay for another game:** change `"name"` in `wrangler.jsonc` first (e.g. `"my-game-relay"`),
-deploy, and set `DEFAULT_RELAY_URL` to the `wss://…workers.dev` address it prints. Deploying with an
-existing name to the same Cloudflare account **replaces** that relay.
+deploy, and put the `wss://…workers.dev` address it prints in `RELAYS`. Deploying with an existing name
+to the same Cloudflare account **replaces** that relay.
 
 Local testing: `npm run dev` serves the relay on http://127.0.0.1:8787. Point the game at it with an
 `override.cfg` in the project root (don't commit it):
@@ -151,12 +158,15 @@ It reads each relay's `GET /status`, which the games use too:
   counts as full once it stops answering. Per account (both, once):
   1. Cloudflare dashboard → My Profile → API Tokens → Create Token → Custom token, permission
      **Account · Account Analytics · Read**, that account only.
-  2. From `relay/` (for the backup account, with `XDG_CONFIG_HOME` set as in "Deploy / update"):
+  2. From `relay/` (for the backup account, with `XDG_CONFIG_HOME` and `CLOUDFLARE_ACCOUNT_ID` set as
+     in "Deploy / update"):
      ```bash
      npx wrangler secret put CF_API_TOKEN     # paste the token
      npx wrangler secret put CF_ACCOUNT_ID    # the account ID from `npx wrangler whoami`
      ```
+     (`CF_ACCOUNT_ID` is already set on both current relays; only `CF_API_TOKEN` is missing.)
   The numbers come from Cloudflare's analytics, which lag a few minutes; the relay caches them for 2.
+  Secrets take effect at once, no redeploy needed.
 
 ## Costs and the free plan's daily limit
 

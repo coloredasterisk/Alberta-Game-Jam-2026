@@ -28,7 +28,7 @@ for (const host of RELAYS) {
       line = !s.ok
         ? `REFUSING ROOMS (Durable Objects: ${s.error ?? "unavailable"})`
         : s.used == null
-          ? `up; usage unknown (add CF_ACCOUNT_ID + CF_API_TOKEN secrets, see README); ${resets}`
+          ? `up; usage unknown (needs the CF_API_TOKEN secret, see README "status and usage"); ${resets}`
           : `up; Workers ${pct(s.workers, s.limit)}, Durable Objects ${pct(s.durableObjects, s.limit)} of ${s.limit.toLocaleString()}/day; ${resets}${s.used >= 0.9 ? "  <- games now prefer the other relay" : ""}`;
     }
   } catch (e) {

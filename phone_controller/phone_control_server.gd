@@ -16,8 +16,16 @@ extends Node
 ##         repo) and opens a room; session_code is the room code. The game uploads its own
 ##         controller.html to the room and the relay serves it over HTTPS at /?r=CODE, then
 ##         forwards messages. Devices can be on any network.
-##   "auto" = relay in web builds, LAN elsewhere. Defaults: DEFAULT_MODE / DEFAULT_RELAY_URL below,
-##   or the Project Settings phone_controllers/mode and phone_controllers/relay_url.
+##   "auto" = relay in web builds, LAN elsewhere. Default: DEFAULT_MODE below, or the Project
+##   Setting phone_controllers/mode.
+##
+## Which relay (relay mode): the same relay code runs on two Cloudflare accounts (RELAYS), each
+## with its own free daily allowance. Unless one is forced (_relay_override), every start() asks
+## each relay's /status and picks one that works and has allowance left (choose_relay); a relay
+## that stops answering mid-session is swapped for the next (_relay_failed), keeping the room
+## code. Phones (alt= in the join URL) and online guests (get_relay_candidates) then look for the
+## room on the other relays too, so nobody has to rescan. relay/README.md has the details and
+## `npm run status` (in relay/) shows each relay's state.
 ##
 ## Direct link (web builds only): a game client that says "rtc": true in its hello is offered a
 ## WebRTC peer connection with one unreliable data channel. The offer/answer/ICE messages travel
@@ -280,6 +288,8 @@ func choose_relay() -> String:
 	return fallback if fallback != "" else DEFAULT_RELAY_URL
 
 
+## GET <relay>/status into results[url]: the relay's answer, or {"ok": false} when it didn't
+## answer in time, answered with an error (429 = over its daily limit), or isn't deployed (404).
 func _fetch_relay_status(url: String, results: Dictionary) -> void:
 	var http := HTTPRequest.new()
 	http.timeout = _RELAY_STATUS_TIMEOUT_SEC
