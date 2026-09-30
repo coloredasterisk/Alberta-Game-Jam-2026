@@ -4,8 +4,8 @@
 // "OVER DAILY LIMIT" = Cloudflare answers 429 / error 1027: that account's 100,000 free requests
 // for today are used up (resets 00:00 UTC). Games then move to the other relay by themselves.
 const RELAYS = process.argv.slice(2).length ? process.argv.slice(2) : [
-  "pvp-phone-relay.pvp-phone-relay.workers.dev",   // RELAY_MAIN   (account 1)
-  "pvp-phone-relay.gamejam-relay.workers.dev",     // RELAY_BACKUP (account 2)
+  "alberta-game-jam-relay.pvp-phone-relay.workers.dev",   // RELAY_MAIN   (account 1)
+  "alberta-game-jam-relay.gamejam-relay.workers.dev",     // RELAY_BACKUP (account 2)
 ];
 
 const pct = (n, limit) => `${n.toLocaleString()} (${Math.round((100 * n) / limit)}%)`;
@@ -19,7 +19,7 @@ for (const host of RELAYS) {
     if (res.status === 429 || text.includes("1027")) {
       line = "OVER DAILY LIMIT (429 / error 1027) - games use the other relay until 00:00 UTC";
     } else if (res.status === 404) {
-      line = "up (old relay code without /status: run npm run deploy on this account)";
+      line = "not deployed on this account (404) - run npm run deploy there";
     } else if (!res.ok) {
       line = `problem: HTTP ${res.status} ${text.slice(0, 120)}`;
     } else {

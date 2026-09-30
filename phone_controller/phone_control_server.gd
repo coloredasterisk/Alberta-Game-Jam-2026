@@ -81,8 +81,8 @@ const COLORS := ["#4cc9f0", "#f72585", "#b8f35a", "#ffb703", "#9b5de5", "#ff6b35
 const CODE_CHARS := "ABCDEFGHJKLMNPQRSTUVWXYZ123456789"
 ## Known relays (the same relay/ code deployed on two Cloudflare accounts; each account has its own
 ## free daily request allowance, see relay/README.md).
-const RELAY_MAIN := "wss://pvp-phone-relay.pvp-phone-relay.workers.dev"
-const RELAY_BACKUP := "wss://pvp-phone-relay.gamejam-relay.workers.dev"
+const RELAY_MAIN := "wss://alberta-game-jam-relay.pvp-phone-relay.workers.dev"
+const RELAY_BACKUP := "wss://alberta-game-jam-relay.gamejam-relay.workers.dev"
 ## Relays the game picks from by itself, most preferred first. Unless a relay is forced (?relay=,
 ## PHONE_RELAY_URL, the Project Setting phone_controllers/relay_url; see _relay_override), every
 ## new session asks each one's /status and uses the first that works and has allowance left
@@ -293,8 +293,6 @@ func _fetch_relay_status(url: String, results: Dictionary) -> void:
 	var st: Variant = null
 	if r[0] == HTTPRequest.RESULT_SUCCESS and r[1] == 200:
 		st = JSON.parse_string((r[3] as PackedByteArray).get_string_from_utf8())
-	elif r[0] == HTTPRequest.RESULT_SUCCESS and r[1] == 404:
-		st = {"ok": true, "used": null}  # a relay deployed before /status existed: it's up
 	results[url] = st if st is Dictionary else {"ok": false, "http": r[1]}
 	print("PhoneControllers: relay %s status %s" % [url, results[url]])
 

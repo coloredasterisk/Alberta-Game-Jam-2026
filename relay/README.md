@@ -23,8 +23,8 @@ constants in `phone_controller/phone_control_server.gd`:
 
 | Constant | Address |
 |---|---|
-| `RELAY_MAIN` | `https://pvp-phone-relay.pvp-phone-relay.workers.dev` |
-| `RELAY_BACKUP` | `https://pvp-phone-relay.gamejam-relay.workers.dev` |
+| `RELAY_MAIN` | `https://alberta-game-jam-relay.pvp-phone-relay.workers.dev` |
+| `RELAY_BACKUP` | `https://alberta-game-jam-relay.gamejam-relay.workers.dev` |
 
 The game chooses between them by itself (`RELAYS` in that file, most preferred first), so one account
 running out of its free allowance doesn't stop anyone playing. Deploy code changes to **both** (see
@@ -56,7 +56,7 @@ Normally not needed (see above). To pin the game to one relay, set one of these 
 
 | Where | How | Needs a rebuild? |
 |---|---|---|
-| Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
+| Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=alberta-game-jam-relay.OTHER.workers.dev` | No; remove it to go back |
 | Desktop / editor | environment variable `PHONE_RELAY_URL=HOST` before starting Godot or the game | No |
 | Any build | Project Setting `phone_controllers/relay_url` (or an `override.cfg` next to the game) | Editor: no. Exports: re-export |
 | Order of preference | the `RELAYS` list in `phone_control_server.gd` | Yes |
@@ -133,9 +133,9 @@ npm run status
 ```
 
 ```
-pvp-phone-relay.pvp-phone-relay.workers.dev
+alberta-game-jam-relay.pvp-phone-relay.workers.dev
   up; Workers 12,408 (12%), Durable Objects 71,230 (71%) of 100,000/day; resets in 5h12m
-pvp-phone-relay.gamejam-relay.workers.dev
+alberta-game-jam-relay.gamejam-relay.workers.dev
   OVER DAILY LIMIT (429 / error 1027) - games use the other relay until 00:00 UTC
 ```
 
@@ -195,7 +195,9 @@ free allowance; see Cloudflare's current pricing page for exact limits.
 
 ## This repo's relay folder
 
-`wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this repo creates a
-separate relay (on whichever Cloudflare account wrangler is logged in to) instead of replacing
-`pvp-phone-relay`. After deploying it, add its address as another constant next to `RELAY_MAIN` /
-`RELAY_BACKUP` in `phone_controller/phone_control_server.gd` and put it in `RELAYS` (first = preferred).
+`wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this folder creates or
+updates this game's own relay on whichever Cloudflare account wrangler is logged in to. It doesn't touch
+`pvp-phone-relay` (the PvP game's relay on the same accounts). Deploy it to **both** accounts; the
+addresses become `alberta-game-jam-relay.<account subdomain>.workers.dev`, which is what `RELAY_MAIN`
+and `RELAY_BACKUP` in `phone_controller/phone_control_server.gd` point at. Both games still share each
+account's daily allowance.
