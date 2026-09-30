@@ -3,7 +3,7 @@ extends Area2D
 var color = ""
 var active = false
 var radius = 96
-var power = 100
+var power = 150
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

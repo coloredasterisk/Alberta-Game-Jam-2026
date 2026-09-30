@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://dfps2ajsxma4d"]
 
-[ext_resource type="PackedScene" uid="uid://2elg8d45uxjs" path="res://scenes/map_1.tscn" id="1_jyhfs"]
 [ext_resource type="Theme" uid="uid://colb7a5ytrq4o" path="res://main_theme.tres" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cy7876evugj5" path="res://scripts/main.gd" id="1_tipki"]
 [ext_resource type="Script" uid="uid://dy1l2xljudpey" path="res://scripts/title_screen.gd" id="2_0wfyh"]
@@ -143,8 +142,6 @@ snap_2d_transforms_to_pixel = true
 scaling_3d_mode = 5
 size = Vector2i(640, 360)
 render_target_update_mode = 4
-
-[node name="Map1" parent="World/Player1/SubViewport" unique_id=585905906 instance=ExtResource("1_jyhfs")]
 
 [node name="BG" type="CanvasLayer" parent="World/Player1/SubViewport" unique_id=2042990104]
 
@@ -537,12 +534,13 @@ offset_right = 230.0
 offset_bottom = 207.0
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
 text = "- The winner is the one with the most honey after 2 minutes
 - Collect Nectar from your own color Flowers
 - Bring Nectar back to your hive
 - Can also steal steal honey from rival hives
 - Spend money at the shop to buy powerups
-- Gain money from stealing from ants, watch out they bite back"
+- Gain money from repeatly stealing from ant hills, watch out [color=red]if you miss, a portion of your current money is taken [/color]make sure to leave early before that happens"
 fit_content = true
 
 [node name="PowerupSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=541425424]

@@ -57,6 +57,7 @@ var _session_started := false
 
 func _ready() -> void:
 	_show_lobby(true)
+	get_tree().paused = false
 
 ## Starts phone-controller / relay networking for Session.mode. Called once the player finishes
 ## the pre-match menu (amount picked in ChoosePlayerAmount, or a join code submitted) - NOT at

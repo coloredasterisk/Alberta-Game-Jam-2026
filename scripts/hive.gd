@@ -32,13 +32,13 @@ func interact(player) -> bool:
 	print(color, " hive: ", current_amount, " | bee nectar: ", player.nectar)
 	return true
 
-func spawn_wind() -> void:
+func spawn_wind(time) -> void:
 	has_wind = true
+	$Timer.start(time)
 	var windarea = preload("res://scenes/wind_area.tscn").instantiate()
 	windarea.color = color
 	windarea.enable(Global.powerup_durations["wind"])
 	add_child(windarea)
-	get_tree().create_timer(Global.powerup_durations["wind"]).timeout.connect(end_wind)
 	
 func end_wind():
 	has_wind = false

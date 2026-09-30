@@ -7,19 +7,19 @@ var powerup_costs = {
 	"speed" : 15,
 	"rain" : 25,
 	"stinger" : 20,
-	"wind" : 25,
-	"swarm" : 30,
+	"wind" : 20,
+	"swarm" : 40,
 	"capacity" : 30,
-	"collection" : 100,
+	"collection" : 75,
 	"" : 0,
 }
 
 var powerup_descriptions = {
-	"confusion" : "Invert all rival bees controls for 10s",
-	"speed" : "Gain a boost of speed for 15s",
+	"confusion" : "Invert all rival bees controls for 15s",
+	"speed" : "Gain a boost of speed for 20s",
 	"rain" : "Slow all rival bees for 10s",
-	"stinger" : "For 10s when touching a bee, steal their nectar and fling them",
-	"wind" : "You and the hive create a field that pushes bees away for 15s",
+	"stinger" : "For 15s when touching a bee, steal their nectar and fling them",
+	"wind" : "You and the hive create a field that pushes bees away for 20s",
 	"swarm" : "Steal up to 5 honey from the richest rival bee",
 	"capacity" : "Increase your carrying capacity by 1",
 	"collection" : "Increase nectar collected from flowers by 1",
@@ -40,12 +40,18 @@ var powerup_icons = {
 
 #power up durations
 var powerup_durations = {
-	"confusion" : 10,
+	"confusion" : 15,
 	"speed" : 20,
 	"rain" : 10,
-	"stinger" : 10,
-	"wind" : 15,
+	"stinger" : 15,
+	"wind" : 20,
 }
+var maps = [
+	preload("res://scenes/map_1.tscn"),
+	preload("res://scenes/map_2.tscn"),
+	preload("res://scenes/map_3.tscn")
+	
+]
 
 var original_max_capacity: int = 5
 var win_amount = 10

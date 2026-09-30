@@ -39,12 +39,12 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("p1_interact") and round_over:
-		get_tree().reload_current_scene()
+		get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 var flower_colors = ["red","blue","green","yellow"]
 func _start_game() -> void:
-	
-	hives = $Player1/SubViewport/Map1/Hives.get_children()
+	$Player1/SubViewport.add_child(Global.maps.pick_random().instantiate())
+	hives = $Player1/SubViewport.get_child(2).get_node("Hives").get_children()
 	
 
 	var spliced_colors = flower_colors.slice(0, Global.amount_of_players)
@@ -72,16 +72,19 @@ func _on_start_countdown_timeout() -> void:
 		
 func _on_round_timer_timeout() -> void:
 	#var hives = get_tree().get_nodes_in_group("hives")
-	#hives.sort_custom(func(a, b): return a.current_amount > b.current_amount)
-
+	var sorted = []
+	for i in hives.size():
+		sorted.append([i, hives[i].current_amount])
+	sorted.sort_custom(func(a, b): return a[1] > b[1])
+	print(sorted)
 	var place := 0
 	for i in hives.size():
 		# only move down a place if this hive has less than the one before it
-		if i == 0 or hives[i].current_amount < hives[i - 1].current_amount:
+		if i == 0 or sorted[i][1] < sorted[i - 1][1]:
 			place = i + 1
 		var result = place_name(place)
-		var score =  hives[i].current_amount
-		get_node("/root/Main/World").get_child(i).get_node("SubViewport/BG/Placement").update_display(result, score)
+		var score =  sorted[i][1]
+		get_node("/root/Main/World").get_child(sorted[i][0]).get_node("SubViewport/BG/Placement").update_display(result, score)
 	get_tree().paused = true
 	round_over = true
 

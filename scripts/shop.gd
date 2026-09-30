@@ -33,11 +33,7 @@ func _ready() -> void:
 
 func interact(player) -> void:
 	if player.shopping:
-		player.shopping = false
-		player.get_node("../BG/ShopMenu").visible = false
 		_on_powerup_purchased(shop_grid[grid_position.y][grid_position.x], player)
-		if not (player in get_overlapping_bodies()):
-			player.shop = null
 	else:
 		player.shopping = true
 		player.get_node("../BG/ShopMenu").visible = true
@@ -57,7 +53,6 @@ func _on_body_entered(body: Node2D) -> void:
 
 
 func _on_body_exited(body: Node2D) -> void:
-	return
 	if body is Player:
 		if not body.shopping:
 			body.shop = null
@@ -129,7 +124,11 @@ func _on_powerup_purchased(type: String, buyer: Player):
 			buyer.add_collection()
 		"wind":
 			var own_hive = world.hives.filter(func(h): return h.color == buyer.player_color)[0]
-			own_hive.spawn_wind()
+			own_hive.spawn_wind(Global.powerup_durations["wind"])
 			buyer.spawn_wind()
-			
+		"":
+			buyer.shopping = false
+			buyer.get_node("../BG/ShopMenu").visible = false
+			if not (buyer in get_overlapping_bodies()):
+				buyer.shop = null
 	hide_rect()

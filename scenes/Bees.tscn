@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://ch0pfrvlf6akf" path="res://art/Birds-Sheet.png" id="5_lexnm"]
 [ext_resource type="Texture2D" uid="uid://bh6am0r1dxevl" path="res://art/Rain.png" id="6_lexnm"]
 [ext_resource type="Texture2D" uid="uid://cvo4xkwjp4aw3" path="res://art/Stinger_Icon.png" id="8_ybcnv"]
-[ext_resource type="PackedScene" uid="uid://dll7343b5efh2" path="res://scenes/wind_area.tscn" id="9_rj8tm"]
 
 [sub_resource type="Gradient" id="Gradient_xu4xf"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -334,13 +333,16 @@ bus = &"SFX"
 
 [node name="Capacity" type="RichTextLabel" parent="." unique_id=1301983836]
 self_modulate = Color(1, 1, 1, 0)
-offset_left = -19.0
-offset_top = -16.0
-offset_right = 21.0
+offset_left = -67.0
+offset_top = -98.0
+offset_right = 66.0
 offset_bottom = -5.0
+theme_override_colors/font_outline_color = Color(0.30907038, 0.26391536, 0.10807978, 0.7411765)
+theme_override_constants/outline_size = 4
 theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2
 
 [node name="StingerIcon" type="Sprite2D" parent="." unique_id=943679249]
 visible = false
@@ -348,5 +350,11 @@ position = Vector2(-6, 1)
 texture = ExtResource("8_ybcnv")
 flip_h = true
 
-[node name="WindArea" parent="." unique_id=799771819 instance=ExtResource("9_rj8tm")]
-visible = false
+[node name="WindTimer" type="Timer" parent="." unique_id=1021248346]
+one_shot = true
+
+[node name="ConfusionTimer" type="Timer" parent="." unique_id=444230926]
+one_shot = true
+
+[connection signal="timeout" from="WindTimer" to="." method="end_wind"]
+[connection signal="timeout" from="ConfusionTimer" to="." method="end_confusion"]

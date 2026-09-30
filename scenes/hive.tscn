@@ -116,3 +116,8 @@ radial_accel_max = -150.0
 tangential_accel_min = 60.0
 tangential_accel_max = 90.0
 color_ramp = SubResource("Gradient_q7y6d")
+
+[node name="Timer" type="Timer" parent="." unique_id=1605649336]
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="end_wind"]

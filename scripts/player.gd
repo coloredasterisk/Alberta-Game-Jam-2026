@@ -22,7 +22,7 @@ var collection_multi : int = 1
 
 var pollen_counter: int = 0
 var max_pollen_counter: int = 4
-var money_counter: int = 300
+var money_counter: int = 100
 
 var confused: bool = false
 var rain: bool = false
@@ -30,6 +30,7 @@ var wind: bool = false
 var capacity_tween
 var shop = null
 var shopping = false
+var rain_speed = 0
 
 var sound_list = {
 	"stinger" : preload("res://music/Rainbow Stinger Powerup.wav"),
@@ -52,7 +53,6 @@ var has_stinger: bool = false:
 
 
 func _ready():
-	$WindArea.color = player_color
 	$AnimatedSprite2D/Shadow.play()
 	bee_outline_animation.self_modulate = Global.modulate_color[player_color]
 	bee_animation.play(player_color)
@@ -77,6 +77,7 @@ func enable():
 
 func update_capacity(num) -> void:
 	nectar += num
+	$Capacity.push_font_size(8)
 	$Capacity.self_modulate = Color.WHITE
 	if capacity_tween:
 		capacity_tween.kill()
@@ -92,6 +93,21 @@ func update_capacity(num) -> void:
 		capacity_tween.tween_property($Capacity, "self_modulate", Color.TRANSPARENT, 5.0)
 		capacity_tween.play()
 		
+func update_money(new_amount) -> void:
+	if capacity_tween:
+		capacity_tween.kill()
+	var display = "[font_size=" + str(8 + (sqrt(abs(new_amount)) * 2)) + "]"
+	if new_amount >= 0:
+		display += "+"
+		$Capacity.self_modulate = Color.GREEN
+	else:
+		$Capacity.self_modulate = Color.RED
+	$Capacity.text = display + str(new_amount)
+	capacity_tween = get_tree().create_tween()
+	capacity_tween.set_ease(Tween.EASE_IN_OUT)
+	capacity_tween.tween_property($Capacity, "self_modulate", Color.TRANSPARENT, 5.0)
+	capacity_tween.play()
+	
 func movement(delta):
 
 	if phone_id > 0:
@@ -103,20 +119,22 @@ func movement(delta):
 			direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
 	if shopping and shop != null:
 		shop.move_selection(direction.round(), self)
-		direction = Vector2.ZERO
+		acceleration = Vector2.ZERO
+		velocity = Vector2.ZERO
+		return
 	
 	if confused:
 		direction = -direction
 	if speed > Global.original_player_speed:
 		$SpeedParticles.direction = -direction
-	acceleration = direction * speed
+	acceleration = direction * (speed + rain_speed)
 	velocity = acceleration * delta + (velocity * drag_factor)
 
 func confusion():
 	confused = true
 	$Birds.visible = true
 	play_sound("confusion")
-	get_tree().create_timer(Global.powerup_durations["confusion"]).timeout.connect(end_confusion)
+	$ConfusionTimer.start(Global.powerup_durations["confusion"])
 	
 func end_confusion():
 	confused = false
@@ -125,12 +143,12 @@ func end_confusion():
 func rain_power():
 	rain = true
 	$Rain.visible = true
-	speed = Global.rain_slow_speed
+	rain_speed -= Global.rain_slow_speed
 	get_tree().create_timer(Global.powerup_durations["rain"]).timeout.connect(end_rain)
 
 func end_rain():
 	$Rain.visible = false
-	speed = Global.original_player_speed
+	rain_speed += Global.rain_slow_speed
 	rain = false
 	
 func speed_power():
@@ -162,7 +180,6 @@ func spawn_wind():
 	windarea.color = player_color
 	windarea.enable(Global.powerup_durations["wind"])
 	add_child(windarea)
-	get_tree().create_timer(Global.powerup_durations["wind"]).timeout.connect(end_wind)
 	
 func end_wind():
 	wind = false
@@ -178,12 +195,15 @@ func interact():
 			shop.interact(self)
 		else:
 			for area in interaction.get_overlapping_areas():
-				apply_interact()
+				apply_interact(true)
 
-func apply_interact():
-	for area in interaction.get_overlapping_areas():
-		if area.has_method("interact") and area.interact(self):
-			break
+func apply_interact(override = false):
+	if shop != null and not override:
+		shop.interact(self)
+	else:
+		for area in interaction.get_overlapping_areas():
+			if area.has_method("interact") and area.interact(self):
+				break
 
 func stinger():
 	has_stinger = true
