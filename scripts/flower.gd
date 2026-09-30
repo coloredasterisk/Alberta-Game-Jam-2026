@@ -30,7 +30,7 @@ func interact(player) -> bool:
 		bulb_outline.show()
 		$Growing_Cooldown.start()
 		print(current_state)
-		player.update_capacity(1)
+		player.update_capacity(1 * player.collection_multi)
 		print("picked! nectar counter: ", player.nectar)
 		$Shadow.play("bulb")
 		var sfx = oneshot.instantiate()

@@ -3,6 +3,8 @@ var current_amount = 0
 
 @export_enum("red","blue","yellow","green") var color: String = "red"
 var oneshot = preload("res://scenes/one_shot.tscn")
+var has_wind = false
+var playing = true
 
 func _ready() -> void:
 	$Sprite.animation = color
@@ -29,3 +31,14 @@ func interact(player) -> bool:
 		$StealNectar.emitting = true
 	print(color, " hive: ", current_amount, " | bee nectar: ", player.nectar)
 	return true
+
+func spawn_wind() -> void:
+	has_wind = true
+	var windarea = preload("res://scenes/wind_area.tscn").instantiate()
+	windarea.color = color
+	windarea.enable(Global.powerup_durations["wind"])
+	add_child(windarea)
+	get_tree().create_timer(Global.powerup_durations["wind"]).timeout.connect(end_wind)
+	
+func end_wind():
+	has_wind = false

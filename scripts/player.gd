@@ -18,14 +18,18 @@ var external_stick := Vector2.ZERO
 var nectar: int = 0
 var current_nectar_capacity: int
 var max_nectar_capacity: int
+var collection_multi : int = 1
 
 var pollen_counter: int = 0
 var max_pollen_counter: int = 4
-var money_counter: int = 100
+var money_counter: int = 300
 
 var confused: bool = false
 var rain: bool = false
+var wind: bool = false
 var capacity_tween
+var shop = null
+var shopping = false
 
 var sound_list = {
 	"stinger" : preload("res://music/Rainbow Stinger Powerup.wav"),
@@ -48,6 +52,7 @@ var has_stinger: bool = false:
 
 
 func _ready():
+	$WindArea.color = player_color
 	$AnimatedSprite2D/Shadow.play()
 	bee_outline_animation.self_modulate = Global.modulate_color[player_color]
 	bee_animation.play(player_color)
@@ -96,13 +101,16 @@ func movement(delta):
 			direction = (get_global_mouse_position() - global_position).normalized()
 		else:
 			direction = Input.get_vector("p%d_move_left" % player_index, "p%d_move_right" % player_index, "p%d_move_up" % player_index, "p%d_move_down" % player_index)
+	if shopping and shop != null:
+		shop.move_selection(direction.round(), self)
+		direction = Vector2.ZERO
+	
 	if confused:
 		direction = -direction
 	if speed > Global.original_player_speed:
 		$SpeedParticles.direction = -direction
 	acceleration = direction * speed
 	velocity = acceleration * delta + (velocity * drag_factor)
-	
 
 func confusion():
 	confused = true
@@ -127,13 +135,37 @@ func end_rain():
 	
 func speed_power():
 	speed += Global.additive_speed_up
+	drag_factor = Global.speed_up_drag_factor
 	$SpeedParticles.visible = true
 	play_sound("speed")
 	get_tree().create_timer(Global.powerup_durations["speed"]).timeout.connect(end_speed)
 	
 func end_speed():
-	speed -= 100
+	drag_factor = Global.drag_factor
+	speed -= Global.additive_speed_up
 	$SpeedParticles.visible = false
+	
+func add_capacity():
+	current_nectar_capacity += 1
+	update_capacity(0)
+	
+func add_collection():
+	collection_multi += 1
+	var loyal = preload("res://scenes/loyal_swarm.tscn").instantiate()
+	loyal.color = player_color
+	loyal.follow_parent = self
+	get_parent().add_child(loyal)
+	
+func spawn_wind():
+	wind = true
+	var windarea = preload("res://scenes/wind_area.tscn").instantiate()
+	windarea.color = player_color
+	windarea.enable(Global.powerup_durations["wind"])
+	add_child(windarea)
+	get_tree().create_timer(Global.powerup_durations["wind"]).timeout.connect(end_wind)
+	
+func end_wind():
+	wind = false
 
 func pollen():
 	for area in interaction.get_overlapping_areas():
@@ -142,8 +174,11 @@ func pollen():
 
 func interact():
 	if Input.is_action_just_pressed("p%d_interact" % player_index):
-		for area in interaction.get_overlapping_areas():
-			apply_interact()
+		if shop != null:
+			shop.interact(self)
+		else:
+			for area in interaction.get_overlapping_areas():
+				apply_interact()
 
 func apply_interact():
 	for area in interaction.get_overlapping_areas():

@@ -9,10 +9,34 @@ var powerup_costs = {
 	"stinger" : 20,
 	"wind" : 25,
 	"swarm" : 30,
-	"capacity" : 50,
+	"capacity" : 30,
 	"collection" : 100,
+	"" : 0,
 }
 
+var powerup_descriptions = {
+	"confusion" : "Invert all rival bees controls for 10s",
+	"speed" : "Gain a boost of speed for 15s",
+	"rain" : "Slow all rival bees for 10s",
+	"stinger" : "For 10s when touching a bee, steal their nectar and fling them",
+	"wind" : "You and the hive create a field that pushes bees away for 15s",
+	"swarm" : "Steal up to 5 honey from the richest rival bee",
+	"capacity" : "Increase your carrying capacity by 1",
+	"collection" : "Increase nectar collected from flowers by 1",
+	"" : "Move to browse the shop or press interact now to leave"
+}
+
+var powerup_icons = {
+	"confusion" : preload("res://art/Confusion_Icon.png"),
+	"speed" : preload("res://art/Speed_Icon.png"),
+	"rain" : preload("res://art/Rain_Powerup_Icon.png"),
+	"stinger" : preload("res://art/Stinger_Icon.png"),
+	"wind" : preload("res://art/swirl.png"),
+	"swarm" : preload("res://art/Swarm_Icon.png"),
+	"capacity" : preload("res://art/backpack.png"),
+	"collection" : preload("res://art/flower_upgrade.png"),
+	"" : null
+}
 
 #power up durations
 var powerup_durations = {
@@ -20,7 +44,7 @@ var powerup_durations = {
 	"speed" : 20,
 	"rain" : 10,
 	"stinger" : 10,
-	"wind" : 10,
+	"wind" : 15,
 }
 
 var original_max_capacity: int = 5
@@ -32,8 +56,8 @@ var local_mode = false
 var original_player_speed = 200
 var rain_slow_speed = 50
 var drag_factor = 0.98
-var additive_speed_up = 100
-var speed_up_drag_factor = 0.5
+var additive_speed_up = 400
+var speed_up_drag_factor = 0.95
 var normal_knockback = 100
 var stinger_knockback = 1000
 

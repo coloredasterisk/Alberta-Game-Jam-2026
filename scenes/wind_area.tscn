@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://dll7343b5efh2"]
+
+[ext_resource type="Script" uid="uid://bl4wnsrlns7qa" path="res://scripts/wind_area.gd" id="1_dnhq2"]
+[ext_resource type="Texture2D" uid="uid://du47n02bo3wuo" path="res://art/swirl.png" id="2_2q3k3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_py7os"]
+radius = 96.0
+
+[sub_resource type="Curve" id="Curve_i4qo7"]
+_limits = [-500.0, 500.0, 0.0, 1.0]
+_data = [Vector2(0, 0.1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_j4kyi"]
+_limits = [-200.0, 200.0, 0.0, 1.0]
+_data = [Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(1, 200), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_ybcnv"]
+offsets = PackedFloat32Array(0.021857923, 0.3852459, 0.6338798, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="WindArea" type="Area2D" unique_id=799771819]
+script = ExtResource("1_dnhq2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2131088911]
+shape = SubResource("CircleShape2D_py7os")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=1146172639]
+amount = 32
+texture = ExtResource("2_2q3k3")
+lifetime = 5.0
+local_coords = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 40.0
+initial_velocity_max = 55.0
+angular_velocity_min = 1000.0
+angular_velocity_max = 1000.0
+orbit_velocity_min = 1.0
+orbit_velocity_max = 1.0
+orbit_velocity_curve = SubResource("Curve_i4qo7")
+radial_accel_min = 3.0
+radial_accel_max = 3.0
+tangential_accel_curve = SubResource("Curve_j4kyi")
+color_ramp = SubResource("Gradient_ybcnv")
+
+[node name="Timer" type="Timer" parent="." unique_id=1970700851]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="disable"]

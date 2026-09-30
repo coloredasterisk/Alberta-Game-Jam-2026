@@ -8,7 +8,8 @@
 [ext_resource type="PackedScene" uid="uid://bjnp8g5702l8h" path="res://scenes/Bees.tscn" id="2_tbgi4"]
 [ext_resource type="Script" uid="uid://dijmi2kmfhtdv" path="res://scripts/canvas_layer.gd" id="4_tipki"]
 [ext_resource type="PackedScene" uid="uid://j36fge0l8028" path="res://scenes/placement.tscn" id="4_yc10j"]
-[ext_resource type="Script" uid="uid://vxxg3jlq7jua" path="res://scenes/splash_world.gd" id="6_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://ce3wi3v83e7dm" path="res://scenes/shop_menu.tscn" id="5_fv21b"]
+[ext_resource type="Script" uid="uid://vxxg3jlq7jua" path="res://scripts/splash_world.gd" id="6_gqmmt"]
 [ext_resource type="Script" uid="uid://22lyamgsoq1q" path="res://scripts/online_multiplayer_setup.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://bj3w62suy0xmh" path="res://scripts/screens.gd" id="7_85g3d"]
 [ext_resource type="Texture2D" uid="uid://dk6xkuixlnj8y" path="res://art/Shop.png" id="7_pm3ni"]
@@ -140,6 +141,8 @@ render_target_update_mode = 4
 [node name="Placement" parent="World/Player1/SubViewport/BG" unique_id=821759070 instance=ExtResource("4_yc10j")]
 visible = false
 
+[node name="ShopMenu" parent="World/Player1/SubViewport/BG" unique_id=1444242569 instance=ExtResource("5_fv21b")]
+
 [node name="Player" parent="World/Player1/SubViewport" unique_id=558911984 instance=ExtResource("2_tbgi4")]
 z_index = 0
 
@@ -164,6 +167,9 @@ render_target_update_mode = 0
 
 [node name="Placement" parent="World/Player2/SubViewport/BG" unique_id=506912986 instance=ExtResource("4_yc10j")]
 visible = false
+
+[node name="ShopMenu" parent="World/Player2/SubViewport/BG" unique_id=2099124947 instance=ExtResource("5_fv21b")]
+direction = "right"
 
 [node name="Player" parent="World/Player2/SubViewport" unique_id=1663139987 instance=ExtResource("2_tbgi4")]
 z_index = 0
@@ -192,6 +198,8 @@ render_target_update_mode = 0
 [node name="Placement" parent="World/Player3/SubViewport/BG" unique_id=1842952051 instance=ExtResource("4_yc10j")]
 visible = false
 
+[node name="ShopMenu" parent="World/Player3/SubViewport/BG" unique_id=1704976326 instance=ExtResource("5_fv21b")]
+
 [node name="Player" parent="World/Player3/SubViewport" unique_id=837753581 instance=ExtResource("2_tbgi4")]
 z_index = 0
 player_index = 3
@@ -219,6 +227,9 @@ render_target_update_mode = 0
 
 [node name="Placement" parent="World/Player4/SubViewport/BG" unique_id=925250167 instance=ExtResource("4_yc10j")]
 visible = false
+
+[node name="ShopMenu" parent="World/Player4/SubViewport/BG" unique_id=285573524 instance=ExtResource("5_fv21b")]
+direction = "right"
 
 [node name="Player" parent="World/Player4/SubViewport" unique_id=404724800 instance=ExtResource("2_tbgi4")]
 z_index = 0
@@ -372,12 +383,13 @@ offset_right = 640.0
 offset_bottom = 360.0
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 0
+current_tab = 1
 tabs_visible = false
 deselect_enabled = true
 script = ExtResource("7_85g3d")
 
 [node name="TitleScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=1965919025]
+visible = false
 custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 mouse_filter = 2
@@ -439,7 +451,6 @@ layout_mode = 2
 text = "Quit Game"
 
 [node name="TutorialScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=915148859]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_py7os")
 metadata/_tab_index = 1

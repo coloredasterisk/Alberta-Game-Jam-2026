@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ce3wi3v83e7dm"]
+
+[ext_resource type="Script" uid="uid://cpd4ceggmdop4" path="res://scripts/shop_menu.gd" id="1_1ltno"]
+[ext_resource type="PackedScene" uid="uid://bl3bg5x1mpnqn" path="res://scenes/shop_grid.tscn" id="1_5pe57"]
+[ext_resource type="PackedScene" uid="uid://d1oykbq075lru" path="res://scenes/shop_info.tscn" id="2_1ltno"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ltno"]
+bg_color = Color(0.20784314, 0.12941177, 0.20784314, 0.9137255)
+
+[node name="ShopMenu" type="Panel" unique_id=768070950]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_1ltno")
+script = ExtResource("1_1ltno")
+
+[node name="ShopGrid" parent="." unique_id=130492684 instance=ExtResource("1_5pe57")]
+layout_mode = 1
+scale = Vector2(0.5, 0.5)
+
+[node name="ShopInfo" parent="." unique_id=1255274563 instance=ExtResource("2_1ltno")]
+layout_mode = 1

@@ -1,13 +1,14 @@
 class_name AntHill extends Area2D
 
 var ant_counter: int = 1
+var combo = 0
 
 @onready var bar: Sprite2D = $TextureProgressBar/progress_bar
 @onready var progress_bar: TextureProgressBar = $TextureProgressBar
 
 var active := false
 var move_dir := 1
-var bar_speed: Array = [60, 75, 80, 40]
+var bar_speed: Array = [20, 40, 60, 80, 100]
 var current_speed: float
 
 func _ready() -> void:
@@ -15,20 +16,22 @@ func _ready() -> void:
 
 func interact(player) -> bool:
 	if not active:
-		if ant_counter <= 0:
-			return false
+		#if ant_counter <= 0:
+		#	return false
 		start()
 	else:
 		var hit = check()
 		stop()
 		print("stopped at ", bar.position.x, " hit: ", hit)
 		if hit:
-			ant_counter -= 1
+			#ant_counter -= 1
 			player.money_counter += 25
 			print("goodjob! ants left: ", ant_counter)
+			combo += 1
 		else:
 			player.money_counter -= 10
 			player.send_home()
+			combo = 0
 	return true
 
 func start():
@@ -36,7 +39,7 @@ func start():
 	progress_bar.visible = true
 	bar.position.x = 1
 	move_dir = 1
-	current_speed = bar_speed.pick_random()
+	current_speed = bar_speed[combo]
 
 func check() -> bool:
 	return bar.position.x > 16 and bar.position.x < 22

@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://d1oykbq075lru"]
+
+[ext_resource type="Script" uid="uid://bhe3rvvsjeu0v" path="res://scripts/shop_info.gd" id="1_b43nj"]
+[ext_resource type="Texture2D" uid="uid://61s8dv5acwqm" path="res://art/Money.png" id="1_ihtxj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8x1w7"]
+bg_color = Color(0.87004864, 0.65350187, 0.38924584, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.6277436, 0.40667123, 0.22013846, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="ShopInfo" type="Panel" unique_id=1255274563]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -45.0
+offset_right = 90.0
+offset_bottom = 45.0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8x1w7")
+script = ExtResource("1_b43nj")
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=1274047607]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 8.0
+offset_right = 81.0
+offset_bottom = 17.0
+theme_override_font_sizes/normal_font_size = 8
+
+[node name="Cost" type="RichTextLabel" parent="." unique_id=1061761957]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 74.0
+offset_right = 149.0
+offset_bottom = 83.0
+theme_override_font_sizes/normal_font_size = 8
+text = "Cost:"
+
+[node name="TextureRect" type="TextureRect" parent="Cost" unique_id=1269356644]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 1.0
+offset_right = 35.0
+offset_bottom = 8.0
+texture = ExtResource("1_ihtxj")
+
+[node name="CostAmount" type="RichTextLabel" parent="Cost" unique_id=1928025569]
+layout_mode = 0
+offset_left = 36.0
+offset_right = 72.0
+offset_bottom = 9.0
+theme_override_font_sizes/normal_font_size = 8
+text = "0"
+
+[node name="Description" type="RichTextLabel" parent="." unique_id=1528297351]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 21.0
+offset_right = 82.0
+offset_bottom = 72.0
+theme_override_colors/default_color = Color(0.57598245, 0.30157366, 0.012334948, 1)
+theme_override_font_sizes/normal_font_size = 8
+
+[node name="Icon" type="TextureRect" parent="." unique_id=350571894]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = 18.0
+offset_bottom = 18.0
+stretch_mode = 5

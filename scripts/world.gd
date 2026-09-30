@@ -49,11 +49,12 @@ func _start_game() -> void:
 
 	var spliced_colors = flower_colors.slice(0, Global.amount_of_players)
 	for flower in get_tree().get_nodes_in_group("flower"):
-		if not flower.flower_color  in spliced_colors:
+		if not flower.flower_color in spliced_colors:
 			flower.disable()
 	for i in range(players.size()):
 		if i >= Global.amount_of_players:
 			hives[i].visible = false
+			hives[i].playing = false
 	
 	for i in range(hives.size()):
 		players[i].global_position = hives[i].global_position
