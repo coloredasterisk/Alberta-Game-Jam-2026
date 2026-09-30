@@ -174,9 +174,10 @@ The free plan allows, per Cloudflare account, **100,000 Worker requests a day** 
 Object requests a day** (both reset at 00:00 UTC). Every page load and every WebSocket connect is a
 Worker request. Messages over an open connection aren't Worker requests, but every room is a Durable
 Object and **messages arriving at it count as Durable Object requests (20 messages = 1 request)**, so
-the relay's traffic, not only connects, uses up that allowance. Phones only send when the input changes;
-an online match over the relay (no direct WebRTC link) sends the guest's input and the host's 30 Hz
-snapshots through it, a few requests a second. When the Workers limit is hit, *everything* on the relay
+the relay's traffic, not only connects, uses up that allowance. Phones and online guests only send when the input changes
+(a guest also resends it every 0.25 s, see `_send_guest_input` in `scripts/main.gd`); what remains is
+the host's 30 Hz snapshots in an online match over the relay (when there's no direct WebRTC link), about
+1.5 requests a second, roughly 5,400 an hour of play. When the Workers limit is hit, *everything* on the relay
 answers **429 / Cloudflare error 1027** ("temporarily rate limited") until the reset; when the Durable
 Object limit is hit, rooms stop working. Either way the games move to the other relay (see above).
 

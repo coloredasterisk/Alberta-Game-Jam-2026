@@ -14,6 +14,8 @@ enum Phase { LOBBY, PLAYING }
 
 const MENU_SCENE := "res://scenes/main.tscn"
 const SNAPSHOT_SEC := 1.0 / 30.0
+## Online guest: resend unchanged input this often (see _send_guest_input).
+const _GUEST_INPUT_RESEND_SEC := 0.25
 
 ## Local mode: how many players share this screen (one keyboard/phone slot each). Must not be
 ## more than the number of SubViewport slots under $World.
@@ -50,6 +52,10 @@ var _ready_to_start: Array[bool] = []
 # Online host / guest (slot 0 is the host; relay IDs 1..N-1 map to the other slots)
 var _snapshot_timer := 0.0
 var _guest: OnlineGuest
+# Guest input last sent to the host (see _send_guest_input). INF so the first frame always sends.
+var _guest_last_move := Vector2(INF, INF)
+var _guest_last_sent_at := 0.0
+var _guest_sent_interact := false  # last message held "interact": the next one releases it
 
 # True once begin_session() has actually started PhoneControllers / joined as a guest.
 var _session_started := false
@@ -439,13 +445,33 @@ func _send_snapshot() -> void:
 
 # --- Online: guest -------------------------------------------------------------
 
+## Sends this player's input to the host, but only when it changes (plus a resend every
+## _GUEST_INPUT_RESEND_SEC, in case a message on the unreliable direct link was lost). Sending
+## every frame meant ~60 messages a second through the relay when there's no direct link, and
+## every message counts against the relay account's daily Durable Object allowance
+## (relay/README.md, "Costs"). Each message is the full state (stick + held buttons), as the
+## host expects: a message without "b" releases the buttons.
 func _send_guest_input() -> void:
 	if _guest == null or not _guest.is_connected_to_host():
 		return
-	if Input.is_action_just_pressed("p1_interact"):
-		_guest.send({"t": "in", "b": ["interact"]})
 	var move := Input.get_vector("p1_move_left", "p1_move_right", "p1_move_up", "p1_move_down")
-	_guest.send_fast({"t": "in", "x": snappedf(move.x, 0.01), "y": snappedf(move.y, 0.01)})
+	move = move.snapped(Vector2(0.01, 0.01))
+	var now := Time.get_ticks_msec() / 1000.0
+	if Input.is_action_just_pressed("p1_interact"):
+		# Reliable path: a press must not get lost. It carries the stick too, so the player
+		# keeps moving; the next frame sends the release (host reacts on the press).
+		_guest.send({"t": "in", "x": move.x, "y": move.y, "b": ["interact"]})
+		_guest_sent_interact = true
+		_guest_last_move = move
+		_guest_last_sent_at = now
+		return
+	if move == _guest_last_move and not _guest_sent_interact \
+			and now - _guest_last_sent_at < _GUEST_INPUT_RESEND_SEC:
+		return
+	_guest.send_fast({"t": "in", "x": move.x, "y": move.y})
+	_guest_sent_interact = false
+	_guest_last_move = move
+	_guest_last_sent_at = now
 
 
 func _on_host_message(msg: Dictionary) -> void:
