@@ -5,7 +5,8 @@
   "scripts": {
     "sync-page": "node -e \"require('fs').mkdirSync('public',{recursive:true});require('fs').copyFileSync('../phone_controller/controller.html','public/index.html')\"",
     "dev": "npm run sync-page && wrangler dev",
-    "deploy": "npm run sync-page && wrangler deploy"
+    "deploy": "npm run sync-page && wrangler deploy",
+    "status": "node check-relays.mjs"
   },
   "devDependencies": {
     "wrangler": "^4"

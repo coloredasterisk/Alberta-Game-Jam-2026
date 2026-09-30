@@ -23,24 +23,43 @@ constants in `phone_controller/phone_control_server.gd`:
 
 | Constant | Address |
 |---|---|
-| `RELAY_MAIN` | `https://pvp-phone-relay.pvp-phone-relay.workers.dev` |
-| `RELAY_BACKUP` | `https://pvp-phone-relay.gamejam-relay.workers.dev` |
+| `RELAY_MAIN` | `https://alberta-game-jam-relay.pvp-phone-relay.workers.dev` |
+| `RELAY_BACKUP` | `https://alberta-game-jam-relay.gamejam-relay.workers.dev` |
 
-`DEFAULT_RELAY_URL` says which one the game uses (currently `RELAY_BACKUP`, while the main account's
-allowance recovers). Switch by changing that one word; see the next section for switching without a
-rebuild. Deploy code changes to **both** (see "Deploy / update").
+The game chooses between them by itself (`RELAYS` in that file, most preferred first), so one account
+running out of its free allowance doesn't stop anyone playing. Deploy code changes to **both** (see
+"Deploy / update").
 
-## Switching to another relay (and back)
+## Automatic relay choice and failover
 
-The game picks its relay in this order (`_pick_relay_url()` in `phone_control_server.gd`); the first
-one set wins:
+- **New session** (lobby opens): the game asks every relay's `/status` at once (a few seconds at most)
+  and uses the first in `RELAYS` order that answers and is below `RELAY_SWITCH_AT` (90 %) of today's
+  allowance. If all are above it, the one with the most left. A relay over its Workers limit answers 429
+  (error 1027) without running any code, so it simply doesn't count as answering.
+- **Mid-session**: if the game's relay connection fails twice in a row without opening the room, it moves
+  to the next relay in `RELAYS` **with the same room code**. Phones get the other relays in the QR code
+  (`&alt=…`) and try them in turn when theirs stops answering. An online guest does the same with
+  `PhoneControllers.get_relay_candidates()`. Everyone finds the room again, usually within a few seconds,
+  and keeps their player slot.
+- **Joining by code**: a guest (or phone) told "no game with this code" asks the other relays before
+  giving up, because the host may be on a different one.
+- If every relay is down, retries keep backing off (up to 30 s), so a game left open doesn't burn
+  requests.
+
+Forcing one relay (next section) turns the automatic choice off; phones and guests still have the others
+as fallbacks.
+
+## Forcing a relay
+
+Normally not needed (see above). To pin the game to one relay, set one of these (`_relay_override()` in
+`phone_control_server.gd`); the first one set wins:
 
 | Where | How | Needs a rebuild? |
 |---|---|---|
-| Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=pvp-phone-relay.OTHER.workers.dev` | No; remove it to go back |
+| Web build | add `?relay=HOST` to the game's address, e.g. `https://coloredasterisk.github.io/Alberta-Game-Jam-2026/?relay=alberta-game-jam-relay.OTHER.workers.dev` | No; remove it to go back |
 | Desktop / editor | environment variable `PHONE_RELAY_URL=HOST` before starting Godot or the game | No |
 | Any build | Project Setting `phone_controllers/relay_url` (or an `override.cfg` next to the game) | Editor: no. Exports: re-export |
-| Default | `DEFAULT_RELAY_URL := RELAY_MAIN` / `RELAY_BACKUP` in `phone_control_server.gd` | Yes (one word) |
+| Order of preference | the `RELAYS` list in `phone_control_server.gd` | Yes |
 
 `HOST` can be a bare host name or a full `wss://…` URL. Phones follow automatically (the QR code points
 at the relay in use), and invite links carry `&relay=…` when it isn't the default, so a friend's game
@@ -52,7 +71,7 @@ separate credentials folder (PowerShell):
 ```powershell
 $env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"   # any folder; keep it out of git
 npx wrangler login        # sign in with the other account
-npm run deploy            # prints https://pvp-phone-relay.<that account's subdomain>.workers.dev
+npm run deploy            # prints https://alberta-game-jam-relay.<that account's subdomain>.workers.dev
 ```
 
 Without `XDG_CONFIG_HOME` set, wrangler uses the original login again. Each Cloudflare account has its own
@@ -84,17 +103,24 @@ npm run deploy         # copies the fallback phone page into public/ and deploys
 ```
 
 That deploys to the account wrangler is logged in to (`RELAY_MAIN`). For `RELAY_BACKUP`, which is on the
-second account, point wrangler at that account's login folder first (PowerShell; the folder is the one
-used when logging in to that account, see "Switching to another relay"):
+second account, point wrangler at that account's login folder **and** its account ID first. Wrangler
+caches the account ID of the last deploy in `node_modules/.cache`, so without `CLOUDFLARE_ACCOUNT_ID`
+it tries the main account with the second login and fails with "Authentication error [code: 10000]".
+(PowerShell; the folder is the one used when logging in to that account, see "Forcing a relay"):
 
 ```powershell
-$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"; npm run deploy
-Remove-Item Env:XDG_CONFIG_HOME      # back to the main account
+$env:XDG_CONFIG_HOME = "C:\path\to\wrangler-account2"
+$env:CLOUDFLARE_ACCOUNT_ID = "<second account's ID>"   # npx wrangler whoami shows it
+npm run deploy
+Remove-Item Env:XDG_CONFIG_HOME, Env:CLOUDFLARE_ACCOUNT_ID   # back to the main account
 ```
 
+Always deploy to **both** accounts, then check with `npm run status`. A relay change must stay compatible
+with builds already out there (players don't all reload at once).
+
 **Your own relay for another game:** change `"name"` in `wrangler.jsonc` first (e.g. `"my-game-relay"`),
-deploy, and set `DEFAULT_RELAY_URL` to the `wss://…workers.dev` address it prints. Deploying with an
-existing name to the same Cloudflare account **replaces** that relay.
+deploy, and put the `wss://…workers.dev` address it prints in `RELAYS`. Deploying with an existing name
+to the same Cloudflare account **replaces** that relay.
 
 Local testing: `npm run dev` serves the relay on http://127.0.0.1:8787. Point the game at it with an
 `override.cfg` in the project root (don't commit it):
@@ -105,13 +131,55 @@ mode="relay"
 relay_url="ws://127.0.0.1:8787"
 ```
 
+## Is a relay over its limit? (status and usage)
+
+From the `relay` folder:
+
+```bash
+npm run status
+```
+
+```
+alberta-game-jam-relay.pvp-phone-relay.workers.dev
+  up; Workers 12,408 (12%), Durable Objects 71,230 (71%) of 100,000/day; resets in 5h12m
+alberta-game-jam-relay.gamejam-relay.workers.dev
+  OVER DAILY LIMIT (429 / error 1027) - games use the other relay until 00:00 UTC
+```
+
+It reads each relay's `GET /status`, which the games use too:
+
+```json
+{"ok": true, "used": 0.71, "workers": 12408, "durableObjects": 71230, "limit": 100000, "resetsInSec": 18720}
+```
+
+- `ok: false` means the relay runs but can't open rooms (usually its Durable Object allowance is used up).
+- No answer, or 429, means the Workers allowance is used up (or the relay is down).
+- **`used` needs a read-only analytics token** on each account, otherwise it's `null` and a relay only
+  counts as full once it stops answering. Per account (both, once):
+  1. Cloudflare dashboard → My Profile → API Tokens → Create Token → Custom token, permission
+     **Account · Account Analytics · Read**, that account only.
+  2. From `relay/` (for the backup account, with `XDG_CONFIG_HOME` and `CLOUDFLARE_ACCOUNT_ID` set as
+     in "Deploy / update"):
+     ```bash
+     npx wrangler secret put CF_API_TOKEN     # paste the token
+     npx wrangler secret put CF_ACCOUNT_ID    # the account ID from `npx wrangler whoami`
+     ```
+     (`CF_ACCOUNT_ID` is already set on both current relays; only `CF_API_TOKEN` is missing.)
+  The numbers come from Cloudflare's analytics, which lag a few minutes; the relay caches them for 2.
+  Secrets take effect at once, no redeploy needed.
+
 ## Costs and the free plan's daily limit
 
-The free Workers plan allows **100,000 requests a day** (resets at 00:00 UTC). Every page load and every
-WebSocket connect is a request; messages over an open connection are not. A match uses a handful, but
-something that reconnects in a loop uses them up fast. When the limit is hit, *everything* on the relay
-answers **429 / Cloudflare error 1027** ("temporarily rate limited") until the reset: phones can't join,
-online matches can't connect.
+The free plan allows, per Cloudflare account, **100,000 Worker requests a day** and **100,000 Durable
+Object requests a day** (both reset at 00:00 UTC). Every page load and every WebSocket connect is a
+Worker request. Messages over an open connection aren't Worker requests, but every room is a Durable
+Object and **messages arriving at it count as Durable Object requests (20 messages = 1 request)**, so
+the relay's traffic, not only connects, uses up that allowance. Phones and online guests only send when the input changes
+(a guest also resends it every 0.25 s, see `_send_guest_input` in `scripts/main.gd`); what remains is
+the host's 30 Hz snapshots in an online match over the relay (when there's no direct WebRTC link), about
+1.5 requests a second, roughly 5,400 an hour of play. When the Workers limit is hit, *everything* on the relay
+answers **429 / Cloudflare error 1027** ("temporarily rate limited") until the reset; when the Durable
+Object limit is hit, rooms stop working. Either way the games move to the other relay (see above).
 
 To stay well under it, every client backs off when the other side is gone:
 
@@ -138,7 +206,9 @@ free allowance; see Cloudflare's current pricing page for exact limits.
 
 ## This repo's relay folder
 
-`wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this repo creates a
-separate relay (on whichever Cloudflare account wrangler is logged in to) instead of replacing
-`pvp-phone-relay`. After deploying it, add its address as another constant next to `RELAY_MAIN` /
-`RELAY_BACKUP` in `phone_controller/phone_control_server.gd` and point `DEFAULT_RELAY_URL` at it.
+`wrangler.jsonc` here is named `alberta-game-jam-relay`, so `npm run deploy` from this folder creates or
+updates this game's own relay on whichever Cloudflare account wrangler is logged in to. It doesn't touch
+`pvp-phone-relay` (the PvP game's relay on the same accounts). Deploy it to **both** accounts; the
+addresses become `alberta-game-jam-relay.<account subdomain>.workers.dev`, which is what `RELAY_MAIN`
+and `RELAY_BACKUP` in `phone_controller/phone_control_server.gd` point at. Both games still share each
+account's daily allowance.

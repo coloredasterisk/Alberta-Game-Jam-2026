@@ -220,9 +220,23 @@
   const INJECTED_PORT = '__WS_PORT__';
   const WS_PORT = /^\d+$/.test(INJECTED_PORT) ? INJECTED_PORT : (params.get('ws') || '8081');
   const WS_HOST = params.get('host') || location.hostname || 'localhost';
-  const WS_URL = ROOM
-    ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/phone/${encodeURIComponent(ROOM)}`
-    : `ws://${WS_HOST}:${WS_PORT}`;
+  // Relay mode: this relay first, then the ones in alt= (the game lists its other relays there).
+  // If a relay stops answering (down, or over its daily limit) the game moves the room, same code,
+  // to the next relay; the phone tries them in turn until it finds it again.
+  const RELAY_HOSTS = ROOM
+    ? [location.host, ...(params.get('alt') || '').split(',')
+        .filter((h) => /^[A-Za-z0-9.-]+(:\d+)?$/.test(h) && h !== location.host)]
+    : [];
+  let relayIndex = 0;
+  let noGameCount = 0;  // relays that said "no game with this code" since the last welcome
+  function wsUrl() {
+    return ROOM
+      ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${RELAY_HOSTS[relayIndex]}/ws/phone/${encodeURIComponent(ROOM)}`
+      : `ws://${WS_HOST}:${WS_PORT}`;
+  }
+  function nextRelay() {
+    if (RELAY_HOSTS.length > 1) relayIndex = (relayIndex + 1) % RELAY_HOSTS.length;
+  }
   const DEADZONE = 0.12;
   // Over the internet relay, 30 updates/s is plenty and halves the traffic.
   const SEND_INTERVAL_MS = ROOM ? 33 : 16;
@@ -361,8 +375,9 @@
     setStatus(joined ? 'reconnecting' : 'connecting');
     let sock;
     try {
-      sock = new WebSocket(WS_URL);
+      sock = new WebSocket(wsUrl());
     } catch {
+      nextRelay();
       scheduleRetry();
       return;
     }
@@ -381,8 +396,15 @@
       ws = null;
       // The game restarting or briefly losing the relay isn't fatal for a joined phone:
       // keep retrying and rejoin (same player slot) when it's back.
+      // Before giving up on a code, make sure no relay has the room (the game may have moved it).
+      if (!joined && !rejected && ev.reason === 'no_game' && ++noGameCount < RELAY_HOSTS.length) {
+        nextRelay();
+        connect();
+        return;
+      }
       const gameAway = ev.reason === 'host_left' || (joined && ev.reason === 'no_game');
       $('overlay').textContent = gameAway ? 'Waiting for the game…' : 'Reconnecting…';
+      nextRelay();  // whatever went wrong, look on the next relay (if there is one) next time
       const reason = rejected || (!gameAway && REJECT_TEXT[ev.reason] ? ev.reason : null);
       if (reason) {
         wantConnected = false;
@@ -424,6 +446,7 @@
         joined = true;
         retryDelay = 500;  // connected for real: next drop starts retrying quickly again
         failingSince = 0;
+        noGameCount = 0;
         playerIndex = Number(m.id) || 0;
         playerName = String(m.name || playerName || 'Player');
         if (m.color) document.documentElement.style.setProperty('--accent', m.color);
