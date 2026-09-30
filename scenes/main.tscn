@@ -18,7 +18,6 @@
 [ext_resource type="Script" uid="uid://coxff40gph86s" path="res://scripts/choose_player_amount.gd" id="10_choun"]
 [ext_resource type="Script" uid="uid://cqn1rls8s4njc" path="res://scripts/input.gd" id="11_ya4ey"]
 [ext_resource type="Texture2D" uid="uid://bt6fdcndm1k6w" path="res://art/ui/timer_4.png" id="12_0ld40"]
-[ext_resource type="AudioStream" uid="uid://cbri8tv6xim0u" path="res://music/Main Bee Song 2.wav" id="12_eb6dy"]
 [ext_resource type="Texture2D" uid="uid://bsh88cdia0ayq" path="res://art/ui/timer_3.png" id="13_dp3eg"]
 [ext_resource type="Texture2D" uid="uid://b013twdaigach" path="res://art/321Go.png" id="13_trceg"]
 [ext_resource type="Texture2D" uid="uid://bu3rnwortnmfb" path="res://art/Nectar_Drop_That_Goes_In_The_Bee’s_Mouth_I_Wonder_How_Long_I_Can_Make_This_Banananananana_This_Long.png" id="14_0ld40"]
@@ -30,6 +29,10 @@
 [ext_resource type="Texture2D" uid="uid://jm5no2lt5isb" path="res://art/Swarm_Icon.png" id="17_qkpxi"]
 [ext_resource type="Texture2D" uid="uid://cvo4xkwjp4aw3" path="res://art/Stinger_Icon.png" id="18_5q0nq"]
 [ext_resource type="Texture2D" uid="uid://b2rcy3ewsxhk2" path="res://art/Rain_Powerup_Icon.png" id="19_dgi5k"]
+[ext_resource type="Texture2D" uid="uid://du47n02bo3wuo" path="res://art/swirl.png" id="21_5q0nq"]
+[ext_resource type="Texture2D" uid="uid://b0lj8vp8i638o" path="res://art/backpack.png" id="22_dgi5k"]
+[ext_resource type="Texture2D" uid="uid://dbp1tylb6xt22" path="res://art/flower_upgrade.png" id="23_j8jky"]
+[ext_resource type="AudioStream" uid="uid://jc74fxkpi6hl" path="res://music/Super Speed Powerup.wav" id="33_5q0nq"]
 
 [sub_resource type="Gradient" id="Gradient_pm3ni"]
 offsets = PackedFloat32Array(0, 0.25, 0.5090361, 1)
@@ -56,6 +59,13 @@ bg_color = Color(0.7019608, 0.53333336, 0.7058824, 0.14901961)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_py7os"]
 bg_color = Color(0.1254902, 0.03529412, 0.13725491, 0.8117647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fv21b"]
+bg_color = Color(0.13725491, 0.078431375, 0.14117648, 0.827451)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xu4xf"]
 bg_color = Color(0.6, 0.6, 0.6, 0.14509805)
@@ -383,13 +393,12 @@ offset_right = 640.0
 offset_bottom = 360.0
 theme = ExtResource("1_o5qli")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_py7os")
-current_tab = 1
+current_tab = 0
 tabs_visible = false
 deselect_enabled = true
 script = ExtResource("7_85g3d")
 
 [node name="TitleScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=1965919025]
-visible = false
 custom_minimum_size = Vector2(640, 360)
 layout_mode = 2
 mouse_filter = 2
@@ -451,6 +460,7 @@ layout_mode = 2
 text = "Quit Game"
 
 [node name="TutorialScreen" type="Panel" parent="CanvasLayer/Screens" unique_id=915148859]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_py7os")
 metadata/_tab_index = 1
@@ -497,11 +507,11 @@ text = "There is movement and an interact button for everything
 
 - On phone, use joystick to move and interact to interact
 
-- On split keyboard:
-	-P1: WASD and E
-	-P2: Arrow Keys and Enter
-	-P3: Mouse move and click
-	-P4: JIKL and O"
+- On split keyboard, with move and interact keys:
+	[color=red]-P1: WASD and E
+	[color=blue]-P2: Arrow Keys and Enter
+	[color=green]-P3: Mouse move and click
+	[color=yellow]-P4: JIKL and O"
 
 [node name="InstructionSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1299993277]
 anchors_preset = 0
@@ -527,13 +537,12 @@ offset_right = 230.0
 offset_bottom = 207.0
 mouse_filter = 2
 theme_override_font_sizes/normal_font_size = 8
-text = "- The winner is the one with the most honey 
-		after 2 minutes
+text = "- The winner is the one with the most honey after 2 minutes
 - Collect Nectar from your own color Flowers
 - Bring Nectar back to your hive
 - Can also steal steal honey from rival hives
 - Spend money at the shop to buy powerups
-- Gain money from stealing from ants "
+- Gain money from stealing from ants, watch out they bite back"
 fit_content = true
 
 [node name="PowerupSection" type="Control" parent="CanvasLayer/Screens/TutorialScreen" unique_id=541425424]
@@ -550,22 +559,31 @@ offset_top = 4.0
 offset_right = 439.0
 offset_bottom = 31.0
 bbcode_enabled = true
-text = "[center]Powerups"
+text = "[center]Powerups in the Shop"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection" unique_id=878343311]
+[node name="Grid" type="GridContainer" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection" unique_id=1044545570]
 layout_mode = 0
-offset_left = 26.0
-offset_top = 88.0
-offset_right = 351.0
-offset_bottom = 128.0
-theme_override_constants/separation = 38
+offset_left = -8.0
+offset_top = 34.0
+offset_right = 516.0
+offset_bottom = 138.0
+columns = 4
 
-[node name="Confusion" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1524725619]
+[node name="Confusion" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=37194018]
+custom_minimum_size = Vector2(128, 40)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Confusion" unique_id=1524725619]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
 texture = ExtResource("14_yq6so")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Confusion" unique_id=2119128611]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Confusion/Background" unique_id=2119128611]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 9.0
@@ -574,22 +592,32 @@ offset_bottom = 21.0
 texture = ExtResource("15_fv21b")
 stretch_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Confusion" unique_id=1526854362]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Confusion" unique_id=1526854362]
 layout_mode = 0
-offset_left = -16.0
-offset_top = -52.0
-offset_right = 51.0
-offset_bottom = -12.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 38.0
 theme_override_font_sizes/normal_font_size = 8
-text = "   Confusion
-Inverts rivals controls"
+bbcode_enabled = true
+text = "    [color=yellow]Confusion[/color]
+Inverts rival bee controls"
 
-[node name="Speed" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=518563922]
+[node name="Speed" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=2127791685]
+custom_minimum_size = Vector2(128, 40)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Speed" unique_id=1954539816]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
 texture = ExtResource("14_yq6so")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Speed" unique_id=1692151703]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Speed/Background" unique_id=1288933869]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 9.0
@@ -598,23 +626,32 @@ offset_bottom = 21.0
 texture = ExtResource("16_tel4y")
 stretch_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Speed" unique_id=812470007]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Speed" unique_id=661295136]
 layout_mode = 0
-offset_left = -16.0
-offset_top = -52.0
-offset_right = 51.0
-offset_bottom = -12.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 38.0
 theme_override_font_sizes/normal_font_size = 8
-text = "   Speed
-Makes you
-Speedy!"
+bbcode_enabled = true
+text = "    [color=yellow]Speed[/color]
+Makes you speedy!"
 
-[node name="Swarm" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1144117380]
+[node name="Swarm" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=1550038193]
+custom_minimum_size = Vector2(128, 40)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Swarm" unique_id=1148453464]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
 texture = ExtResource("14_yq6so")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Swarm" unique_id=2045832632]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Swarm/Background" unique_id=1132362644]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 9.0
@@ -623,22 +660,32 @@ offset_bottom = 21.0
 texture = ExtResource("17_qkpxi")
 stretch_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Swarm" unique_id=201454915]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Swarm" unique_id=2080599533]
 layout_mode = 0
-offset_left = -16.0
-offset_top = -52.0
-offset_right = 54.0
-offset_bottom = -2.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 38.0
 theme_override_font_sizes/normal_font_size = 8
-text = "   Swarm
-Steals Honey from hives! (max 5)"
+bbcode_enabled = true
+text = "    [color=yellow]Swarm[/color]
+Steal Honey from rival hives!"
 
-[node name="Stinger" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=2109703597]
+[node name="Stinger" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=2072798879]
+custom_minimum_size = Vector2(128, 40)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Stinger" unique_id=278073889]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
 texture = ExtResource("14_yq6so")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Stinger" unique_id=1605047185]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Stinger/Background" unique_id=1174435619]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 9.0
@@ -647,22 +694,32 @@ offset_bottom = 21.0
 texture = ExtResource("18_5q0nq")
 stretch_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Stinger" unique_id=689433558]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Stinger" unique_id=1150688168]
 layout_mode = 0
-offset_left = -16.0
-offset_top = -52.0
-offset_right = 53.0
-offset_bottom = -2.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 39.0
 theme_override_font_sizes/normal_font_size = 8
-text = "   Stinger
-Steals Honey from rivals and push them"
+bbcode_enabled = true
+text = "    [color=yellow]Rain[/color]
+Steal Honey from rival bees and push them"
 
-[node name="Rain" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer" unique_id=1475875512]
+[node name="Rain" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=355699319]
+custom_minimum_size = Vector2(128, 40)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Rain" unique_id=541948139]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
 texture = ExtResource("14_yq6so")
 stretch_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Rain" unique_id=79415199]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Rain/Background" unique_id=276163276]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 9.0
@@ -671,22 +728,125 @@ offset_bottom = 21.0
 texture = ExtResource("19_dgi5k")
 stretch_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/HBoxContainer/Rain" unique_id=722489637]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Rain" unique_id=1037887825]
 layout_mode = 0
-offset_left = -16.0
-offset_top = -52.0
-offset_right = 59.0
-offset_bottom = -12.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 39.0
 theme_override_font_sizes/normal_font_size = 8
-text = "   Rain
-Make your rivals slow!"
+bbcode_enabled = true
+text = "    [color=yellow]Rain[/color]
+Make rival bees slow!"
+
+[node name="Wind" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=190638093]
+custom_minimum_size = Vector2(128, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Wind" unique_id=1999214433]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Wind/Background" unique_id=87699622]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("21_5q0nq")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Wind" unique_id=12960419]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 39.0
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "    [color=yellow]Wind[/color]
+Blow away rival bees from you and the hive!"
+
+[node name="Capacity" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=789227353]
+custom_minimum_size = Vector2(128, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Capacity" unique_id=1884530965]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Capacity/Background" unique_id=659918345]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("22_dgi5k")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Capacity" unique_id=1415570316]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 39.0
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "    [color=yellow]Capacity[/color]
+Increase the amount of nectar you carry"
+
+[node name="Collection" type="Panel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid" unique_id=1265313550]
+custom_minimum_size = Vector2(128, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fv21b")
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Collection" unique_id=1502854103]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 4.0
+offset_right = 125.0
+offset_bottom = 36.0
+texture = ExtResource("14_yq6so")
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Collection/Background" unique_id=591583814]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 9.0
+offset_right = 22.0
+offset_bottom = 21.0
+texture = ExtResource("23_j8jky")
+stretch_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PowerupSection/Grid/Collection" unique_id=63459170]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 39.0
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "    [color=yellow]Collection[/color]
+Increase nectar collected from flowers"
 
 [node name="PlayerSection" type="Panel" parent="CanvasLayer/Screens/TutorialScreen" unique_id=1118434159]
 layout_mode = 0
 offset_left = 474.0
 offset_top = 47.0
 offset_right = 631.0
-offset_bottom = 317.0
+offset_bottom = 243.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xu4xf")
 
@@ -704,13 +864,28 @@ mouse_filter = 2
 bbcode_enabled = true
 text = "[center]Players"
 
+[node name="PlayerTitle2" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PlayerSection" unique_id=1740717343]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -71.5
+offset_top = -9.0
+offset_right = 72.5
+offset_bottom = 17.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center]Press Interact to Ready up!"
+
 [node name="PlayerReady" type="VBoxContainer" parent="CanvasLayer/Screens/TutorialScreen/PlayerSection" unique_id=1166315424]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 34.0
-offset_bottom = -4.0
+offset_top = 1.5
+offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 2
@@ -753,6 +928,7 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Player5" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady" unique_id=428813099]
+visible = false
 modulate = Color(1, 0, 1, 1)
 layout_mode = 2
 bbcode_enabled = true
@@ -762,6 +938,7 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Player6" type="RichTextLabel" parent="CanvasLayer/Screens/TutorialScreen/PlayerSection/PlayerReady" unique_id=885454871]
+visible = false
 modulate = Color(0, 1, 1, 1)
 layout_mode = 2
 mouse_filter = 2
@@ -773,10 +950,11 @@ autowrap_mode = 0
 
 [node name="Skip" type="Button" parent="CanvasLayer/Screens/TutorialScreen" unique_id=52672396]
 layout_mode = 0
-offset_left = 518.0
-offset_top = 328.0
+offset_left = 569.0
+offset_top = 337.0
 offset_right = 632.0
 offset_bottom = 352.0
+theme_override_font_sizes/font_size = 8
 text = "Skip Setup"
 
 [node name="LocalMultiplayerControl" type="Control" parent="CanvasLayer/Screens" unique_id=1397146521]
@@ -1045,34 +1223,31 @@ metadata/_tab_index = 6
 
 [node name="Title" type="RichTextLabel" parent="CanvasLayer/Screens/EnterCode" unique_id=1238769822]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -165.0
-offset_right = -20.0
-offset_bottom = -135.0
+offset_left = -140.0
+offset_top = 23.0
+offset_right = 140.0
+offset_bottom = 53.0
 grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
 bbcode_enabled = true
 text = "[center]Enter Join Code"
 
 [node name="Entry" type="RichTextLabel" parent="CanvasLayer/Screens/EnterCode" unique_id=1690349558]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 7
 anchor_left = 0.5
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 20.0
-offset_top = -165.0
-offset_right = 300.0
-offset_bottom = -135.0
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_top = -97.0
+offset_right = 140.0
+offset_bottom = -67.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 mouse_filter = 2
 bbcode_enabled = true
 text = "[center]Entered:"
@@ -1084,14 +1259,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -101.5
-offset_top = -125.0
-offset_right = 101.5
-offset_bottom = 80.0
+offset_left = -80.0
+offset_top = -117.0
+offset_right = 123.0
+offset_bottom = 88.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/h_separation = 4
-theme_override_constants/v_separation = 4
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
 columns = 6
 script = ExtResource("11_ya4ey")
 
@@ -1479,7 +1654,8 @@ scale = Vector2(10, 10)
 sprite_frames = SubResource("SpriteFrames_xu4xf")
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=1648089543]
-stream = ExtResource("12_eb6dy")
+stream = ExtResource("33_5q0nq")
+autoplay = true
 
 [connection signal="body_entered" from="SplashWorld/Destroyer" to="SplashWorld" method="_on_destroyer_body_entered"]
 [connection signal="pressed" from="CanvasLayer/Screens/TitleScreen/Selection/Local" to="CanvasLayer" method="_on_local_pressed"]

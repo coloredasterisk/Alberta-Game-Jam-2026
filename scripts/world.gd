@@ -59,6 +59,7 @@ func _start_game() -> void:
 	for i in range(hives.size()):
 		players[i].global_position = hives[i].global_position
 	
+	get_node("../BackgroundMusic").stream = preload("res://music/Main Bee Song 2.wav")
 	get_node("../BackgroundMusic").play()
 	get_node("../CanvasLayer/321Go").visible = true
 	get_node("../CanvasLayer/321Go").play()
